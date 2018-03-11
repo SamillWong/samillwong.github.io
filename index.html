@@ -4,13 +4,49 @@
 <head>
 	<title>trash website</title>
 	<meta name="description" content="samillwong's github site">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<link rel="shortcut icon" href="favicon.ico">
-	<link rel="stylesheet" href="\materialize\css\materialize.css">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link type="text/css" rel="stylesheet" href="./media/materialize/css/materialize.min.css">
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+	<script src="./media/materialize/js/materialize.js"></script>
 </head>
 
 <body>
+	<script>
+		$(document).ready(function(){
+			$('.parallax').parallax();
+			$('.sidenav').sidenav({
+				width: 400,
+				closeOnClick: true,
+				draggable: true,
+			});
+		});
+	</script>
+
+	<!-- sidenav -->
+	<ul id="slide-out" class="sidenav">
+		<li>
+			<div class="user-view">
+				<div class="background">
+					<img src="./media/images/background.jpg">
+				</div>
+				<a href="#!user"><img class="circle" src="./media/images/pp.jpg"></a>
+				<a href="#!name"><span class="white-text name">Samill Wong</span></a>
+				<a href="#!email"><span class="white-text email"></span></a>
+			</div>
+		</li>
+		<li><a class="waves-effect" href="#!">Link 1</a></li>
+		<li><a class="waves-effect" href="#!">Link 2</a></li>
+		<li><div class="divider"></div></li>
+		<li><a class="subheader">Subheader</a></li>
+		<li><a class="waves-effect" href="#!">~~~ wavy link ~~~</a></li>
+	</ul>
+	<a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+
+<!-- dont need this trash
 	<nav>
-		<div class="nav-wrapper">
+		<div class="nav-wrapper orange darken-1">
 			<a href="" class="">Logo</a>
 			<ul id="nav-mobile" class="right hide-on-med-and-down">
 				<li><a href="">Lorem</a></li>
@@ -19,11 +55,40 @@
 			</ul>
 		</div>
 	</nav>
+-->
+
 	<h1>idk what im doing tbh</h1>
 	<div class="parallax-container">
-		<div class=parallax"><img src="images/parallax1.jpg"></div>
+		<div class="parallax"><img src="./media/images/parallax1.png"></div>
 	</div>
 	<h2><i>h e y    l o o k    f a n c y     t e x t</i></h2>
+
+	<footer class="page-footer orange darken-1">
+		<div class="container">
+			<div class="row">
+				<div class="col l6 s12">
+					<h5 class="white-text">Footer Title</h5>
+					<p class="grey-text text-lighten-4">Lorem Ipsum dolor sit amet, hello world.</p>
+				</div>
+				<div class="col l4 offset-12 s12">
+					<h5 class="white-text">Links</h5>
+					<ul>
+						<li><a class="grey-text text-lighten-3" href="#!">Link 1</a></li>
+						<li><a class="grey-text text-lighten-3" href="#!">Link 2</a></li>
+						<li><a class="grey-text text-lighten-3" href="#!">Link 3</a></li>
+						<li><a class="grey-text text-lighten-3" href="#!">Link 4</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="footer-copyright orange	darken-2">
+			<div class="container">
+				© 2299 who cares about copyright tbh
+				<a class="grey-text text-lighten-4 right" href="#!">more links</a>
+			</div>
+		</div>
+	</footer>
+
 </body>
 
 </html>
