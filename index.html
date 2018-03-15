@@ -10,20 +10,30 @@
 	<link type="text/css" rel="stylesheet" href="./media/materialize/css/materialize.min.css">
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 	<script src="./media/materialize/js/materialize.js"></script>
-</head>
 
-<body>
 	<script>
 		$(document).ready(function(){
 			$('.parallax').parallax();
-			$('.sidenav').sidenav({
-				width: 400,
-				closeOnClick: true,
-				draggable: true,
-			});
+			$('.sidenav').sidenav();
 		});
 	</script>
 
+	<style>
+		.sidenav{
+			width: 315px;
+		}
+		.sidenav .user-view .circle {
+			height: 250px;
+			width: 250px;
+		}
+		.parallax-container {
+			height: 650px;
+		}
+	</style>
+
+</head>
+
+<body bgcolor="#424242">
 	<!-- sidenav -->
 	<ul id="slide-out" class="sidenav">
 		<li>
@@ -32,15 +42,23 @@
 					<img src="./media/images/background.jpg">
 				</div>
 				<a href="#!user"><img class="circle" src="./media/images/pp.jpg"></a>
-				<a href="#!name"><span class="white-text name">Samill Wong</span></a>
-				<a href="#!email"><span class="white-text email"></span></a>
+				<a href="#!name"><span class="white-text name center">Samill Wong</span></a>
+				<a href="#!email"><span class="white-text email center"></span></a>
 			</div>
 		</li>
-		<li><a class="waves-effect" href="#!">Link 1</a></li>
-		<li><a class="waves-effect" href="#!">Link 2</a></li>
+		<li><br></li>
+		<li><a class="subheader center"><b>Portfolio</b></a></li>
 		<li><div class="divider"></div></li>
-		<li><a class="subheader">Subheader</a></li>
-		<li><a class="waves-effect" href="#!">~~~ wavy link ~~~</a></li>
+		<li><a class="waves-effect center" href="./portfolio/digitalarts">Digital Arts</a></li>
+		<li><a class="waves-effect center" href="./portfolio/programming">Programming</a></li>
+		<li><a class="waves-effect center" href="./portfolio/music">Music</a></li>
+		<li><br></li>
+		<li><a class="subheader center"><b>About</b></a></li>
+		<li><div class="divider"></div></li>
+		<li><a class="waves-effect center" href="./about">About Me</a></li>
+		<li><a class="waves-effect center" href="./ama">Ask Me Anything!</a></li>
+		<li><a class="waves-effect center" href="#!">~~~ woo wavy link! ~~~</a></li>
+
 	</ul>
 	<a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
 
@@ -57,34 +75,44 @@
 	</nav>
 -->
 
-	<h1>idk what im doing tbh</h1>
+	<div class="parallax-container">
+		<div class="parallax"><img src="./media/images/quantum.png"></div>
+	</div>
+	
+	<h4 class="white-text"><i>h e y    l o o k    f a n c y     t e x t</i></h2>
+	
+	<div class="parallax-container">
+		<div class="parallax"><img src="./media/images/aurora.png"></div>
+	</div>
+
+	<h4 class="white-text">generic placeholder text</h3>
+
 	<div class="parallax-container">
 		<div class="parallax"><img src="./media/images/parallax1.png"></div>
 	</div>
-	<h2><i>h e y    l o o k    f a n c y     t e x t</i></h2>
-
-	<footer class="page-footer orange darken-1">
+	
+	<footer class="page-footer grey darken-3">
 		<div class="container">
 			<div class="row">
 				<div class="col l6 s12">
-					<h5 class="white-text">Footer Title</h5>
-					<p class="grey-text text-lighten-4">Lorem Ipsum dolor sit amet, hello world.</p>
+					<h5 class="white-text">samillwong.github.io</h5>
+					<p class="white-text text-lighten-4">idk</p>
 				</div>
 				<div class="col l4 offset-12 s12">
-					<h5 class="white-text">Links</h5>
+					<h5 class="white-text">Social Media</h5>
 					<ul>
-						<li><a class="grey-text text-lighten-3" href="#!">Link 1</a></li>
-						<li><a class="grey-text text-lighten-3" href="#!">Link 2</a></li>
-						<li><a class="grey-text text-lighten-3" href="#!">Link 3</a></li>
-						<li><a class="grey-text text-lighten-3" href="#!">Link 4</a></li>
+						<li><a class="white-text text-lighten-3" href="#!">Email: soon(tm)</a></li>
+						<li><a class="white-text text-lighten-3" href="https://twitter.com/samillwong">Twitter: @samillwong</a></li>
+						<li><a class="white-text text-lighten-3" href="https://twitch.tv/samillwong">Twitch: samillwong</a></li>
+						<li><a class="white-text text-lighten-3" href="#!">Link 4</a></li>
 					</ul>
 				</div>
 			</div>
 		</div>
-		<div class="footer-copyright orange	darken-2">
+		<div class="footer-copyright grey darken-4">
 			<div class="container">
 				© 2299 who cares about copyright tbh
-				<a class="grey-text text-lighten-4 right" href="#!">more links</a>
+				<a class="white-text text-lighten-4 right" href="#!">more links</a>
 			</div>
 		</div>
 	</footer>
