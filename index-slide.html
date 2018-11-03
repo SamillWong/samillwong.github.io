@@ -17,6 +17,7 @@
 	<link href="css/owl.carousel.css" rel="stylesheet" media="screen" />
     <link href="css/owl.theme.css" rel="stylesheet" media="screen" />
 	<link href="css/flexslider.css" rel="stylesheet" />
+	<link href="css/slippry.css" rel="stylesheet" >
 	<link href="css/animate.css" rel="stylesheet" />
     <link href="css/style.css" rel="stylesheet">
 	<link href="color/default.css" rel="stylesheet">
@@ -52,26 +53,21 @@
     </div>
     <!-- /page loader -->
 
-	<!-- Section: home video -->
-    <section id="intro" class="home-video text-light">
-		<div class="home-video-wrapper">
-
-		<div class="homevideo-container">
-           <div id="P1" class="bg-player" style="display:block; margin: auto; background: rgba(0,0,0,0.5)" data-property="{videoURL:'http://youtu.be/mroiVdC7H10',containment:'.homevideo-container', quality: 'hd720', showControls: false, autoPlay:true, mute:true, startAt:0, opacity:1}"></div>
-		</div>
-		<div class="overlay">
-			<div class="text-center video-caption">
-				<div class="wow bounceInDown" data-wow-offset="0" data-wow-delay="0.8s">
-					<h1 class="big-heading font-light"><span id="js-rotating">We are valera, Awesome Bootstrap theme, Get better appearance, Craft from pixel </span></h1>
-				</div>
-				<div class="wow bounceInUp" data-wow-offset="0" data-wow-delay="1s">
-					<div class="margintop-30">
-						<a href="#about" class="btn btn-skin" id="btn-scroll">Start here</a>
-					</div>
-				</div>
+	<!-- Section: home slide -->
+    <section id="intro" class="home-slide text-light">
+		<ul id="valera-slippry">
+		  <li>
+			<div>
+			<img src="img/slides/1.jpg" alt="Welcome to Valera <br /><a href='#about' class='btn btn-skin btn-slide'>Learn more</a>">
 			</div>
-		</div>
-		</div>
+		  </li>
+		  <li>
+			<div><img src="img/slides/2.jpg"  alt="This is an awesome theme <br /><a href='#' class='btn btn-skin btn-slide'>Service block</a>"></div>
+		  </li>
+		  <li>
+			<div><img src="img/slides/3.jpg" alt="You are going to <span class='red'>♥</span> it :) <br /><a href='#' class='btn btn-skin btn-slide'>Portfolio</a>"></div>
+		  </li>
+		</ul>
     </section>
 	<!-- /Section: intro -->
 	
@@ -81,17 +77,15 @@
         <nav class="navbar navbar-custom" role="navigation">
                               <div class="container">
                                     <div class="row">
-                                          <div class="col-md-2 mob-logo">
-                                                <div class="row">
-                                                      <div class="site-logo">
+                                          <div class="col-md-2">
+                                                   <div class="site-logo">
                                                             <a href="index.html"><img src="img/logo-dark.png" alt="" /></a>
-                                                      </div>
-                                                </div>
+                                                    </div>
                                           </div>
                                           
 
-                                          <div class="col-md-10 mob-menu">
-                                                <div class="row">
+                                          <div class="col-md-10">
+                         
                                                       <!-- Brand and toggle get grouped for better mobile display -->
                                           <div class="navbar-header">
                                                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu">
@@ -117,7 +111,7 @@
                                                             </ul>
                                                       </div>
                                                       <!-- /.Navbar-collapse -->
-                                                </div>
+                             
                                           </div>
                                     </div>
                               </div>
@@ -521,7 +515,7 @@
 						
 						</div>
 						<p>Valera, Inc. 795 Folsom Ave, Suite 600 San Francisco, CA 94107<br />
-						&copy;Copyright 2015 - Valera. All rights reserved.  | Designed by <a href="http://bootstraptaste.com">BootstrapTaste</a></p>
+						&copy;Copyright 2015 - Valera. All rights reserved. | Designed by <a href="http://bootstraptaste.com">BootstrapTaste</a></p>
                         <!-- 
                             All links in the footer should remain intact. 
                             Licenseing information is available at: http://bootstraptaste.com/license/
