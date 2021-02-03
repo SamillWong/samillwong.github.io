@@ -1,2 +1,2 @@
 # samillwong.github.io
-A GitHub page for myself using the MaterializeCSS framework by Google.
+A personal blog for anything infosec, mostly HackTheBox writeups.
