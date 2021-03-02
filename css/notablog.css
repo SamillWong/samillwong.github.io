@@ -58,13 +58,13 @@
 /* Common */
 
 .Header, .PageRoot, .ArticleList {
-  width: 900px;
+  width: 1000px;
   max-width: 100%;
   margin: 0px auto;
   padding: 0px 96px;
 }
 
-@media only screen and (max-width: 900px) {
+@media only screen and (max-width: 1000px) {
   .Header, .PageRoot, .ArticleList {
     max-width: 87.5%;
     padding-left: 0px;
