@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- iOS Safari -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <!-- Chrome, Firefox OS and Opera Status Bar Color -->
+  <meta name="theme-color" content="#FFFFFF">
+  <meta property="og:title" content="Heim - UMassCTF '21">
+  
+  <meta name="description" content="Only those who BEARER a token may enter! A web exploitation category challenge on intercepting and forging JSON Web Tokens from a debugging endpoint to bypass Bearer authentication.">
+  <meta property="og:description" content="Only those who BEARER a token may enter! A web exploitation category challenge on intercepting and forging JSON Web Tokens from a debugging endpoint to bypass Bearer authentication.">
+  
+  <meta property="og:type" content="blog">
+  <title>Heim - UMassCTF '21</title>
+  <!-- Favicon -->
+  
+  <link rel="shortcut icon" href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fa5f479f2-9bc6-4717-a854-a228503e7e09%2FSu3h8Ebb_400x400.png?table=collection&id=92e319e1-0c5e-49c7-adc1-7d48fe74e022">
+  
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+  <link rel="stylesheet" type="text/css"
+    href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
+  <link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
+  <link rel="stylesheet" type="text/css" href="css/notablog.css">
+  <link rel="stylesheet" type="text/css" href="css/theme.css">
+  <style>
+    :root {
+      font-size: 18px;
+    }
+
+    .DateTagBar {
+      margin-top: 1.0rem;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="Navbar">
+    <a href="index.html">
+      <div class="Navbar__Btn"><span><img class="inline-img-icon" src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fa5f479f2-9bc6-4717-a854-a228503e7e09%2FSu3h8Ebb_400x400.png?table=collection&id=92e319e1-0c5e-49c7-adc1-7d48fe74e022"></span> <span>Home</span></div>
+    </a>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  </nav>
+  <header class="Header">
+      
+    <div class="Header__Spacer Header__Spacer--NoCover">
+    </div>
+    
+    <div class="Header__Icon"><span>🏔️</span></div>
+    
+    <h1 class="Header__Title">Heim - UMassCTF '21</h1>
+        
+    <div class="DateTagBar">
+          
+      <span class="DateTagBar__Item DateTagBar__Date">Posted on Mon, Mar 29, 2021</span>
+          
+          
+      <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
+          <a href="tag/UMassCTF'21.html">UMassCTF'21</a>
+      </span>
+      
+      <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
+          <a href="tag/Web Application.html">Web Application</a>
+      </span>
+      
+      <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--blue">
+          <a href="tag/Bearer Authentication.html">Bearer Authentication</a>
+      </span>
+      
+    </div>
+    <div class="Article__Desc">
+        Only those who BEARER a token may enter! A web exploitation category challenge on intercepting and forging JSON Web Tokens from a debugging endpoint to bypass Bearer authentication.
+    </div>
+        
+  </header>
+      <article id="https://www.notion.so/7164fde9fd1b497497bc1c79cab811f7" class="PageRoot PageRoot--FullWidth"><h2 id="https://www.notion.so/47b71c4768724d7898a2c67579b0f2c1" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/47b71c4768724d7898a2c67579b0f2c1"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">The Heim</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/85e610aeb5e345dba6bf9a4729962277" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Upon navigating to the given URL, we&#x27;re met with a login form which asks the user for a &quot;name&quot;, claiming that &quot;only those who </span><span class="SemanticString"><span class="SemanticString__Fragment SemanticString__Fragment--Unknown">BEARER</span></span><span class="SemanticString"> a token may enter&quot;.</span></span><div id="https://www.notion.so/4773207ab6534064afdde01fba146aa7" class="Image Image--Normal"><figure><a href="https://i.imgur.com/96m81yH.png?width=864"><img src="https://i.imgur.com/96m81yH.png?width=864" style="width:864px"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div></li><li id="https://www.notion.so/351b977e2b7a40e2bfebb231c57830d3" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">After entering a name and hitting &quot;Enter&quot;, we are then redirected to the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">/auth/authorised</code></span><span class="SemanticString"> page containing our access token:</span></span><div id="https://www.notion.so/0dd2bd1e47d64f9cba3dbae539079eb8" class="Image Image--Normal"><figure><a href="https://i.imgur.com/s2PtrcI.png?width=624"><img src="https://i.imgur.com/s2PtrcI.png?width=624" style="width:624px"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div></li><li id="https://www.notion.so/305d10c0122845cfbea73e9f8b8b1b1c" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">This likely suggests that we&#x27;re dealing with some type of bearer token authentication. Bearer tokens allow requests to authenticate by using a cryptic string generated and encrypted by the server, such as a JSON Web Token, which looks something akin to this:</span></span><div id="https://www.notion.so/12335b0d7c2741beaab85ae2251cbfe5" class="Image Image--Normal"><figure><a href="https://i.imgur.com/IVE3srk.png?width=720"><img src="https://i.imgur.com/IVE3srk.png?width=720" style="width:720px"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div></li><li id="https://www.notion.so/58b1a95ed5404e03be90b89969575368" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">This token is then included in the HTTP header, in the format of:</span></span><pre id="https://www.notion.so/aaba912d02ea4cfcb81a3e3cd290a35b" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>Authorization: Bearer <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>JWT</span><span class="token punctuation">></span></span></span></span></span></code></pre></li></ul><h2 id="https://www.notion.so/34cd77334cd948e4ba83f04486fbe4e4" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/34cd77334cd948e4ba83f04486fbe4e4"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Intercepting requests with Burp Suite</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/e1bb9e1714e544c4b360f6b4a9e961cd" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Let&#x27;s intercept the outbound POST request made to </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">/auth</code></span><span class="SemanticString"> with Burp Suite&#x27;s proxy feature, and forward the request to the repeater with </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">Ctrl-R</code></span><span class="SemanticString"> to try and figure out what is happening behind the scenes:</span></span><div id="https://www.notion.so/a00ba5a8c7ae495eaf941f4b5f594802" class="Image Image--Normal"><figure><a href="https://i.imgur.com/EZ3LsiC.png?width=1392"><img src="https://i.imgur.com/EZ3LsiC.png?width=1392" style="width:1392px"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div></li><li id="https://www.notion.so/852e585923fa41d087264c6064f51c3d" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">We see that the browser first makes a POST request to </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">/auth</code></span><span class="SemanticString"> with the form data, and is then redirected to the URL:</span></span><div id="https://www.notion.so/800724133cc945a898e23ab06e83552e" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">/auth?access_token=&lt;JWT&gt;&amp;jwt_secret_key=arottenbranchwillbefoundineverytree</code></span></span></p></div></li><li id="https://www.notion.so/16796a9975e6415e99306d0970c4d856" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Leaked at the end of the redirect URL is the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">jwt_secret_key</code></span><span class="SemanticString">, which is used for encrypting JSON Web Tokens:</span></span><div id="https://www.notion.so/59accdb694704d6a91b46617899a2fe8" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">arottenbranchwillbefoundineverytree</code></span></span></p></div></li><li id="https://www.notion.so/e0dc3cd61753440f84e28f01bf66c97f" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">While looking for more API endpoints on the website by trying related keywords, we stumbled upon </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">/heim</code></span><span class="SemanticString">, which returned:</span></span><pre id="https://www.notion.so/ce81700eb2a54f55b55814e171516517" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token punctuation">{</span>
+  <span class="token property">"msg"</span><span class="token operator">:</span> <span class="token string">"Missing Authorization Header"</span>
+<span class="token punctuation">}</span></span></span></span></code></pre></li><li id="https://www.notion.so/44a0b920f57b418f97141eadbbad3f46" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">This means that the web server is expecting a Bearer token in the HTTP header, so let&#x27;s add that to our request in Burp Suite&#x27;s repeater:</span></span><div id="https://www.notion.so/f53de0b4747a4274af76714f603bffad" class="Image Image--Normal"><figure><a href="https://i.imgur.com/HR6kSKQ.png?width=1392"><img src="https://i.imgur.com/HR6kSKQ.png?width=1392" style="width:1392px"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div></li><li id="https://www.notion.so/7a56d3e1739949fb998c927b2c160f2e" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">We received a massive message encoded in base64, let&#x27;s decode it:</span></span><div id="https://www.notion.so/f87c2d5fe2dc434c8e42d0bc80068ba9" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ echo &quot;ewogICAgIm...AgIH0KfQ==&quot; | base64 -d</code></span></span></p></div><pre id="https://www.notion.so/8f51c0c1910543e49d95ae2ff7833b55" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token punctuation">{</span>
+  <span class="token property">"api"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"v1"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"/auth"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+              <span class="token property">"get"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+                  <span class="token property">"summary"</span><span class="token operator">:</span> <span class="token string">"Debugging method for authorization post"</span><span class="token punctuation">,</span>
+                  <span class="token property">"security"</span><span class="token operator">:</span> <span class="token string">"None"</span><span class="token punctuation">,</span>
+                  <span class="token property">"parameters"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+                      <span class="token property">"access_token"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+                          <span class="token property">"required"</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+                          <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Access token from recently authorized Viking"</span><span class="token punctuation">,</span>
+                          <span class="token property">"in"</span><span class="token operator">:</span> <span class="token string">"path"</span><span class="token punctuation">,</span>
+                      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+                      <span class="token property">"jwt_secret_key"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+                          <span class="token property">"required"</span><span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+                          <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Debugging - should be removed in prod Heim"</span><span class="token punctuation">,</span>
+                          <span class="token property">"in"</span><span class="token operator">:</span> <span class="token string">"path"</span>
+                      <span class="token punctuation">}</span>
+                  <span class="token punctuation">}</span>
+              <span class="token punctuation">}</span><span class="token punctuation">,</span>
+              <span class="token property">"post"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+                  <span class="token property">"summary"</span><span class="token operator">:</span> <span class="token string">"Authorize yourself as a Viking"</span><span class="token punctuation">,</span>
+                  <span class="token property">"security"</span><span class="token operator">:</span> <span class="token string">"None"</span><span class="token punctuation">,</span>
+                  <span class="token property">"parameters"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+                      <span class="token property">"username"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+                          <span class="token property">"required"</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+                          <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Your Viking name"</span><span class="token punctuation">,</span>
+                          <span class="token property">"in"</span><span class="token operator">:</span> <span class="token string">"body"</span><span class="token punctuation">,</span>
+                          <span class="token property">"content"</span><span class="token operator">:</span> <span class="token string">"multipart/x-www-form-urlencoded"</span>
+                      <span class="token punctuation">}</span>
+                  <span class="token punctuation">}</span>
+              <span class="token punctuation">}</span>
+          <span class="token punctuation">}</span><span class="token punctuation">,</span>
+          <span class="token property">"/heim"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+              <span class="token property">"get"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+                  <span class="token property">"summary"</span><span class="token operator">:</span> <span class="token string">"List the endpoints available to named Vikings"</span><span class="token punctuation">,</span>
+                  <span class="token property">"security"</span><span class="token operator">:</span> <span class="token string">"BearerAuth"</span>
+              <span class="token punctuation">}</span>
+          <span class="token punctuation">}</span><span class="token punctuation">,</span>
+          <span class="token property">"/flag"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+              <span class="token property">"get"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+                  <span class="token property">"summary"</span><span class="token operator">:</span> <span class="token string">"Retrieve the flag"</span><span class="token punctuation">,</span>
+                  <span class="token property">"security"</span><span class="token operator">:</span> <span class="token string">"BearerAuth"</span>
+              <span class="token punctuation">}</span>
+          <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></span></span></span></code></pre></li><li id="https://www.notion.so/3ff54d2a4e4e4c2f903246074c0ed10c" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Nice! We have obtained a list of all available endpoints and now know the flag is located at </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">/flag</code></span><span class="SemanticString">, and that the GET method for </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">/auth</code></span><span class="SemanticString"> was originally meant to be a debugging endpoint, explaining why </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">jwt_secret_key</code></span><span class="SemanticString"> was leaked in the redirect URL.</span></span></li><li id="https://www.notion.so/1144a7a69d654cf68152e25ae2407068" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Making a GET request to </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">/flag</code></span><span class="SemanticString"> with our Bearer token returns:</span></span><pre id="https://www.notion.so/9223f0f90ae2461b9ce4e229a827fbca" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token punctuation">{</span>
+  <span class="token property">"msg"</span><span class="token operator">:</span> <span class="token string">"You are not worthy. Only the AllFather Odin may view the flag"</span>
+<span class="token punctuation">}</span></span></span></span></code></pre></li><li id="https://www.notion.so/39b1c3e711094805966e0f40476ff6e2" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Seems like only Odin is worthy enough to view the flag! Also, trying to submit &quot;odin&quot; as the name in the login form returns:</span></span><pre id="https://www.notion.so/2743ee7fb0374fca975c5a10b7a6b499" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token punctuation">{</span>
+  <span class="token property">"error"</span><span class="token operator">:</span> <span class="token string">"You are not wise enough to be Odin"</span>
+<span class="token punctuation">}</span></span></span></span></code></pre></li><li id="https://www.notion.so/fbe6046a39ae478a83ed6d99e743bf45" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Though, since we can obtain a sample access token and are in possession of the secret key, we can forge our own tokens to authenticate as the Odin user.</span></span></li></ul><h2 id="https://www.notion.so/b4e7ee1ba3884b7aa3c2ef1915ad5b06" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/b4e7ee1ba3884b7aa3c2ef1915ad5b06"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Forging Odin&#x27;s token</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/a5d18d4cddd74701b9c31101d008ce6d" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Using </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://gchq.github.io/CyberChef/">CyberChef</a></span><span class="SemanticString"> tool, we can easily read the payload of our own JWT string with the &quot;JWT decode&quot; function:</span></span><div id="https://www.notion.so/cca6c326f42c4606950bba9ae733fd70" class="Image Image--Normal"><figure><a href="https://i.imgur.com/gRvcmbl.png?width=816"><img src="https://i.imgur.com/gRvcmbl.png?width=816" style="width:816px"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div></li><li id="https://www.notion.so/e227915a79e943f7bff1cf0960a07144" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">We see that the JWT payload contains the following data:</span></span><pre id="https://www.notion.so/c9339a06cc7f445c87775fa70cd7aadf" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token punctuation">{</span>
+    <span class="token property">"fresh"</span><span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+    <span class="token property">"iat"</span><span class="token operator">:</span> <span class="token number">1617017482</span><span class="token punctuation">,</span>
+    <span class="token property">"jti"</span><span class="token operator">:</span> <span class="token string">"380b9f5c-fb31-479e-a189-59e2c8040453"</span><span class="token punctuation">,</span>
+    <span class="token property">"nbf"</span><span class="token operator">:</span> <span class="token number">1617017482</span><span class="token punctuation">,</span>
+    <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"access"</span><span class="token punctuation">,</span>
+    <span class="token property">"sub"</span><span class="token operator">:</span> <span class="token string">"samiko"</span><span class="token punctuation">,</span>
+    <span class="token property">"exp"</span><span class="token operator">:</span> <span class="token number">1617018382</span>
+<span class="token punctuation">}</span></span></span></span></code></pre></li><li id="https://www.notion.so/3c785c2284d147728dfb6b14ed96f970" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Of all variables, </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">sub</code></span><span class="SemanticString"> (subject) and </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">exp</code></span><span class="SemanticString"> (expiration time) are the ones that appear most interesting to us, since we want to forge a token for Odin (that never expires!), so let&#x27;s modify the payload to the following:</span></span><pre id="https://www.notion.so/348ea03110184897a27c776685617d72" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token punctuation">{</span>
+    <span class="token property">"fresh"</span><span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+    <span class="token property">"iat"</span><span class="token operator">:</span> <span class="token number">1617017482</span><span class="token punctuation">,</span>
+    <span class="token property">"jti"</span><span class="token operator">:</span> <span class="token string">"380b9f5c-fb31-479e-a189-59e2c8040453"</span><span class="token punctuation">,</span>
+    <span class="token property">"nbf"</span><span class="token operator">:</span> <span class="token number">1617017482</span><span class="token punctuation">,</span>
+    <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"access"</span><span class="token punctuation">,</span>
+    <span class="token property">"sub"</span><span class="token operator">:</span> <span class="token string">"odin"</span><span class="token punctuation">,</span>
+    <span class="token property">"exp"</span><span class="token operator">:</span> <span class="token number">9999999999</span>
+<span class="token punctuation">}</span></span></span></span></code></pre></li><li id="https://www.notion.so/99afcc1d001c44ce9006680e020655e7" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Using the &quot;JWT Sign&quot; function with the leaked </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">jwt_secret_key</code></span><span class="SemanticString"> and HS256 as parameters, we get the token:</span></span><div id="https://www.notion.so/9219556bf7b04dcd83d88cea363580fc" class="Image Image--Normal"><figure><a href="https://i.imgur.com/AEjoHH4.png?width=816"><img src="https://i.imgur.com/AEjoHH4.png?width=816" style="width:816px"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div></li><li id="https://www.notion.so/c8a17dfd437a41fa97929da98b6359c2" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Using the forged token in the HTTP header as a Bearer token, we make a GET request to </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">/flag</code></span><span class="SemanticString">:</span></span><div id="https://www.notion.so/a6c7c17bdea2410798d05f6330a33d8c" class="Image Image--Normal"><figure><a href="https://i.imgur.com/Tq2jaX7.png?width=1392"><img src="https://i.imgur.com/Tq2jaX7.png?width=1392" style="width:1392px"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div></li><li id="https://www.notion.so/7a4b0c3a0c92437282d658b613aa239d" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Voila! We got the flag:</span></span><pre id="https://www.notion.so/51d14d788d5d445aa9aa4d8059a3ee50" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>UMASS<span class="token punctuation">{</span>liveheim_laughheim_loveheim<span class="token punctuation">}</span></span></span></span></code></pre></li></ul><h2 id="https://www.notion.so/57058c7bb15c49dd973880e8711a7188" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/57058c7bb15c49dd973880e8711a7188"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Resources</span></span></h2><ol class="NumberedListWrapper"><li id="https://www.notion.so/87150da3481243a7904d14216f859525" class="NumberedList" value="1"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://swagger.io/docs/specification/authentication/bearer-authentication/">https://swagger.io/docs/specification/authentication/bearer-authentication/</a></span></span></li><li id="https://www.notion.so/9181f46889a74b3cb6c3ff5c1c461277" class="NumberedList" value="2"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://research.securitum.com/jwt-json-web-token-security/">https://research.securitum.com/jwt-json-web-token-security/</a></span></span></li><li id="https://www.notion.so/60f3ff8a01234d31a9fab5c579b452a1" class="NumberedList" value="3"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://gchq.github.io/CyberChef/">https://gchq.github.io/CyberChef/</a></span></span></li></ol><div id="https://www.notion.so/63b72b29db0341ac81a6dc4bfa1e2bd1" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div></article>
+  <footer class="Footer">
+        <div>&copy; samiko@127.0.0.1~$ &centerdot; 2021</div>
+        <div>&centerdot;</div>
+        <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
+            rel="noopener noreferrer">Notablog</a>.
+        </div>
+    </footer>
+</body>
+
+</html>
