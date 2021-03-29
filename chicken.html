@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- iOS Safari -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <!-- Chrome, Firefox OS and Opera Status Bar Color -->
+  <meta name="theme-color" content="#FFFFFF">
+  <meta property="og:title" content="Chicken - UMassCTF '21">
+  
+  <meta name="description" content="Chicken Chicken Chicken: Chicken Chicken? A forensics category challenge all about extracting hidden streams in a PDF file and 7-Zip password cracking.">
+  <meta property="og:description" content="Chicken Chicken Chicken: Chicken Chicken? A forensics category challenge all about extracting hidden streams in a PDF file and 7-Zip password cracking.">
+  
+  <meta property="og:type" content="blog">
+  <title>Chicken - UMassCTF '21</title>
+  <!-- Favicon -->
+  
+  <link rel="shortcut icon" href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fa5f479f2-9bc6-4717-a854-a228503e7e09%2FSu3h8Ebb_400x400.png?table=collection&id=92e319e1-0c5e-49c7-adc1-7d48fe74e022">
+  
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+  <link rel="stylesheet" type="text/css"
+    href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
+  <link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
+  <link rel="stylesheet" type="text/css" href="css/notablog.css">
+  <link rel="stylesheet" type="text/css" href="css/theme.css">
+  <style>
+    :root {
+      font-size: 18px;
+    }
+
+    .DateTagBar {
+      margin-top: 1.0rem;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="Navbar">
+    <a href="index.html">
+      <div class="Navbar__Btn"><span><img class="inline-img-icon" src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fa5f479f2-9bc6-4717-a854-a228503e7e09%2FSu3h8Ebb_400x400.png?table=collection&id=92e319e1-0c5e-49c7-adc1-7d48fe74e022"></span> <span>Home</span></div>
+    </a>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  </nav>
+  <header class="Header">
+      
+    <div class="Header__Spacer Header__Spacer--NoCover">
+    </div>
+    
+    <div class="Header__Icon"><span>🐔</span></div>
+    
+    <h1 class="Header__Title">Chicken - UMassCTF '21</h1>
+        
+    <div class="DateTagBar">
+          
+      <span class="DateTagBar__Item DateTagBar__Date">Posted on Mon, Mar 29, 2021</span>
+          
+          
+      <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
+          <a href="tag/UMassCTF'21.html">UMassCTF'21</a>
+      </span>
+      
+      <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--gray">
+          <a href="tag/Forensics.html">Forensics</a>
+      </span>
+      
+    </div>
+    <div class="Article__Desc">
+        Chicken Chicken Chicken: Chicken Chicken? A forensics category challenge all about extracting hidden streams in a PDF file and 7-Zip password cracking.
+    </div>
+        
+  </header>
+      <article id="https://www.notion.so/daadf237e2864501a4bd62f87350c2d7" class="PageRoot PageRoot--FullWidth"><h2 id="https://www.notion.so/21d548da58634fcf80216c7d32c07c80" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/21d548da58634fcf80216c7d32c07c80"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Investigating the mystery PDF File</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/55f09c22fec84586a5f375b7a9d85802" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">We&#x27;re given a modified PDF file of the infamous research paper, &quot;Chicken Chicken Chicken: Chicken Chicken&quot;, by Doug Zongker at the University of Washington.</span></span><a id="https://www.notion.so/217d1ee6a5ff47aa9518b9cd4305949d" class="File" href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F1265e1d3-f480-4881-a1f6-b188cdc8701e%2Fchicken.pdf?table=block&amp;id=217d1ee6-a5ff-47aa-9518-b9cd4305949d"><div><div class="File__Icon"><svg viewBox="0 0 30 30" style="width:1.35em;height:1.35em;fill:inherit"><g><path d="M22,8v12c0,3.866-3.134,7-7,7s-7-3.134-7-7V8c0-2.762,2.238-5,5-5s5,2.238,5,5v12c0,1.657-1.343,3-3,3s-3-1.343-3-3V8h-2v12c0,2.762,2.238,5,5,5s5-2.238,5-5V8c0-3.866-3.134-7-7-7S6,4.134,6,8v12c0,4.971,4.029,9,9,9s9-4.029,9-9V8H22z"></path></g></svg></div><div><span class="File__Title">chicken.pdf</span><span class="File__Size">50.7KB</span></div></div></a><div id="https://www.notion.so/43fccf1ddc464ccba43451e940f63086" class="Image Image--Normal"><figure><a href="https://i.imgur.com/jBSJVNH.png?width=960"><img src="https://i.imgur.com/jBSJVNH.png?width=960" style="width:960px"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div></li><li id="https://www.notion.so/6b3d506419e04180a2edef5d85ef4a86" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Since we know this is a published research paper, we can download a copy of the </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://isotropic.org/papers/chicken.pdf">original PDF file</a></span><span class="SemanticString"> and compare the two for any difference:</span></span><div id="https://www.notion.so/557eac2c905049c5ae47d198f6e80445" class="Image Image--Normal"><figure><a href="https://i.imgur.com/bE2dmRu.png?width=1344"><img src="https://i.imgur.com/bE2dmRu.png?width=1344" style="width:1344px"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div></li><li id="https://www.notion.so/5f00af15578549948275f5d2f5391191" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">We see that at around line 202, there is an extra OpenAction object inserted into the document, with a data stream beginning with </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">7z</code></span><span class="SemanticString">:</span></span><div id="https://www.notion.so/cfcd83ebb4a44fbab20229b8da9424af" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ hexdump -C realchicken.pdf | grep 7z -A 11</code></span></span></p></div><pre id="https://www.notion.so/9462a25e8ff94e0fbf1a52183ef31d70" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>00001980  0d 0a 37 7a bc af 27 1c  00 04 2b 65 00 6c 30 00  |..7z..&#x27;...+e.l0.|
+00001990  00 00 00 00 00 00 6a 00  00 00 00 00 00 00 4c 6a  |......j.......Lj|
+000019a0  b9 1e 0c fd be 4f 3b 93  39 58 52 bd 23 ea 0b 2d  |.....O;.9XR.#..-|
+000019b0  8d d1 a2 79 55 0b d8 05  68 43 0d ae 06 d5 2d f8  |...yU...hC....-.|
+000019c0  25 ff b4 16 8d 21 3b 88  16 35 44 69 6d 5c 0e 59  |%....!;..5Dim\.Y|
+000019d0  a7 b3 01 04 06 00 01 09  30 00 07 0b 01 00 02 24  |........0......$|
+000019e0  06 f1 07 01 0a 53 07 56  f2 43 9d 21 42 28 ae 21  |.....S.V.C.!B(.!|
+000019f0  21 01 00 01 00 0c 29 25  00 08 0a 01 4e 5d 1c 8e  |!.....)%....N]..|
+00001a00  00 00 05 01 19 09 00 00  00 00 00 00 00 00 00 11  |................|
+00001a10  0f 00 73 00 65 00 63 00  72 00 65 00 74 00 00 00  |..s.e.c.r.e.t...|
+00001a20  19 04 00 00 00 00 14 0a  01 00 80 33 4a 2c b7 1d  |...........3J,..|
+00001a30  d7 01 15 06 01 00 20 80  a4 81 00 00 0a 65 6e 64  |...... ......end|</span></span></span></code></pre></li><li id="https://www.notion.so/7735004a2de846b3b21ebb65a4b69eac" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">The data stream start with the 7z magic bytes, confirming that it is indeed a 7z file:</span></span><div id="https://www.notion.so/5d466c0ff96f4e81a1f09c5c7cbffa9a" class="Bookmark"><a href="https://en.wikipedia.org/wiki/List_of_file_signatures"><h5 class="Bookmark__Title">List of file signatures - Wikipedia</h5><p class="Bookmark__Desc">Many file formats are not intended to be read as text. If such a file is accidentally viewed as a text file, its contents will be unintelligible. However, sometimes the file signature can be recognizable when interpreted as text.</p><p class="Bookmark__Link">https://en.wikipedia.org/wiki/List_of_file_signatures</p></a></div><div id="https://www.notion.so/145d025ba3444c639c751088b5ef9186" class="Image Image--Normal"><figure><a href="https://i.imgur.com/99riFle.png?width=672"><img src="https://i.imgur.com/99riFle.png?width=672" style="width:672px"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div></li><li id="https://www.notion.so/a21f5d63b13a4d6a864e9f473b14ed73" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Let&#x27;s extract the stream with a bit of Bashfu to a </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">chicken.hex</code></span><span class="SemanticString"> file:</span></span><div id="https://www.notion.so/3a8a66306bf84eeb9aefcb010f29c7b5" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ hexdump -C realchicken.pdf | grep 7z -A 11 | cut -d &#x27; &#x27; -f3- | rev | cut -d &#x27; &#x27; -f3- | rev &gt; chicken.hex</code></span></span></p></div><pre id="https://www.notion.so/e6264ec2005c4309951f3ede470c29b5" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><del class="SemanticString__Fragment SemanticString__Fragment--Strike"><span>0d 0a</span></del></span><span class="SemanticString"><span> 37 7a bc af 27 1c 00 04 2b 65 00 6c 30 00
+00 00 00 00 00 00 6a 00 00 00 00 00 00 00 4c 6a
+b9 1e 0c fd be 4f 3b 93 39 58 52 bd 23 ea 0b 2d
+8d d1 a2 79 55 0b d8 05 68 43 0d ae 06 d5 2d f8
+25 ff b4 16 8d 21 3b 88 16 35 44 69 6d 5c 0e 59
+a7 b3 01 04 06 00 01 09 30 00 07 0b 01 00 02 24
+06 f1 07 01 0a 53 07 56 f2 43 9d 21 42 28 ae 21
+21 01 00 01 00 0c 29 25 00 08 0a 01 4e 5d 1c 8e
+00 00 05 01 19 09 00 00 00 00 00 00 00 00 00 11
+0f 00 73 00 65 00 63 00 72 00 65 00 74 00 00 00
+19 04 00 00 00 00 14 0a 01 00 80 33 4a 2c b7 1d
+d7 01 15 06 01 00 20 80 a4 81 00 00 </span></span><span class="SemanticString"><del class="SemanticString__Fragment SemanticString__Fragment--Strike"><span>0a 65 6e 64</span></del></span></span></code></pre></li><li id="https://www.notion.so/c0fd12bb74fb4065bcf1e2382717440b" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">From reading the </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://www.7-zip.org/recover.html">technical specifications</a></span><span class="SemanticString"> of the 7z file format, we know the file has to begin with </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">37 7A BC AF 27 1C</code></span><span class="SemanticString"> and end with </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">00 00</code></span><span class="SemanticString">. Therefore, we can trim off the starting </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">0D 0A</code></span><span class="SemanticString"> and the ending </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">0A 65 6E 64</code></span><span class="SemanticString"> bytes, as they are not a part of the file.</span></span></li><li id="https://www.notion.so/1546543944084d21881905499ad13ced" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Convert the hex dump to a 7z file:</span></span><div id="https://www.notion.so/dc283ba5164549809b25cb2376c6b567" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ xxd -r -p chicken.hex chicken.7z</code></span></span></p></div></li></ul><h2 id="https://www.notion.so/a0775e81ae534ac6a4c6202d5063add5" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/a0775e81ae534ac6a4c6202d5063add5"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Extracting and cracking 7z password hash with John the Ripper</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/3e11d03573cc42abb0b88fc4e6ac06d6" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Upon trying to extract the 7z file, we&#x27;re greeted with a password prompt:</span></span><div id="https://www.notion.so/93170cba9a9f4064ae27b3c60faff6be" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ 7z x chicken.7z</code></span></span></p></div><pre id="https://www.notion.so/cc018051497a467b9108fd8d0e285dd2" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>7-Zip [64] 17.03 : Copyright (c) 1999-2020 Igor Pavlov : 2017-08-28
+p7zip Version 17.03 (locale=en_AU.UTF-8,Utf16=on,HugeFiles=on,64 bits,8 CPUs x64)
+
+Scanning the drive for archives:
+1 file, 186 bytes (1 KiB)
+
+Extracting archive: chicken.7z
+--
+Path = chicken.7z
+Type = 7z
+Physical Size = 186
+Headers Size = 138
+Method = LZMA2:12 7zAES
+Solid = -
+Blocks = 1
+
+Enter password (will not be echoed): _</span></span></span></code></pre></li><li id="https://www.notion.so/babb4d1372d24060be27b7335b2eca0e" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">We can obtain the password hash with </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">7z2john</code></span><span class="SemanticString">:</span></span><div id="https://www.notion.so/c957100b10104bf0ae31e90de30fc9a3" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ 7z2john ./chicken.7z &gt; chicken.hash</code></span></span></p></div><pre id="https://www.notion.so/295393d1575e4b8ead58af345992a506" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>chicken.7z:$7z$2$19$0$$8$56f2439d214228ae0000000000000000$2384223566$48$41$0cfdbe4f3b93395852bd23ea0b2d8dd1a279550bd80568430dae06d52df825ffb4168d213b88163544696d5c0e59a7b3$37$00</span></span></span></code></pre></li><li id="https://www.notion.so/1a261c96fac943e0b3147b59e6dce26e" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Now that we have the password hash, let&#x27;s crack it using John with the rockyou.txt wordlist:</span></span><div id="https://www.notion.so/cf7008c3d8944ec094fed4dee67e3450" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ john chicken.hash --wordlist=rockyou.txt --format=7z-opencl</code></span></span></p></div><pre id="https://www.notion.so/f0a536631c19422388ae893d75a4b530" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>Device 2@arch-zippy: GeForce GTX 1070
+Using default input encoding: UTF-8
+Loaded 1 password hash (7z-opencl, 7-Zip [SHA256 AES OpenCL])
+Cost 1 (iteration count) is 524288 for all loaded hashes
+Cost 2 (padding size) is 7 for all loaded hashes
+Cost 3 (compression type) is 2 for all loaded hashes
+Will run 8 OpenMP threads
+Press &#x27;q&#x27; or Ctrl-C to abort, almost any other key for status
+0g 0:00:00:15 0.36% (ETA: 00:59:49) 0g/s 3576p/s 3576c/s 3576C/s Dev#2:61°C iiloveyou..simone13
+0g 0:00:11:47 16.93% (ETA: 00:59:03) 0g/s 3736p/s 3736c/s 3736C/s Dev#2:59°C yahoomylove..y2j341
+0g 0:00:19:51 29.15% (ETA: 00:57:34) 0g/s 3643p/s 3643c/s 3643C/s Dev#2:60°C rebel9250..rdoleo
+pineapple95 (chicken.7z)
+1g 0:00:21:25 DONE (2021-03-29 00:10) 0.000778g/s 3627p/s 3627c/s 3627C/s Dev#2:59°C pinkice88..pincy
+Use the &quot;--show&quot; option to display all of the cracked passwords reliably
+Session completed</span></span></span></code></pre></li><li id="https://www.notion.so/f7596361df714cd6842c800628f0fd7a" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">After 21 gruelling minutes, we get the cracked password:</span></span><div id="https://www.notion.so/75d28c5a440e423eb31d3f062be487ca" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">pineapple95</code></span></span></p></div></li><li id="https://www.notion.so/6da799e4fc0c4b49a56f0f2820d76352" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Extract the 7z:</span></span><div id="https://www.notion.so/933dd4e786534af6bbf41a85bbdf13fb" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ 7z x chicken.7z</code></span></span></p></div><pre id="https://www.notion.so/9dc0bfe785ce4e658e63aa49697f6282" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>7-Zip [64] 17.03 : Copyright (c) 1999-2020 Igor Pavlov : 2017-08-28
+p7zip Version 17.03 (locale=en_AU.UTF-8,Utf16=on,HugeFiles=on,64 bits,8 CPUs x64)
+
+Scanning the drive for archives:
+1 file, 186 bytes (1 KiB)
+
+Extracting archive: chicken.7z
+--
+Path = chicken.7z
+Type = 7z
+Physical Size = 186
+Headers Size = 138
+Method = LZMA2:12 7zAES
+Solid = -
+Blocks = 1
+
+Enter password (will not be echoed): pineapple95
+Everything is Ok
+
+Size:       37
+Compressed: 186</span></span></span></code></pre></li><li id="https://www.notion.so/a7ec1f1c99dc4f5287fa738e326771af" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">The 7z file contains a </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">secret</code></span><span class="SemanticString"> file, let&#x27;s read it:</span></span><div id="https://www.notion.so/02133979b8814318b0bb932c38309c9c" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ cat secret</code></span></span></p></div><pre id="https://www.notion.so/839f4b03eb6749ee87e57cbdad579423" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>VU1BU1N7QF9sIUxfNW03SCFuXzN4N3JAfQo=</span></span></span></code></pre></li><li id="https://www.notion.so/7a8387c6f550405797d89a70e487a441" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">This string seems to be encoded in base64, as hinted by the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">=</code></span><span class="SemanticString"> padding. Decoding it gives:</span></span><div id="https://www.notion.so/60032526b7dd45a58adc63f2e4ce064a" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ echo &quot;VU1BU1N7QF9sIUxfNW03SCFuXzN4N3JAfQo=&quot; | base64 -d</code></span></span></p></div><pre id="https://www.notion.so/eb5a3cd564de40019817264974e6986d" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>UMASS{@_l!L_5m7H!n_3x7r@}</span></span></span></code></pre></li><li id="https://www.notion.so/23e7eb883fbe4c86b3661d0497f5cf7f" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Winner winner chicken dinner, we got the flag!</span></span></li></ul><h2 id="https://www.notion.so/2eecd86550644438bb0bc8ef59be899c" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/2eecd86550644438bb0bc8ef59be899c"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Resources</span></span></h2><ol class="NumberedListWrapper"><li id="https://www.notion.so/9e42b0d6f8984c139bcc7849b448aae2" class="NumberedList" value="1"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://isotropic.org/papers/chicken.pdf">https://isotropic.org/papers/chicken.pdf</a></span></span></li><li id="https://www.notion.so/36385b26e5b941dc968d790106e46c6c" class="NumberedList" value="2"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="http://myexperimentswithmalware.blogspot.com/2014/09/pdf-analysis-with-peepdf.html">http://myexperimentswithmalware.blogspot.com/2014/09/pdf-analysis-with-peepdf.html</a></span></span></li><li id="https://www.notion.so/404e02727d1d4311af8006bb44766ace" class="NumberedList" value="3"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://en.wikipedia.org/wiki/List_of_file_signatures">https://en.wikipedia.org/wiki/List_of_file_signatures</a></span></span></li><li id="https://www.notion.so/9744ca24799b4e5eba4bd3f1a392d92b" class="NumberedList" value="4"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://www.7-zip.org/recover.html">https://www.7-zip.org/recover.html</a></span></span></li></ol></article>
+  <footer class="Footer">
+        <div>&copy; samiko@127.0.0.1~$ &centerdot; 2021</div>
+        <div>&centerdot;</div>
+        <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
+            rel="noopener noreferrer">Notablog</a>.
+        </div>
+    </footer>
+</body>
+
+</html>
