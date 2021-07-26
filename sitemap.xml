@@ -8,253 +8,248 @@
 
 
 <url>
-  <loc>https://samillwong.github.io/</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>1.00</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/index.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/vault</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/vault.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/IJCTF_2021</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/tag/IJCTF%202021.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/Forensics</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/tag/Forensics.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/Network_Analysis</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/tag/Network%20Analysis.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/ready</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/ready.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/Medium</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/tag/Medium.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/Linux</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/tag/Linux.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/Web_Application</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/tag/Web%20Application.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/GitLab</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/tag/GitLab.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/Docker</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/tag/Docker.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/sharp</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/sharp.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/Hard</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/tag/Hard.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/Windows</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/tag/Windows.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/Reversing</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/tag/Reversing.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/SMB</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/tag/SMB.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/bucket</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/bucket.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/Amazon_DynamoDB</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/tag/Amazon%20DynamoDB.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/Amazon_S3</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/tag/Amazon%20S3.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/Pd4Cmd</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/tag/Pd4Cmd.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/laboratory</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/laboratory.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/Easy</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/tag/Easy.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/PATH_Hijacking</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/tag/PATH%20Hijacking.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/time</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/time.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/Jackson</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/tag/Jackson.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/Command_Injection</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/tag/Command%20Injection.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/chicken</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/chicken.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/UMassCTF'21</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/tag/UMassCTF'21.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/Password_Cracking</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/tag/Password%20Cracking.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/heim</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/heim.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/Bearer_Authentication</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/tag/Bearer%20Authentication.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/reel2</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/reel2.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/Password_Spraying</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/tag/Password%20Spraying.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/Outlook_Web_App</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/tag/Outlook%20Web%20App.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/Powershell_JEA</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/tag/Powershell%20JEA.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/passage</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/passage.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/CuteNews</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/tag/CuteNews.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/USBCreator</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/tag/USBCreator.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/academy</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/academy.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/Laravel</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/tag/Laravel.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/Composer</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/tag/Composer.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/feline</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/feline.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/Insecure_Deserialisation</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/tag/Insecure%20Deserialisation.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/SaltStack_Salt</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/tag/SaltStack%20Salt.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/doctor</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/doctor.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/Splunk_Forwarder</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/tag/Splunk%20Forwarder.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/worker</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/worker.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/SVN</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://samillwong.github.io/tag/SVN.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://samillwong.github.io/tag/Azure%20DevOps.html</loc>
-  <lastmod>2021-07-26T09:17:07+00:00</lastmod>
+  <loc>https://samiko.me/tag/Azure_DevOps</loc>
+  <lastmod>2021-07-26T15:47:24+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 
