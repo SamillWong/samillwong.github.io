@@ -3,34 +3,38 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- iOS Safari -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <!-- Chrome, Firefox OS and Opera Status Bar Color -->
-  <meta name="theme-color" content="#FFFFFF">
-  <meta property="og:title" content="Bucket - 10.10.10.212">
-  
-  <meta name="description" content="Medium-difficulty Linux box all about exploiting improperly configured Amazon S3 buckets. Privilege escalation by extracting credentials from DynamoDB and leveraging arbitrary file read through PD4ML, an HTML-to-PDF tool.">
-  <meta property="og:description" content="Medium-difficulty Linux box all about exploiting improperly configured Amazon S3 buckets. Privilege escalation by extracting credentials from DynamoDB and leveraging arbitrary file read through PD4ML, an HTML-to-PDF tool.">
-  
-  <meta property="og:type" content="blog">
-  <title>Bucket - 10.10.10.212</title>
-  <!-- Favicon -->
-  
-  <link rel="shortcut icon" href="https://samillwong.github.io/images/profile.jpg">
-  
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
-  <link rel="stylesheet" type="text/css"
-    href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
-  <link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
-  <link rel="stylesheet" type="text/css" href="css/notablog.css">
-  <link rel="stylesheet" type="text/css" href="css/theme.css">
-  <style>
-    :root {
-      font-size: 18px;
-    }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- iOS Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- Chrome, Firefox OS and Opera Status Bar Color -->
+<meta name="theme-color" content="#FFFFFF">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+<link rel="stylesheet" type="text/css"
+  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
+<link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
+<link rel="stylesheet" type="text/css" href="css/theme.css">
+<link rel="stylesheet" type="text/css" href="css/notablog.css">
+<!-- Favicon -->
 
+  <link rel="shortcut icon" href="https://samiko.me/images/profile.jpg">
+
+<style>
+  :root {
+    font-size: 20px;
+  }
+</style>
+  <title>Bucket - HackTheBox Writeup (10.10.10.212)&nbsp;|&nbsp;samiko@127.0.0.1~$</title>
+  <meta property="og:type" content="blog">
+  <meta property="og:title" content="Bucket - HackTheBox Writeup (10.10.10.212)">
+  
+    <meta name="description" content="Medium-difficulty Linux box all about exploiting improperly configured Amazon S3 buckets. Privilege escalation by extracting credentials from DynamoDB and leveraging arbitrary file read through PD4ML, an HTML-to-PDF tool.">
+    <meta property="og:description" content="Medium-difficulty Linux box all about exploiting improperly configured Amazon S3 buckets. Privilege escalation by extracting credentials from DynamoDB and leveraging arbitrary file read through PD4ML, an HTML-to-PDF tool.">
+  
+  
+    <meta property="og:image" content="https://www.hackthebox.eu/storage/avatars/3f07dd46f3ff7d287d2f736b18c6ded7.png">
+  
+  <style>
     .DateTagBar {
       margin-top: 1.0rem;
     }
@@ -39,92 +43,99 @@
 
 <body>
   <nav class="Navbar">
-    <a href="/">
-      <div class="Navbar__Btn"><span><img class="inline-img-icon" src="https://samillwong.github.io/images/profile.jpg"></span> <span>Home</span></div>
-    </a>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-  </nav>
-  <header class="Header">
+  <a href="/">
+    <div class="Navbar__Btn">
       
+        <span><img class="inline-img-icon" src="https://samiko.me/images/profile.jpg"></span>&nbsp;
+      
+      <span>Home</span>
+    </div>
+  </a>
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+</nav>
+  <header class="Header">
+    
     <div class="Header__Spacer Header__Spacer--NoCover">
     </div>
     
-    <div class="Header__Icon"><span><img class="inline-img-icon" src="https://www.hackthebox.eu/storage/avatars/3f07dd46f3ff7d287d2f736b18c6ded7.png"></span></div>
+      <div class="Header__Icon">
+        <span><img class="inline-img-icon" src="https://www.hackthebox.eu/storage/avatars/3f07dd46f3ff7d287d2f736b18c6ded7.png"></span>
+      </div>
     
-    <h1 class="Header__Title">Bucket - 10.10.10.212</h1>
+    <h1 class="Header__Title">Bucket - HackTheBox Writeup (10.10.10.212)</h1>
+    
+      <div class="DateTagBar">
         
-    <div class="DateTagBar">
-          
-      <span class="DateTagBar__Item DateTagBar__Date">Posted on Sun, May 2, 2021</span>
-          
-          
-      <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--yellow">
-          <a href="tag/Medium">Medium</a>
-      </span>
-      
-      <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--orange">
-          <a href="tag/Linux">Linux</a>
-      </span>
-      
-      <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--blue">
-          <a href="tag/Amazon_DynamoDB">Amazon DynamoDB</a>
-      </span>
-      
-      <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--orange">
-          <a href="tag/Amazon_S3">Amazon S3</a>
-      </span>
-      
-      <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--purple">
-          <a href="tag/Pd4Cmd">Pd4Cmd</a>
-      </span>
-      
-    </div>
-    <div class="Article__Desc">
+          <span class="DateTagBar__Item DateTagBar__Date">Posted on Sun, May 2, 2021</span>
+        
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--yellow">
+            <a href="tag/Medium">Medium</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--orange">
+            <a href="tag/Linux">Linux</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--blue">
+            <a href="tag/Amazon_DynamoDB">Amazon DynamoDB</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--orange">
+            <a href="tag/Amazon_S3">Amazon S3</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--purple">
+            <a href="tag/Pd4Cmd">Pd4Cmd</a>
+          </span>
+        
+      </div>
+      <div>
         Medium-difficulty Linux box all about exploiting improperly configured Amazon S3 buckets. Privilege escalation by extracting credentials from DynamoDB and leveraging arbitrary file read through PD4ML, an HTML-to-PDF tool.
-    </div>
-        
+      </div>
+    
   </header>
-      <article id="https://www.notion.so/09bb09bcdcdc42a98709118e15580e62" class="PageRoot PageRoot--FullWidth"><h2 id="https://www.notion.so/a79c85890e4946578d3a3421f459b4bc" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/a79c85890e4946578d3a3421f459b4bc"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Recon</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/9ab38b2034a14a77ba6e8ceb171f1cdd" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Port scan:</span></span><div id="https://www.notion.so/673f969a7bda423c85d7e1fbadf2fb9c" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ nmap -p- 10.10.10.212 &gt; ports.nmap</code></span></span></p></div><pre id="https://www.notion.so/29c69f07fffa47d9ae3843a37c0cc091" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>PORT   STATE SERVICE
+  <article id="https://www.notion.so/09bb09bcdcdc42a98709118e15580e62" class="PageRoot PageRoot--FullWidth"><h2 id="https://www.notion.so/a79c85890e4946578d3a3421f459b4bc" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/a79c85890e4946578d3a3421f459b4bc"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Recon</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/9ab38b2034a14a77ba6e8ceb171f1cdd" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Port scan:</span></span><div id="https://www.notion.so/673f969a7bda423c85d7e1fbadf2fb9c" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ nmap -p- 10.10.10.212 &gt; ports.nmap</code></span></span></p></div><pre id="https://www.notion.so/29c69f07fffa47d9ae3843a37c0cc091" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>PORT   STATE SERVICE
 22/tcp open  ssh
 80/tcp open  http</span></span></span></code></pre></li><li id="https://www.notion.so/28af846f7a0c4291a3e856fb431750c3" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Targeted scan:</span></span><div id="https://www.notion.so/fa3b3b4955b641ba98538b289bac76ce" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ nmap -sC -sV -p 22,80 10.10.10.212 &gt; targeted.nmap</code></span></span></p></div><pre id="https://www.notion.so/6c8983377b0d4ebd997837ed5321fdea" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>PORT   STATE SERVICE VERSION
 22/tcp open  ssh     OpenSSH 8.2p1 Ubuntu 4 (Ubuntu Linux; protocol 2.0)
@@ -415,12 +426,10 @@ aws --endpoint-url<span class="token operator">=</span>http://localhost:4566 s3 
 <span class="token punctuation">}</span>
 <span class="token variable">$result</span> <span class="token operator">=</span> <span class="token variable">$dynamodb</span><span class="token operator">-></span><span class="token function">deleteTable</span><span class="token punctuation">(</span><span class="token variable">$params</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span></span></span></span></code></pre></li></ul><h2 id="https://www.notion.so/a91688bb194d4adb9eeff945f5df02a7" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/a91688bb194d4adb9eeff945f5df02a7"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Persistence</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/a862c564962143b6918cdceb606a52aa" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Get root user&#x27;s hash from </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">/etc/shadow</code></span><span class="SemanticString">:</span></span><pre id="https://www.notion.so/a70321b0846046fda8a462e727eab78b" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>root:$6$rvx83lCm9lfbxx/M$x56XT96DB4RIHKtx8HhObNwNNe1TBEAUZlkhhgE2Goqg.ZnbIn/VOD.T2Q0XhcTxmLmAMrjk5ad6Gsd/jgjQn/:18528:0:99999:7:::</span></span></span></code></pre></li><li id="https://www.notion.so/b3a16e847bd8498593cd5d7bde9bc1a8" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Clean up after ourselves and delete any residual files:</span></span><div id="https://www.notion.so/b343a6c87a4d416eaa4b95496809ae62" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ rm -r /tmp/.samiko/</code></span></span></p></div></li></ul><h2 id="https://www.notion.so/c75de2b1d869487f8ea9e4b9da717898" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/c75de2b1d869487f8ea9e4b9da717898"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Resources</span></span></h2><ol class="NumberedListWrapper"><li id="https://www.notion.so/3715ab55d37a428f8e65b191d7dc44f3" class="NumberedList" value="1"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://docs.aws.amazon.com/cli/latest/userguide/cli-services-dynamodb.html">https://docs.aws.amazon.com/cli/latest/userguide/cli-services-dynamodb.html</a></span></span></li></ol></article>
   <footer class="Footer">
-        <div>&copy; samiko@127.0.0.1~$ &centerdot; 2021</div>
-        <div>&centerdot;</div>
-        <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
-            rel="noopener noreferrer">Notablog</a>.
-        </div>
-    </footer>
+  <div>samiko@127.0.0.1~$</div>
+  <div>&centerdot;</div>
+  <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank" rel="noopener noreferrer">Notablog</a>.</div>
+</footer>
 </body>
 
 </html>

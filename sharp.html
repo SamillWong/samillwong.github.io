@@ -3,34 +3,38 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- iOS Safari -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <!-- Chrome, Firefox OS and Opera Status Bar Color -->
-  <meta name="theme-color" content="#FFFFFF">
-  <meta property="og:title" content="Sharp - 10.10.10.219">
-  
-  <meta name="description" content="Hard-difficulty Windows box with a focus on reverse engineering C# applications and enumerating SMB shares. Foothold gained by reversing the encryption in a Kanban application. Privilege escalation by abusing WCF server and client applications ported from .NET remoting.">
-  <meta property="og:description" content="Hard-difficulty Windows box with a focus on reverse engineering C# applications and enumerating SMB shares. Foothold gained by reversing the encryption in a Kanban application. Privilege escalation by abusing WCF server and client applications ported from .NET remoting.">
-  
-  <meta property="og:type" content="blog">
-  <title>Sharp - 10.10.10.219</title>
-  <!-- Favicon -->
-  
-  <link rel="shortcut icon" href="https://samillwong.github.io/images/profile.jpg">
-  
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
-  <link rel="stylesheet" type="text/css"
-    href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
-  <link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
-  <link rel="stylesheet" type="text/css" href="css/notablog.css">
-  <link rel="stylesheet" type="text/css" href="css/theme.css">
-  <style>
-    :root {
-      font-size: 18px;
-    }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- iOS Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- Chrome, Firefox OS and Opera Status Bar Color -->
+<meta name="theme-color" content="#FFFFFF">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+<link rel="stylesheet" type="text/css"
+  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
+<link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
+<link rel="stylesheet" type="text/css" href="css/theme.css">
+<link rel="stylesheet" type="text/css" href="css/notablog.css">
+<!-- Favicon -->
 
+  <link rel="shortcut icon" href="https://samiko.me/images/profile.jpg">
+
+<style>
+  :root {
+    font-size: 20px;
+  }
+</style>
+  <title>Sharp - HackTheBox Writeup (10.10.10.219)&nbsp;|&nbsp;samiko@127.0.0.1~$</title>
+  <meta property="og:type" content="blog">
+  <meta property="og:title" content="Sharp - HackTheBox Writeup (10.10.10.219)">
+  
+    <meta name="description" content="Hard-difficulty Windows box with a focus on reverse engineering C# applications and enumerating SMB shares. Foothold gained by reversing the encryption in a Kanban application. Privilege escalation by abusing WCF server and client applications ported from .NET remoting.">
+    <meta property="og:description" content="Hard-difficulty Windows box with a focus on reverse engineering C# applications and enumerating SMB shares. Foothold gained by reversing the encryption in a Kanban application. Privilege escalation by abusing WCF server and client applications ported from .NET remoting.">
+  
+  
+    <meta property="og:image" content="https://www.hackthebox.eu/storage/avatars/2e0fd7a39dd00dcf9d0627019bee5c3d.png">
+  
+  <style>
     .DateTagBar {
       margin-top: 1.0rem;
     }
@@ -39,92 +43,99 @@
 
 <body>
   <nav class="Navbar">
-    <a href="/">
-      <div class="Navbar__Btn"><span><img class="inline-img-icon" src="https://samillwong.github.io/images/profile.jpg"></span> <span>Home</span></div>
-    </a>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-  </nav>
-  <header class="Header">
+  <a href="/">
+    <div class="Navbar__Btn">
       
+        <span><img class="inline-img-icon" src="https://samiko.me/images/profile.jpg"></span>&nbsp;
+      
+      <span>Home</span>
+    </div>
+  </a>
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+</nav>
+  <header class="Header">
+    
     <div class="Header__Spacer Header__Spacer--NoCover">
     </div>
     
-    <div class="Header__Icon"><span><img class="inline-img-icon" src="https://www.hackthebox.eu/storage/avatars/2e0fd7a39dd00dcf9d0627019bee5c3d.png"></span></div>
+      <div class="Header__Icon">
+        <span><img class="inline-img-icon" src="https://www.hackthebox.eu/storage/avatars/2e0fd7a39dd00dcf9d0627019bee5c3d.png"></span>
+      </div>
     
-    <h1 class="Header__Title">Sharp - 10.10.10.219</h1>
+    <h1 class="Header__Title">Sharp - HackTheBox Writeup (10.10.10.219)</h1>
+    
+      <div class="DateTagBar">
         
-    <div class="DateTagBar">
-          
-      <span class="DateTagBar__Item DateTagBar__Date">Posted on Mon, May 10, 2021</span>
-          
-          
-      <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
-          <a href="tag/Hard">Hard</a>
-      </span>
-      
-      <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--blue">
-          <a href="tag/Windows">Windows</a>
-      </span>
-      
-      <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--gray">
-          <a href="tag/Reversing">Reversing</a>
-      </span>
-      
-      <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--purple">
-          <a href="tag/SMB">SMB</a>
-      </span>
-      
-      <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--blue">
-          <a href="tag/.NET_Remoting">.NET Remoting</a>
-      </span>
-      
-    </div>
-    <div class="Article__Desc">
+          <span class="DateTagBar__Item DateTagBar__Date">Posted on Mon, May 10, 2021</span>
+        
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
+            <a href="tag/Hard">Hard</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--blue">
+            <a href="tag/Windows">Windows</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--gray">
+            <a href="tag/Reversing">Reversing</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--purple">
+            <a href="tag/SMB">SMB</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--blue">
+            <a href="tag/.NET_Remoting">.NET Remoting</a>
+          </span>
+        
+      </div>
+      <div>
         Hard-difficulty Windows box with a focus on reverse engineering C# applications and enumerating SMB shares. Foothold gained by reversing the encryption in a Kanban application. Privilege escalation by abusing WCF server and client applications ported from .NET remoting.
-    </div>
-        
+      </div>
+    
   </header>
-      <article id="https://www.notion.so/44be2b1639694d039f7966cee384b206" class="PageRoot PageRoot--FullWidth"><h2 id="https://www.notion.so/9e8fd2f3fc19443b8739f8252a976e76" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/9e8fd2f3fc19443b8739f8252a976e76"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Recon</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/784038305b11493d909e873477116673" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Port scan:</span></span><div id="https://www.notion.so/3144107efe2d4aaca17dc349234951b6" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ nmap -p- 10.10.10.219 &gt; ports.nmap</code></span></span></p></div><pre id="https://www.notion.so/84cedd3d27f64a22be97ebef03afb25e" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>Starting Nmap 7.91 ( https://nmap.org ) at 2021-01-04 17:09 ACDT
+  <article id="https://www.notion.so/44be2b1639694d039f7966cee384b206" class="PageRoot PageRoot--FullWidth"><h2 id="https://www.notion.so/9e8fd2f3fc19443b8739f8252a976e76" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/9e8fd2f3fc19443b8739f8252a976e76"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Recon</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/784038305b11493d909e873477116673" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Port scan:</span></span><div id="https://www.notion.so/3144107efe2d4aaca17dc349234951b6" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ nmap -p- 10.10.10.219 &gt; ports.nmap</code></span></span></p></div><pre id="https://www.notion.so/84cedd3d27f64a22be97ebef03afb25e" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>Starting Nmap 7.91 ( https://nmap.org ) at 2021-01-04 17:09 ACDT
 Note: Host seems down. If it is really up, but blocking our ping probes, try -Pn
 Nmap done: 1 IP address (0 hosts up) scanned in 3.08 seconds</span></span></span></code></pre><div id="https://www.notion.so/8d51da7304aa4c468dbfdc90418f2d7b" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Scan failed, retrying with host discovery disabled.</span></span></p></div><div id="https://www.notion.so/3b06fa3623cb4940a5c0fc6de26cdc1c" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ nmap -p- 10.10.10.219 -Pn &gt;&gt; ports.nmap</code></span></span></p></div><pre id="https://www.notion.so/f63837dc29c34e819022cecf30e5fb28" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>PORT     STATE SERVICE
 135/tcp  open  msrpc
@@ -395,12 +406,10 @@ RID  : 000003ef (1007)
 User : lars
   Hash NTLM: e5852e8163e71de86599596375a22e5c</span></span></span></code></pre></li></ul><h2 id="https://www.notion.so/8aa4251f9c984d5083710ad81cd8a2c8" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/8aa4251f9c984d5083710ad81cd8a2c8"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Resources</span></span></h2><ol class="NumberedListWrapper"><li id="https://www.notion.so/bca526b45e914bd7a65e4d392f3edd90" class="NumberedList" value="1"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://infinitelogins.com/2020/06/17/enumerating-smb-for-pentesting/">https://infinitelogins.com/2020/06/17/enumerating-smb-for-pentesting/</a></span></span></li><li id="https://www.notion.so/4e0ec89d020d474eb90dafebcb225a83" class="NumberedList" value="2"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://www.ivoidwarranties.tech/posts/pentesting-tuts/cme/crackmapexec-cheatsheet/">https://www.ivoidwarranties.tech/posts/pentesting-tuts/cme/crackmapexec-cheatsheet/</a></span></span></li><li id="https://www.notion.so/e0e84bcd509a45479c6873fe7272e147" class="NumberedList" value="3"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://github.com/tyranid/ExploitRemotingService">https://github.com/tyranid/ExploitRemotingService</a></span></span></li></ol></article>
   <footer class="Footer">
-        <div>&copy; samiko@127.0.0.1~$ &centerdot; 2021</div>
-        <div>&centerdot;</div>
-        <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
-            rel="noopener noreferrer">Notablog</a>.
-        </div>
-    </footer>
+  <div>samiko@127.0.0.1~$</div>
+  <div>&centerdot;</div>
+  <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank" rel="noopener noreferrer">Notablog</a>.</div>
+</footer>
 </body>
 
 </html>

@@ -23,16 +23,16 @@
   text-decoration: none;
 }
 
-.Navbar a:last-child>.Navbar__Btn {
+.Navbar a:last-child > .Navbar__Btn {
   /* .nav padding 20px */
   margin-right: 20px;
 }
 
 .Navbar__Btn {
-  border-radius: 5px;
+  border-radius: 0.25rem;
   padding: 0 6px;
   line-height: 1.8125;
-  transition: background 120ms ease-in 0s;
+  transition: background 30ms ease-in-out 0s;
   /* For centering inline image */
   display: flex;
   align-items: center;
@@ -42,11 +42,15 @@
   background: rgba(55, 53, 47, 0.08);
 }
 
-.Navbar__Btn>span {
+.Navbar__Btn:active {
+  background: rgba(55, 53, 47, 0.16);
+}
+
+.Navbar__Btn > span {
   white-space: nowrap;
 }
 
-.Navbar__Btn>span:not(:first-child) {
+.Navbar__Btn > span:not(:first-child) {
   margin-left: 6px;
 }
 
@@ -57,15 +61,18 @@
 
 /* Common */
 
-.Header, .PageRoot, .ArticleList {
-  width: 1000px;
+.Header,
+.PageRoot,
+.ArticleList {
+  width: 900px;
   max-width: 100%;
   margin: 0px auto;
-  padding: 0px 96px;
 }
 
-@media only screen and (max-width: 1000px) {
-  .Header, .PageRoot, .ArticleList {
+@media only screen and (max-width: 900px) {
+  .Header,
+  .PageRoot,
+  .ArticleList {
     max-width: 87.5%;
     padding-left: 0px;
     padding-right: 0px;
@@ -88,7 +95,7 @@
   z-index: -1;
 }
 
-.Header__Cover>img {
+.Header__Cover > img {
   height: calc(30vh + 50px);
   width: 100%;
   object-fit: cover;
@@ -109,19 +116,21 @@
 }
 
 .Header__Title {
-  margin-top: 2.5rem;
+  margin-top: 0.6rem;
   margin-bottom: 0.25em;
   line-height: 1.2;
-  font-size: 2.625rem;
+  font-size: 2rem;
   font-weight: 700;
+  letter-spacing: -0.005em;
 }
 
-.Header>*:last-child {
+.Header > *:last-child {
   margin-bottom: 2.5rem;
 }
 
 .Header__DescBigQuoteMark {
   font-size: 1.5em;
+  line-height: 0;
 }
 
 /* DateTagBar */
@@ -136,7 +145,7 @@
   margin-right: 10px;
   margin-bottom: 0.5rem;
   padding: 2px 6px;
-  border-radius: 3px;
+  border-radius: 0.25rem;
 }
 
 .DateTagBar__Date {
@@ -191,7 +200,7 @@
   background: rgba(255, 0, 26, 0.2);
 }
 
-.DateTagBar__Tag>a {
+.DateTagBar__Tag > a {
   border: none;
 }
 
@@ -209,17 +218,21 @@
 .Article__Title {
   margin: 0;
   padding-bottom: 0.5rem;
-  line-height: 1.654;
-  font-size: 1.625rem;
-  font-weight: 700;
+  line-height: 1.5;
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
-.Article__Title>a {
-  margin-left: 5px;
+.Article__Title > a {
   border-bottom: 2px solid hsl(45, 8%, 85%);
 }
 
-.Article__Title>a:hover {
+.Article__Title > a:not(:first-child) {
+  margin-left: 5px;
+}
+
+.Article__Title > a:hover {
   border-bottom: 2px solid hsl(45, 8%, 55%);
 }
 
@@ -246,7 +259,7 @@
   color: rgba(55, 53, 47, 0.6);
 }
 
-.Footer>div:nth-child(2) {
+.Footer > div:nth-child(2) {
   margin: 0 3px;
 }
 
@@ -267,12 +280,13 @@
   .Header__Icon {
     font-size: 55px;
   }
-  .Header__Cover>img {
+  .Header__Cover > img {
     height: calc(30vh + 30px);
   }
 }
 
-@supports (not (backdrop-filter: blur(20px))) and (not (-webkit-backdrop-filter: blur(20px))) {
+@supports (not (backdrop-filter: blur(20px))) and
+  (not (-webkit-backdrop-filter: blur(20px))) {
   .Navbar {
     background-color: white;
   }

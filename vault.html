@@ -3,34 +3,38 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- iOS Safari -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <!-- Chrome, Firefox OS and Opera Status Bar Color -->
-  <meta name="theme-color" content="#FFFFFF">
-  <meta property="og:title" content="Vault - IJCTF 2021">
-  
-  <meta name="description" content="A forensics category challenge on recovering TLS session keys from a packet capture, and decrypting TLS traffic tunnelled over ICMP (ping) through a SOCKS proxy, then recovering files from partial HTTP/2 requests.">
-  <meta property="og:description" content="A forensics category challenge on recovering TLS session keys from a packet capture, and decrypting TLS traffic tunnelled over ICMP (ping) through a SOCKS proxy, then recovering files from partial HTTP/2 requests.">
-  
-  <meta property="og:type" content="blog">
-  <title>Vault - IJCTF 2021</title>
-  <!-- Favicon -->
-  
-  <link rel="shortcut icon" href="https://samillwong.github.io/images/profile.jpg">
-  
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
-  <link rel="stylesheet" type="text/css"
-    href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
-  <link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
-  <link rel="stylesheet" type="text/css" href="css/notablog.css">
-  <link rel="stylesheet" type="text/css" href="css/theme.css">
-  <style>
-    :root {
-      font-size: 18px;
-    }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- iOS Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- Chrome, Firefox OS and Opera Status Bar Color -->
+<meta name="theme-color" content="#FFFFFF">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+<link rel="stylesheet" type="text/css"
+  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
+<link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
+<link rel="stylesheet" type="text/css" href="css/theme.css">
+<link rel="stylesheet" type="text/css" href="css/notablog.css">
+<!-- Favicon -->
 
+  <link rel="shortcut icon" href="https://samiko.me/images/profile.jpg">
+
+<style>
+  :root {
+    font-size: 20px;
+  }
+</style>
+  <title>Vault - IJCTF 2021 Writeup&nbsp;|&nbsp;samiko@127.0.0.1~$</title>
+  <meta property="og:type" content="blog">
+  <meta property="og:title" content="Vault - IJCTF 2021 Writeup">
+  
+    <meta name="description" content="A forensics category challenge on recovering TLS session keys from a packet capture, and decrypting TLS traffic tunnelled over ICMP (ping) through a SOCKS proxy, then recovering files from partial HTTP/2 requests.">
+    <meta property="og:description" content="A forensics category challenge on recovering TLS session keys from a packet capture, and decrypting TLS traffic tunnelled over ICMP (ping) through a SOCKS proxy, then recovering files from partial HTTP/2 requests.">
+  
+  
+    <meta property="og:image" content="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text text-anchor=%22middle%22 dominant-baseline=%22middle%22 x=%2250%22 y=%2255%22 font-size=%2280%22&gt;🔐&lt;/text&gt;&lt;/svg&gt;">
+  
+  <style>
     .DateTagBar {
       margin-top: 1.0rem;
     }
@@ -39,84 +43,91 @@
 
 <body>
   <nav class="Navbar">
-    <a href="/">
-      <div class="Navbar__Btn"><span><img class="inline-img-icon" src="https://samillwong.github.io/images/profile.jpg"></span> <span>Home</span></div>
-    </a>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-  </nav>
-  <header class="Header">
+  <a href="/">
+    <div class="Navbar__Btn">
       
+        <span><img class="inline-img-icon" src="https://samiko.me/images/profile.jpg"></span>&nbsp;
+      
+      <span>Home</span>
+    </div>
+  </a>
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+</nav>
+  <header class="Header">
+    
     <div class="Header__Spacer Header__Spacer--NoCover">
     </div>
     
-    <div class="Header__Icon"><span>🔐</span></div>
+      <div class="Header__Icon">
+        <span><img class="inline-img-icon" src="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text text-anchor=%22middle%22 dominant-baseline=%22middle%22 x=%2250%22 y=%2255%22 font-size=%2280%22&gt;🔐&lt;/text&gt;&lt;/svg&gt;"></span>
+      </div>
     
-    <h1 class="Header__Title">Vault - IJCTF 2021</h1>
+    <h1 class="Header__Title">Vault - IJCTF 2021 Writeup</h1>
+    
+      <div class="DateTagBar">
         
-    <div class="DateTagBar">
-          
-      <span class="DateTagBar__Item DateTagBar__Date">Posted on Sun, Jul 25, 2021</span>
-          
-          
-      <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--purple">
-          <a href="tag/IJCTF_2021">IJCTF 2021</a>
-      </span>
-      
-      <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--gray">
-          <a href="tag/Forensics">Forensics</a>
-      </span>
-      
-      <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--blue">
-          <a href="tag/Network_Analysis">Network Analysis</a>
-      </span>
-      
-    </div>
-    <div class="Article__Desc">
+          <span class="DateTagBar__Item DateTagBar__Date">Posted on Sun, Jul 25, 2021</span>
+        
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--purple">
+            <a href="tag/IJCTF_2021">IJCTF 2021</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--gray">
+            <a href="tag/Forensics">Forensics</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--blue">
+            <a href="tag/Network_Analysis">Network Analysis</a>
+          </span>
+        
+      </div>
+      <div>
         A forensics category challenge on recovering TLS session keys from a packet capture, and decrypting TLS traffic tunnelled over ICMP (ping) through a SOCKS proxy, then recovering files from partial HTTP/2 requests.
-    </div>
-        
+      </div>
+    
   </header>
-      <article id="https://www.notion.so/6954c33c138d4c91bc4f8bf352488e65" class="PageRoot PageRoot--FullWidth"><h2 id="https://www.notion.so/440e96b7931d4809a73c547e00d8ef71" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/440e96b7931d4809a73c547e00d8ef71"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Challenge description</span></span></h2><div id="https://www.notion.so/2113606da4a943459896313eaf35ae19" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">A robber broke into our vault in the middle of night. There&#x27;s an indication that the robber tried to steal some items which are considered as confidential assets. Could you figure it out?</span></span></p></div><div id="https://www.notion.so/525fff6ad9304a69a940d23a63cb9c6e" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Flag format: </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">IJCTF{[a-f0-9]{32}}</code></span></span></p></div><div id="https://www.notion.so/f02f7dad8465429fb4bf39d48d529d7f" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Author: </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">Avilia#1337</code></span></span></p></div><div id="https://www.notion.so/fb24b23e4f8f4d539a3d32124d1920cb" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Hint #1: &quot;When the incident happened, the attacker got into our </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">IP over ICMP</code></span><span class="SemanticString"> tunnel network to access an </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">HTTP/2</code></span><span class="SemanticString"> web-server with </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">SSL</code></span><span class="SemanticString"> enabled.&quot;</span></span></p></div><div id="https://www.notion.so/3903fa4f8e1b4b28887a55ea6eed1abf" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Hint #2: &quot;Even so, our captured logs aren&#x27;t precise enough. Each packet has an unusual timestamp and it&#x27;s kinda messy...&quot;</span></span></p></div><a id="https://www.notion.so/444e91400c824128864a576b5b6ff402" class="File" href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F9c9460e7-a032-4f51-856d-f6ced1df9184%2Flog.tar.xz?table=block&amp;id=444e9140-0c82-4128-864a-576b5b6ff402"><div><div class="File__Icon"><svg viewBox="0 0 30 30" style="width:1.35em;height:1.35em;fill:inherit"><g><path d="M22,8v12c0,3.866-3.134,7-7,7s-7-3.134-7-7V8c0-2.762,2.238-5,5-5s5,2.238,5,5v12c0,1.657-1.343,3-3,3s-3-1.343-3-3V8h-2v12c0,2.762,2.238,5,5,5s5-2.238,5-5V8c0-3.866-3.134-7-7-7S6,4.134,6,8v12c0,4.971,4.029,9,9,9s9-4.029,9-9V8H22z"></path></g></svg></div><div><span class="File__Title">log.tar.xz</span><span class="File__Size">495.7KB</span></div></div></a><h2 id="https://www.notion.so/fc4eec9ac38b471cbec67a3201f51fb9" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/fc4eec9ac38b471cbec67a3201f51fb9"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Investigating the packet capture</span></span></h2><div id="https://www.notion.so/6771798975004c359bbf8695687e601b" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">We are provided with a </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">log.tar.xz</code></span><span class="SemanticString"> archive from the challenge description, which we can decompress using </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">xz</code></span><span class="SemanticString"> and </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">tar</code></span><span class="SemanticString"> as so:</span></span></p></div><div id="https://www.notion.so/399a9127f23d4e14b4b77bef6b598e1b" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ xz -d log.tar.xz</code></span></span></p></div><div id="https://www.notion.so/bf2c2b85cb304f159fa7a85f99c46275" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ tar -xvf log.tar</code></span></span></p></div><div id="https://www.notion.so/29eccd7e3e5442f699d78bf6559d020d" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">This should produce a </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">log.pcap</code></span><span class="SemanticString"> file.</span></span></p></div><div id="https://www.notion.so/2a98dc48768f413ea19a9675db1f6aa3" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Running </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">strings</code></span><span class="SemanticString"> against the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">.pcap</code></span><span class="SemanticString"> file, we pipe the output to </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">sort</code></span><span class="SemanticString"> and </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">uniq</code></span><span class="SemanticString"> to only display unique entries, then </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">grep ......</code></span><span class="SemanticString"> to display only lines with length greater or equal to 6:</span></span></p></div><div id="https://www.notion.so/e9dec5c404444751b4a4ce0aad7febc8" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ strings log.pcap | sort | uniq | grep ......</code></span></span></p></div><pre id="https://www.notion.so/4205c673ddfa4c03a4e9a2690616adb6" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>...
+  <article id="https://www.notion.so/6954c33c138d4c91bc4f8bf352488e65" class="PageRoot PageRoot--FullWidth"><h2 id="https://www.notion.so/440e96b7931d4809a73c547e00d8ef71" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/440e96b7931d4809a73c547e00d8ef71"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Challenge description</span></span></h2><div id="https://www.notion.so/2113606da4a943459896313eaf35ae19" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">A robber broke into our vault in the middle of night. There&#x27;s an indication that the robber tried to steal some items which are considered as confidential assets. Could you figure it out?</span></span></p></div><div id="https://www.notion.so/525fff6ad9304a69a940d23a63cb9c6e" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Flag format: </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">IJCTF{[a-f0-9]{32}}</code></span></span></p></div><div id="https://www.notion.so/f02f7dad8465429fb4bf39d48d529d7f" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Author: </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">Avilia#1337</code></span></span></p></div><div id="https://www.notion.so/fb24b23e4f8f4d539a3d32124d1920cb" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Hint #1: &quot;When the incident happened, the attacker got into our </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">IP over ICMP</code></span><span class="SemanticString"> tunnel network to access an </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">HTTP/2</code></span><span class="SemanticString"> web-server with </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">SSL</code></span><span class="SemanticString"> enabled.&quot;</span></span></p></div><div id="https://www.notion.so/3903fa4f8e1b4b28887a55ea6eed1abf" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Hint #2: &quot;Even so, our captured logs aren&#x27;t precise enough. Each packet has an unusual timestamp and it&#x27;s kinda messy...&quot;</span></span></p></div><a id="https://www.notion.so/444e91400c824128864a576b5b6ff402" class="File" href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F9c9460e7-a032-4f51-856d-f6ced1df9184%2Flog.tar.xz?table=block&amp;id=444e9140-0c82-4128-864a-576b5b6ff402"><div><div class="File__Icon"><svg viewBox="0 0 30 30" style="width:1.35em;height:1.35em;fill:inherit"><g><path d="M22,8v12c0,3.866-3.134,7-7,7s-7-3.134-7-7V8c0-2.762,2.238-5,5-5s5,2.238,5,5v12c0,1.657-1.343,3-3,3s-3-1.343-3-3V8h-2v12c0,2.762,2.238,5,5,5s5-2.238,5-5V8c0-3.866-3.134-7-7-7S6,4.134,6,8v12c0,4.971,4.029,9,9,9s9-4.029,9-9V8H22z"></path></g></svg></div><div><span class="File__Title">log.tar.xz</span><span class="File__Size">495.7KB</span></div></div></a><h2 id="https://www.notion.so/fc4eec9ac38b471cbec67a3201f51fb9" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/fc4eec9ac38b471cbec67a3201f51fb9"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Investigating the packet capture</span></span></h2><div id="https://www.notion.so/6771798975004c359bbf8695687e601b" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">We are provided with a </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">log.tar.xz</code></span><span class="SemanticString"> archive from the challenge description, which we can decompress using </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">xz</code></span><span class="SemanticString"> and </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">tar</code></span><span class="SemanticString"> as so:</span></span></p></div><div id="https://www.notion.so/399a9127f23d4e14b4b77bef6b598e1b" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ xz -d log.tar.xz</code></span></span></p></div><div id="https://www.notion.so/bf2c2b85cb304f159fa7a85f99c46275" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ tar -xvf log.tar</code></span></span></p></div><div id="https://www.notion.so/29eccd7e3e5442f699d78bf6559d020d" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">This should produce a </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">log.pcap</code></span><span class="SemanticString"> file.</span></span></p></div><div id="https://www.notion.so/2a98dc48768f413ea19a9675db1f6aa3" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Running </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">strings</code></span><span class="SemanticString"> against the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">.pcap</code></span><span class="SemanticString"> file, we pipe the output to </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">sort</code></span><span class="SemanticString"> and </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">uniq</code></span><span class="SemanticString"> to only display unique entries, then </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">grep ......</code></span><span class="SemanticString"> to display only lines with length greater or equal to 6:</span></span></p></div><div id="https://www.notion.so/e9dec5c404444751b4a4ce0aad7febc8" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ strings log.pcap | sort | uniq | grep ......</code></span></span></p></div><pre id="https://www.notion.so/4205c673ddfa4c03a4e9a2690616adb6" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>...
 CLIENT_RANDOM
 Compressed: 202
 Extracting archive: flag.zip
@@ -152,12 +163,10 @@ bytes=55-55 66
 [flag.zip] flag.txt password: 0edbca2531daefac9c5c84c016792713fd23681ea8bc1b3d088b617f75940313
  extracting: flag.txt</span></span></span></code></pre><div id="https://www.notion.so/5b6e6861e90842bd8c3c569e65252514" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ cat flag.txt</code></span></span></p></div><pre id="https://www.notion.so/2d407e7f0316488a9370e11a3262af4e" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>IJCTF{aa51f2cc8eaf466a277da70db3a3c576}</span></span></span></code></pre><h2 id="https://www.notion.so/8ac76fc4a73448abb4be937d6abd3d9f" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/8ac76fc4a73448abb4be937d6abd3d9f"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Resources</span></span></h2><ol class="NumberedListWrapper"><li id="https://www.notion.so/d1ca1d6fe0554a14a3928a9755b8f548" class="NumberedList" value="1"><span class="SemanticStringArray"><span class="SemanticString">friedrich/hans: IP over ICMP - </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://github.com/friedrich/hans">https://github.com/friedrich/hans</a></span></span></li><li id="https://www.notion.so/722136544fd54a19b7665073020e302f" class="NumberedList" value="2"><span class="SemanticStringArray"><span class="SemanticString">editcap - The Wireshark Network Analyzer 3.4.7 - </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://www.wireshark.org/docs/man-pages/editcap.html">https://www.wireshark.org/docs/man-pages/editcap.html</a></span></span></li><li id="https://www.notion.so/f63c41f453a949e4ac03dbc26409cb6e" class="NumberedList" value="3"><span class="SemanticStringArray"><span class="SemanticString">NSS Key Log Format - Mozilla | MDN - </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/Key_Log_Format">https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/Key_Log_Format</a></span></span></li><li id="https://www.notion.so/46c6627857444888a8168bb1232b1507" class="NumberedList" value="4"><span class="SemanticStringArray"><span class="SemanticString">Wireshark Tutorial: Decrypting HTTPS Traffic - </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://unit42.paloaltonetworks.com/wireshark-tutorial-decrypting-https-traffic/">https://unit42.paloaltonetworks.com/wireshark-tutorial-decrypting-https-traffic/</a></span></span></li><li id="https://www.notion.so/cca76af11dd64f92bf6b4e7537c5db25" class="NumberedList" value="5"><span class="SemanticStringArray"><span class="SemanticString">Decrypting TLS Streams With Wireshark: Part 1 - </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://blog.didierstevens.com/2020/12/14/decrypting-tls-streams-with-wireshark-part-1/">https://blog.didierstevens.com/2020/12/14/decrypting-tls-streams-with-wireshark-part-1/</a></span></span></li><li id="https://www.notion.so/d7d225b3e19e466f9c1ba97b6dccb1c5" class="NumberedList" value="6"><span class="SemanticStringArray"><span class="SemanticString">tshark - The Wireshark Network Analyzer 3.4.7 - </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://www.wireshark.org/docs/man-pages/tshark.html">https://www.wireshark.org/docs/man-pages/tshark.html</a></span></span></li></ol><div id="https://www.notion.so/0d8131280ce24df6aa15795ddfd5bace" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div></article>
   <footer class="Footer">
-        <div>&copy; samiko@127.0.0.1~$ &centerdot; 2021</div>
-        <div>&centerdot;</div>
-        <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
-            rel="noopener noreferrer">Notablog</a>.
-        </div>
-    </footer>
+  <div>samiko@127.0.0.1~$</div>
+  <div>&centerdot;</div>
+  <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank" rel="noopener noreferrer">Notablog</a>.</div>
+</footer>
 </body>
 
 </html>

