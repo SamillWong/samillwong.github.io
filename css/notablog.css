@@ -12,9 +12,7 @@
   height: 50px;
   padding: 10px 20px;
   /* Background blur stuff. */
-  background-color: rgba(255, 255, 255, 1);
-  -webkit-backdrop-filter: blur(20px);
-  backdrop-filter: blur(20px);
+  background-color: rgba(0, 0, 0, 0);
   overflow-x: auto;
 }
 
@@ -154,10 +152,18 @@
   padding-right: 0px;
 }
 
+.DateTagBar__Date {
+  color: rgba(97, 125, 186, 1);
+}
+
 .DateTagBar__Tag {
   color: hsla(45, 8%, 25%, 1);
   font-size: 0.85rem;
   white-space: nowrap;
+}
+
+.DateTagBar__Tag {
+  color: rgba(235, 236, 237, 1);
 }
 
 .DateTagBar__Tag--default {
@@ -165,39 +171,39 @@
 }
 
 .DateTagBar__Tag--gray {
-  background: rgba(155, 154, 151, 0.4);
+  background: rgba(155, 154, 151, 0.5);
 }
 
 .DateTagBar__Tag--brown {
-  background: rgba(140, 46, 0, 0.2);
+  background: rgba(140, 46, 0, 0.7);
 }
 
 .DateTagBar__Tag--orange {
-  background: rgba(245, 93, 0, 0.2);
+  background: rgba(245, 93, 0, 0.7);
 }
 
 .DateTagBar__Tag--yellow {
-  background: rgba(233, 168, 0, 0.2);
+  background: rgba(233, 168, 0, 0.7);
 }
 
 .DateTagBar__Tag--green {
-  background: rgba(0, 135, 107, 0.2);
+  background: rgba(0, 135, 107, 0.7);
 }
 
 .DateTagBar__Tag--blue {
-  background: rgba(0, 120, 223, 0.2);
+  background: rgba(0, 120, 223, 0.7);
 }
 
 .DateTagBar__Tag--purple {
-  background: rgba(103, 36, 222, 0.2);
+  background: rgba(103, 36, 222, 0.7);
 }
 
 .DateTagBar__Tag--pink {
-  background: rgba(221, 0, 129, 0.2);
+  background: rgba(221, 0, 129, 0.7);
 }
 
 .DateTagBar__Tag--red {
-  background: rgba(255, 0, 26, 0.2);
+  background: rgba(255, 0, 26, 0.7);
 }
 
 .DateTagBar__Tag > a {
@@ -236,6 +242,11 @@
   border-bottom: 2px solid hsl(45, 8%, 55%);
 }
 
+.Article__Title > a:hover {
+  color: rgba(140, 198, 63, 1);
+  border-bottom: 2px solid rgba(140, 198, 63, 1);
+}
+
 .Article__Desc {
   padding-bottom: 0.5rem;
 }
@@ -259,12 +270,20 @@
   color: rgba(55, 53, 47, 0.6);
 }
 
+.Footer {
+  color: rgba(97, 125, 186, 0.6);
+}
+
 .Footer > div:nth-child(2) {
   margin: 0 3px;
 }
 
 .Footer a {
   color: rgba(55, 53, 47);
+}
+
+.Footer a {
+  color: rgba(97, 125, 186);
 }
 
 @media only screen and (max-width: 680px) {

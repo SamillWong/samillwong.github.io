@@ -5,7 +5,7 @@
 }
 
 *::selection {
-  background: rgba(45, 170, 219, 0.3);
+  background: rgba(140, 198, 63, 0.3);
 }
 
 :root {
@@ -60,6 +60,11 @@ body {
     'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', sans-serif,
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   margin: 0;
+}
+
+body {
+  background-color: rgba(17, 25, 38, 1);
+  --color-text-default: rgba(235, 236, 237, 1);
 }
 
 code {
