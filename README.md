@@ -1,2 +1,2 @@
-# samillwong.github.io
-A personal blog for anything infosec, mostly HackTheBox writeups.
+# samiko@127.0.0.1~$
+A personal blog for anything cybersecurity, mostly HackTheBox and CTF writeups.

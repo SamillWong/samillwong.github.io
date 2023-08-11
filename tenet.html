@@ -17,7 +17,7 @@
 <link rel="stylesheet" type="text/css" href="css/notablog.css">
 <!-- Favicon -->
 
-  <link rel="shortcut icon" href="https://samiko.me/images/profile.jpg">
+  <link rel="shortcut icon" href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Faf7d66d0-6402-4a6f-b9f5-00d2eb9e3482%2Fhackerman.gif?table=collection&amp;id=92e319e1-0c5e-49c7-adc1-7d48fe74e022">
 
 <style>
   :root {
@@ -46,7 +46,7 @@
   <a href="/">
     <div class="Navbar__Btn">
       
-        <span><img class="inline-img-icon" src="https://samiko.me/images/profile.jpg"></span>&nbsp;
+        <span><img class="inline-img-icon" src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Faf7d66d0-6402-4a6f-b9f5-00d2eb9e3482%2Fhackerman.gif?table=collection&amp;id=92e319e1-0c5e-49c7-adc1-7d48fe74e022"></span>&nbsp;
       
       <span>Home</span>
     </div>
@@ -180,9 +180,9 @@ uid=1001(neil) gid=1001(neil) groups=1001(neil)</span></span></span></code></pre
 
 <span class="token function-name function">checkAdded</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
 
-	<span class="token assign-left variable">sshName</span><span class="token operator">=</span><span class="token variable"><span class="token variable">$(</span>/bin/echo $key <span class="token operator">|</span> /usr/bin/cut -d <span class="token string">" "</span> -f <span class="token number">3</span><span class="token variable">)</span></span>
+	<span class="token assign-left variable">sshName</span><span class="token operator">=</span><span class="token variable"><span class="token variable">$(</span>/bin/echo $key <span class="token operator">|</span> /usr/bin/cut <span class="token parameter variable">-d</span> <span class="token string">" "</span> <span class="token parameter variable">-f</span> <span class="token number">3</span><span class="token variable">)</span></span>
 
-	<span class="token keyword">if</span> <span class="token punctuation">[</span><span class="token punctuation">[</span> <span class="token operator">!</span> -z <span class="token variable"><span class="token variable">$(</span>/bin/grep $sshName /root/.ssh/authorized_keys<span class="token variable">)</span></span> <span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">then</span>
+	<span class="token keyword">if</span> <span class="token punctuation">[</span><span class="token punctuation">[</span> <span class="token operator">!</span> <span class="token parameter variable">-z</span> <span class="token variable"><span class="token variable">$(</span>/bin/grep $sshName /root/.ssh/authorized_keys<span class="token variable">)</span></span> <span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">then</span>
 
 		/bin/echo <span class="token string">"Successfully added <span class="token variable">$sshName</span> to authorized_keys file!"</span>
 
@@ -196,11 +196,11 @@ uid=1001(neil) gid=1001(neil) groups=1001(neil)</span></span></span></code></pre
 
 <span class="token function-name function">checkFile</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
 
-	<span class="token keyword">if</span> <span class="token punctuation">[</span><span class="token punctuation">[</span> <span class="token operator">!</span> -s <span class="token variable">$1</span> <span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">||</span> <span class="token punctuation">[</span><span class="token punctuation">[</span> <span class="token operator">!</span> -f <span class="token variable">$1</span> <span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">then</span>
+	<span class="token keyword">if</span> <span class="token punctuation">[</span><span class="token punctuation">[</span> <span class="token operator">!</span> <span class="token parameter variable">-s</span> <span class="token variable">$1</span> <span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">||</span> <span class="token punctuation">[</span><span class="token punctuation">[</span> <span class="token operator">!</span> <span class="token parameter variable">-f</span> <span class="token variable">$1</span> <span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">then</span>
 
 		/bin/echo <span class="token string">"Error in creating key file!"</span>
 
-		<span class="token keyword">if</span> <span class="token punctuation">[</span><span class="token punctuation">[</span> -f <span class="token variable">$1</span> <span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">then</span> /bin/rm <span class="token variable">$1</span><span class="token punctuation">;</span> <span class="token keyword">fi</span>
+		<span class="token keyword">if</span> <span class="token punctuation">[</span><span class="token punctuation">[</span> <span class="token parameter variable">-f</span> <span class="token variable">$1</span> <span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">then</span> /bin/rm <span class="token variable">$1</span><span class="token punctuation">;</span> <span class="token keyword">fi</span>
 
 		<span class="token builtin class-name">exit</span> <span class="token number">1</span>
 
@@ -210,7 +210,7 @@ uid=1001(neil) gid=1001(neil) groups=1001(neil)</span></span></span></code></pre
 
 <span class="token function-name function">addKey</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
 
-	<span class="token assign-left variable">tmpName</span><span class="token operator">=</span><span class="token variable"><span class="token variable">$(</span>mktemp -u /tmp/ssh-XXXXXXXX<span class="token variable">)</span></span>
+	<span class="token assign-left variable">tmpName</span><span class="token operator">=</span><span class="token variable"><span class="token variable">$(</span>mktemp <span class="token parameter variable">-u</span> /tmp/ssh-XXXXXXXX<span class="token variable">)</span></span>
 
 	<span class="token punctuation">(</span>umask <span class="token number">110</span><span class="token punctuation">;</span> <span class="token function">touch</span> <span class="token variable">$tmpName</span><span class="token punctuation">)</span>
 
